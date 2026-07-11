@@ -10,6 +10,8 @@ import heroData from '../data/hero.json';
             <img 
                 src={navData.siteNameImage} 
                 alt={heroData.title}
+                loading="eager" 
+                fetchpriority="high"
                 width="1042" 
                 height="128" 
                 class="w-[45vw] md:w-70 block aspect-[1042/128]" 

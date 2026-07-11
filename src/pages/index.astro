@@ -32,9 +32,12 @@ import { DESCRIPTION } from '../data/site';
 <img 
   src={heroData.titleImage} 
   alt={heroData.title}
+  fetchpriority="high"
   width="1365" 
   height="397" 
-  class="w-[70vw] md:w-120  mx-auto mb-4" 
+  class="w-[70vw] md:w-120 mx-auto mb-4"
+  fetchpriority="high" 
+  loading="eager"
 />
                 </h1>
                 <p class="text-lg md:text-xl text-slate-500 font-medium tracking-wide">
