@@ -27,7 +27,7 @@ const buttons: ButtonPositions = {
     { id: 'uranai', name: '占い番地', top: "12%", left: "6%", width: "17%", height: "19%" },
     { id: 'iyashi', name: '癒やし番地', top: "10.5%", left: "43.5%", width: "16.5%", height: "15.5%" },
     { id: 'shop', name: 'ショップ番地', top: "72%", left: "3.5%", width: "17.5%", height: "19.5%" },
-    { id: 'counseling', name: 'カウンセリング番地', top: "16%", left: "80%", width: "15%", height: "16%" },
+    { id: 'counseling', name: 'カウンセリング番地', top: "16%", left: "81%", width: "15%", height: "16%" },
     { id: 'meiso', name: '瞑想番地', top: "70.5%", left: "80%", width: "18%", height: "18%" }
   ]
 };
