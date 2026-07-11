@@ -13,7 +13,7 @@ interface SpotsDataType {
 }
 
 export const spotsData: SpotsDataType = {
-  '占い': { title: '占い番地', url: 'https://uranai-site.com', name: 'タロットの館' },
+  '占い': { title: '占い番地', url: 'https://fortune-site.com', name: 'タロットの館' },
   '癒やし': { title: '癒やしの番地', url: 'https://healing.com', name: 'ヒーリングサロン' },
   // ...他の番地もここに追加
 };

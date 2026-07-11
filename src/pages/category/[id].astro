@@ -6,11 +6,11 @@ import spotsData from '../../data/spots.json';
 
 export function getStaticPaths() {
   return [
-    { params: { id: 'uranai' } },
-    { params: { id: 'iyashi' } },
+    { params: { id: 'fortune' } },
+    { params: { id: 'healing' } },
     { params: { id: 'shop' } },
     { params: { id: 'counseling' } },
-    { params: { id: 'meiso' } },
+    { params: { id: 'meditation' } },
   ];
 }
 
@@ -19,11 +19,11 @@ const currentCategory = spotsData[id as keyof typeof spotsData];
 
 // パージ対策を施した背景グラデーションの設定
 const bgGradients = {
-  uranai: "bg-gradient-to-r from-purple-500 to-indigo-600",
-  iyashi: "bg-gradient-to-r from-emerald-500 to-teal-600",
+  fortune: "bg-gradient-to-r from-purple-500 to-indigo-600",
+  healing: "bg-gradient-to-r from-emerald-500 to-teal-600",
   shop: "bg-gradient-to-r from-amber-500 to-orange-600",
   counseling: "bg-gradient-to-r from-rose-500 to-pink-600",
-  meiso: "bg-gradient-to-r from-sky-500 to-blue-600"
+  meditation: "bg-gradient-to-r from-sky-500 to-blue-600"
 };
 const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
 ---
