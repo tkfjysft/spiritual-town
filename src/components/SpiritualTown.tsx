@@ -55,8 +55,12 @@ const SpiritualTown = () => {
       {/* マップ画像 */}
       <img 
         src={isMobile ? "/town-map-mobile.avif" : "/town-map.avif"} 
-        alt="Spiritual Town Map" 
-        className="w-full h-auto block"
+        alt="Spiritual Town Map"
+		width={isMobile ? "1228" : "2201"} 
+		height={isMobile ? "2203" : "1228"} 
+        className={`w-full h-auto block
+			${isMobile ? "aspect-[1228/2203]" : "aspect-[2201/1228]"}
+			`}
       />
 
       {/* クリックエリア ＆ キャプションテキスト */}
