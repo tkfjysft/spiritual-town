@@ -57,6 +57,7 @@ import heroData from '../data/hero.json';
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('menu-btn');
     const closeBtn = document.getElementById('close-btn');
     const drawer = document.getElementById('drawer');
@@ -69,5 +70,6 @@ import heroData from '../data/hero.json';
     // 閉じる処理
     closeBtn?.addEventListener('click', () => {
         drawer?.classList.add('translate-x-full');
+    });
     });
 </script>
