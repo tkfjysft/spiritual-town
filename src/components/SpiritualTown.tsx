@@ -17,18 +17,18 @@ interface ButtonPositions {
 
 const buttons: ButtonPositions = {
   mobile: [
-    { id: 'uranai', name: '占い', top: "5%", left: "3%", width: "28%", height: "15%" },
-    { id: 'iyashi', name: '癒やし', top: "5%", left: "72%", width: "25%", height: "15%" },
-    { id: 'shop', name: 'ショップ', top: "38%", left: "3%", width: "32%", height: "18%" },
-    { id: 'counseling', name: 'カウンセリング', top: "52%", left: "65%", width: "25%", height: "15%" },
-    { id: 'meiso', name: '瞑想', top: "88%", left: "69%", width: "28%", height: "11%" }
+    { id: 'uranai', name: '占い', top: "15%", left: "5%", width: "28%", height: "12%" },
+    { id: 'iyashi', name: '癒やし', top: "12%", left: "70%", width: "25%", height: "10%" },
+    { id: 'shop', name: 'ショップ', top: "47%", left: "4.5%", width: "32%", height: "12%" },
+    { id: 'counseling', name: 'カウンセリング', top: "55%", left: "72%", width: "25%", height: "12%" },
+    { id: 'meiso', name: '瞑想', top: "86%", left: "69%", width: "28%", height: "11%" }
   ],
   pc: [
-    { id: 'uranai', name: '占い番地', top: "14%", left: "8.5%", width: "17%", height: "19%" },
-    { id: 'iyashi', name: '癒やし番地', top: "13.5%", left: "43.5%", width: "16.5%", height: "15.5%" },
-    { id: 'shop', name: 'ショップ番地', top: "67.5%", left: "5.5%", width: "17.5%", height: "19.5%" },
-    { id: 'counseling', name: 'カウンセリング番地', top: "17%", left: "80.5%", width: "15%", height: "16%" },
-    { id: 'meiso', name: '瞑想番地', top: "66.5%", left: "75%", width: "18%", height: "18%" }
+    { id: 'uranai', name: '占い番地', top: "12%", left: "6%", width: "17%", height: "19%" },
+    { id: 'iyashi', name: '癒やし番地', top: "10.5%", left: "43.5%", width: "16.5%", height: "15.5%" },
+    { id: 'shop', name: 'ショップ番地', top: "72%", left: "3.5%", width: "17.5%", height: "19.5%" },
+    { id: 'counseling', name: 'カウンセリング番地', top: "16%", left: "80%", width: "15%", height: "16%" },
+    { id: 'meiso', name: '瞑想番地', top: "70.5%", left: "80%", width: "18%", height: "18%" }
   ]
 };
 
@@ -51,7 +51,7 @@ const SpiritualTown = () => {
   const activeData = categoriesData.items.find(item => item.id === selectedCategory?.id);
 
   return (
-    <div className="relative w-full h-auto overflow-hidden rounded-2xl">
+    <div className="relative w-full h-auto overflow-hidden rounded-2xl select-none group/map">
       {/* マップ画像 */}
       <img 
         src={isMobile ? "/town-map-mobile.png" : "/town-map.png"} 
@@ -59,16 +59,26 @@ const SpiritualTown = () => {
         className="w-full h-auto block"
       />
 
-      {/* クリックエリア（ボタン）のレンダリング */}
+      {/* クリックエリア ＆ キャプションテキスト */}
       {currentButtons.map((btn, index) => (
-        <button
+        <div
           key={index}
-          className="absolute cursor-pointer z-40 transition-all duration-200 rounded-lg
-                 bg-teal-500/0 hover:bg-teal-500/20 border border-transparent hover:border-teal-400 shadow-sm"
+          className="absolute z-40 flex flex-col items-center justify-center"
           style={{ top: btn.top, left: btn.left, width: btn.width, height: btn.height }}
-          onClick={() => handleAddressClick(btn.id, btn.name)}
-          title={btn.name}
-        />
+        >
+          {/* 【新設】看板の上に浮かぶ文字キャプション */}
+          <span className="absolute -top-7 px-2 py-0.5 text-[11px] md:text-xs font-bold text-slate-700 bg-white/90 backdrop-blur-[2px] rounded-md shadow-sm border border-slate-200/60 pointer-events-none whitespace-nowrap transition-transform duration-200 scale-95 group-hover/map:scale-100">
+            {btn.name}
+          </span>
+
+          {/* クリック判定ボタン本体 */}
+          <button
+            className="w-full h-full cursor-pointer rounded-lg transition-all duration-200
+                   bg-teal-500/0 hover:bg-teal-500/15 border border-transparent hover:border-teal-400/60 shadow-sm"
+            onClick={() => handleAddressClick(btn.id, btn.name)}
+            title={btn.name}
+          />
+        </div>
       ))}
 
       {/* 案内板ポップアップ（モーダル） */}
