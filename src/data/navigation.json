@@ -1,5 +1,6 @@
 {
   "siteName": "Spiritual Town",
+  "siteNameImage": "/logo_ci_mini.avif",
   "links": [
     { "label": "ホーム", "url": "/" },
     { "label": "街のマップ", "url": "#map" },
