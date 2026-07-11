@@ -1,6 +1,7 @@
 ---
 // JSONデータのパスは適宜調整してください
-import navData from '../data/navigation.json'; 
+import navData from '../data/navigation.json';
+import heroData from '../data/hero.json';
 ---
 
 <nav class="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-50">
@@ -8,7 +9,7 @@ import navData from '../data/navigation.json';
         <a href="/" class="hover:opacity-80 transition-opacity">
             <img 
                 src={navData.siteNameImage} 
-                alt="Spiritual Town" 
+                alt={heroData.title}
                 width="1042" 
                 height="128" 
                 class="w-[45vw] md:w-70 block" 

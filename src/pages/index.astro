@@ -9,12 +9,14 @@ import heroData from '../data/hero.json';
 import categoriesData from '../data/categories.json';
 import featuredData from '../data/featuredSpots.json';
 import Header from '../components/Header.astro';
+import { DESCRIPTION } from '../data/site';
 ---
 
 <html lang="ja" class="scroll-smooth">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={ DESCRIPTION }>
         <title>{heroData.siteTitle}</title>
     </head>
     <body class="bg-slate-50 antialiased pt-16">
@@ -29,7 +31,7 @@ import Header from '../components/Header.astro';
                 <h1>
 <img 
   src={heroData.titleImage} 
-  alt="Spiritual Town" 
+  alt={heroData.title}
   width="1365" 
   height="397" 
   class="w-[70vw] md:w-120  mx-auto mb-4" 
