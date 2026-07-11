@@ -6,15 +6,23 @@
     "spots": [
       {
         "name": "タロットの館・ステラ",
-        "url": "https://example.com/stella",
+        "url": "https://example.comSLASHstella",
         "description": "迷ったときに心をそっと照らしてくれる、完全予約製のオンラインタロット占いサロンです。",
-        "tags": ["タロット", "メール鑑定", "初心者歓迎"]
+        "tags": [
+          "タロット",
+          "メール鑑定",
+          "初心者歓迎"
+        ]
       },
       {
         "name": "アストロ・ガイア",
-        "url": "https://example.com/gaia",
-        "description": "西洋占星術とホロスコープから、あなたの生まれ持った才能と宿命を紐解きます。",
-        "tags": ["占星術", "ホロスコープ", "対面鑑定"]
+        "url": "https://example.comSLASHstella",
+        "description": "迷ったときに心をそっと照らしてくれる、完全予約製のオンラインタロット占いサロンです。",
+        "tags": [
+          "占星術",
+          "ホロスコープ",
+          "対面鑑定"
+        ]
       }
     ]
   },
@@ -25,15 +33,23 @@
     "spots": [
       {
         "name": "ヒーリングサロン 碧い森",
-        "url": "https://example.com/aoimori",
+        "url": "https://example.comSLASHaoimori",
         "description": "音叉（おんさ）セラピーと遠隔ヒーリングで、体と心の波動を優しく整える専門サロン。",
-        "tags": ["遠隔ヒーリング", "波動調整", "女性専用"]
+        "tags": [
+          "遠隔ヒーリング",
+          "波動調整",
+          "女性専用"
+        ]
       },
       {
         "name": "オーラスタジオ・ルミナス",
-        "url": "https://example.com/luminous",
+        "url": "https://example.comSLASHluminous",
         "description": "最新の機器を用いたオーラ測定と、個別のカラーカウンセリングを行います。",
-        "tags": ["オーラ診断", "カラーセラピー", "当日予約OK"]
+        "tags": [
+          "オーラ診断",
+          "カラーセラピー",
+          "当日予約OK"
+        ]
       }
     ]
   },
@@ -44,9 +60,13 @@
     "spots": [
       {
         "name": "Crystal Moon",
-        "url": "https://example.com/crystal",
+        "url": "https://example.comSLASHcrystal",
         "description": "世界中から集められた高品質な原石や、あなただけのオーダーメイドブレスレットを販売。",
-        "tags": ["パワーストーン", "ハンドメイド", "全国配送"]
+        "tags": [
+          "パワーストーン",
+          "ハンドメイド",
+          "全国配送"
+        ]
       }
     ]
   },
@@ -57,9 +77,13 @@
     "spots": [
       {
         "name": "こころの相談室・ひだまり",
-        "url": "https://example.com/hidamari",
+        "url": "https://example.comSLASHhidamari",
         "description": "インナーチャイルドケアや親子の悩みに特化した、お母さんのための優しいカウンセリングルーム。",
-        "tags": ["心理学", "子育て相談", "オンライン可"]
+        "tags": [
+          "心理学",
+          "子育て相談",
+          "オンライン可"
+        ]
       }
     ]
   },
@@ -70,9 +94,22 @@
     "spots": [
       {
         "name": "Zen Space 瞑想塾",
-        "url": "https://example.com/zenspace",
+        "url": "https://example.comSLASHzenspace",
         "description": "初心者向けのマインドフルネスから、本格的な呼吸法ワークショップまで幅広く開催。",
-        "tags": ["マインドフルネス", "朝活", "初心者歓迎"]
+        "tags": [
+          "マインドフルネス",
+          "朝活",
+          "初心者歓迎"
+        ]
+      },
+      {
+        "name": "メディテーション",
+        "url": "https//example.comSLASHmedi",
+        "description": "瞑想です。",
+        "tags": [
+          "瞑想",
+          "メディテーション"
+        ]
       }
     ]
   }
