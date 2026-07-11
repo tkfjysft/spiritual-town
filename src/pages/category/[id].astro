@@ -1,0 +1,92 @@
+---
+// 1. スタイルの読み込みとデータの読み込み
+import '../../styles/global.css';
+import navData from '../../data/navigation.json';
+import spotsData from '../../data/spots.json';
+
+// 2. Astroに「5つのページ（uranai, iyashi...）を作ってね」と指示する設定
+export function getStaticPaths() {
+  return [
+    { params: { id: 'uranai' } },
+    { params: { id: 'iyashi' } },
+    { params: { id: 'shop' } },
+    { params: { id: 'counseling' } },
+    { params: { id: 'meiso' } },
+  ];
+}
+
+// 3. 現在どのページ（URL）が開かれているかを取得
+const { id } = Astro.params;
+// 開かれているURLに応じたデータをspots.jsonから自動抽出
+const currentCategory = spotsData[id as keyof typeof spotsData];
+---
+
+<html lang="ja">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{currentCategory.title} | {navData.siteName}</title>
+    </head>
+    <body class="bg-slate-50 antialiased pt-16">
+        
+        <nav class="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-50">
+            <div class="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
+                <a href="/" class="text-xl font-bold text-slate-800 tracking-wider hover:opacity-80 transition-opacity">
+                    {navData.siteName}
+                </a>
+                <a href="/" class="text-sm font-semibold text-teal-600 hover:text-teal-700 transition-colors">
+                    ← 街のマップに戻る
+                </a>
+            </div>
+        </nav>
+
+        <div class={`w-full py-16 bg-gradient-to-r ${currentCategory.bgGradient} text-white text-center px-4`}>
+            <div class="max-w-3xl mx-auto">
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-wide mb-3">
+                    {currentCategory.title}
+                </h1>
+                <p class="text-white/90 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+                    {currentCategory.description}
+                </p>
+            </div>
+        </div>
+
+        <main class="max-w-4xl mx-auto px-4 py-12">
+            <div class="space-y-6">
+                {currentCategory.spots.map((spot) => (
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md transition-shadow duration-200">
+                        <div class="flex-1">
+                            <h2 class="text-xl font-bold text-slate-800 mb-2">
+                                {spot.name}
+                            </h2>
+                            <p class="text-slate-500 text-sm leading-relaxed mb-4">
+                                {spot.description}
+                            </p>
+                            <div class="flex flex-wrap gap-1.5">
+                                {spot.tags.map((tag) => (
+                                    <span class="text-xs font-medium bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-md">
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                        <div class="whitespace-nowrap flex items-center">
+                            <a 
+                                href={spot.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                class="w-full md:w-auto text-center px-5 py-3 text-sm font-bold text-white bg-slate-900 hover:bg-teal-600 rounded-xl shadow-sm transition-colors duration-200"
+                            >
+                                公式サイトを訪問する ↗
+                            </a>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </main>
+
+        <footer class="text-center py-8 text-sm text-slate-400 border-t border-slate-200/60 mt-12">
+            <p>{navData.copyright}</p>
+        </footer>
+    </body>
+</html>

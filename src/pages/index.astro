@@ -3,10 +3,11 @@
 import '../styles/global.css';
 import SpiritualTown from '../components/SpiritualTown.tsx';
 
-// 2. 分割したJSONデータをそれぞれ個別に読み込み
+// 2. 分割したJSONデータをそれぞれ読み込み
 import navData from '../data/navigation.json';
 import heroData from '../data/hero.json';
 import categoriesData from '../data/categories.json';
+import featuredData from '../data/featuredSpots.json';
 ---
 
 <html lang="ja" class="scroll-smooth">
@@ -17,6 +18,7 @@ import categoriesData from '../data/categories.json';
     </head>
     <body class="bg-slate-50 antialiased pt-16">
         
+        <!-- グローバルナビゲーション（ヘッダー） -->
         <nav class="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-50">
             <div class="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
                 <a href="/" class="text-xl font-bold text-slate-800 tracking-wider hover:opacity-80 transition-opacity">
@@ -34,30 +36,87 @@ import categoriesData from '../data/categories.json';
 
         <main class="max-w-6xl mx-auto px-4 py-8">
             
-            <header class="text-center my-12">
-                <h1 class="text-4xl md:text-5xl font-bold text-slate-800 tracking-tight mb-4">
+            <!-- ヘッダー・メインビジュアル部分 -->
+            <header class="text-center my-16">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-slate-800 tracking-tight mb-4 bg-gradient-to-r from-slate-800 via-teal-950 to-slate-800 bg-clip-text text-transparent">
                     {heroData.title}
                 </h1>
-                <p class="text-lg text-slate-600 font-medium">
+                <p class="text-lg md:text-xl text-slate-500 font-medium tracking-wide">
                     {heroData.subtitle}
                 </p>
             </header>
 
-            <section class="bg-white border border-slate-100 shadow-sm max-w-3xl mx-auto p-6 rounded-2xl text-center leading-relaxed text-slate-600 mb-16">
-                <p>{heroData.introText}</p>
+            <!-- イントロダクション（説明文）部分 -->
+            <section class="bg-white border border-slate-100/80 shadow-md shadow-slate-100 max-w-3xl mx-auto p-8 rounded-3xl text-center leading-relaxed text-slate-600 mb-20 relative">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal-50 text-teal-700 text-xs font-bold px-4 py-1 rounded-full uppercase tracking-widest">Welcome</div>
+                <p class="text-base md:text-lg">{heroData.introText}</p>
             </section>
 
-            <section id="map" class="mb-20 scroll-mt-24">
-                <SpiritualTown client:load />
+            <!-- メイン機能（街のマップ）部分 -->
+            <section id="map" class="mb-24 scroll-mt-24">
+                <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
+                    <SpiritualTown client:load />
+                </div>
             </section>
 
-            <section id="categories" class="mb-20 scroll-mt-24">
-                <h2 class="text-2xl font-bold text-slate-800 text-center mb-8">
-                    {categoriesData.title}
-                </h2>
+            <!-- 今週のピックアップエリア（動的URL対応版） -->
+            <section id="featured" class="mb-24">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-3">
+                        {featuredData.title}
+                    </h2>
+                    <p class="text-sm text-slate-500">{featuredData.subtitle}</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {featuredData.items.map((spot) => (
+                        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:-translate-y-1 transition-all duration-300 hover:shadow-md">
+                            <!-- ダミー画像代わりのアイキャッチ背景 -->
+                            <div class="h-32 bg-gradient-to-br from-teal-50 to-slate-50 flex items-center justify-center text-4xl border-b border-slate-50">
+                                {spot.image}
+                            </div>
+                            <!-- コンテンツ -->
+                            <div class="p-6 flex-1 flex flex-col">
+                                <span class="text-xs font-bold text-teal-600 uppercase tracking-wider mb-2 block">{spot.category}</span>
+                                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-teal-600 transition-colors">
+                                    {spot.name}
+                                </h3>
+                                <p class="text-slate-500 text-sm leading-relaxed mb-6 flex-1">
+                                    {spot.description}
+                                </p>
+                                
+                                <!-- タグとボタンを綺麗に横並びにするエリア -->
+                                <div class="flex items-end justify-between pt-4 border-t border-slate-50 gap-2">
+                                    <!-- 左側：タグ -->
+                                    <div class="flex flex-wrap gap-1 max-w-[60%]">
+                                        {spot.tags.map((tag) => (
+                                            <span class="text-[10px] font-medium bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
+                                                #{tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <!-- 右側：【修正】動的なURLを設定 -->
+                                    <a href={spot.url} class="text-xs font-bold bg-slate-900 text-white px-3 py-2 rounded-xl shadow-sm hover:bg-teal-600 transition-colors duration-200 whitespace-nowrap">
+                                        詳細を見る
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            <!-- 街の案内所（カテゴリ一覧カード）部分 -->
+            <section id="categories" class="mb-24 scroll-mt-24">
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-3">
+                        {categoriesData.title}
+                    </h2>
+                    <p class="text-sm text-slate-500">目的のジャンルが決まっている方はこちらからどうぞ</p>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {categoriesData.items.map((category) => (
-                        <div class="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200">
+                        <div class="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200">
                             <div class="text-4xl mb-4">{category.icon}</div>
                             <h3 class="text-xl font-bold text-slate-800 mb-2">
                                 {category.name}
@@ -73,6 +132,7 @@ import categoriesData from '../data/categories.json';
                 </div>
             </section>
 
+            <!-- フッター部分 -->
             <footer class="text-center py-8 text-sm text-slate-400 border-t border-slate-200/60">
                 <p>{navData.copyright}</p>
             </footer>
