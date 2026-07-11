@@ -54,7 +54,7 @@ const SpiritualTown = () => {
     <div className="relative w-full h-auto overflow-hidden rounded-2xl select-none group/map">
       {/* マップ画像 */}
       <img 
-        src={isMobile ? "/town-map-mobile.png" : "/town-map.png"} 
+        src={isMobile ? "/town-map-mobile.avif" : "/town-map.avif"} 
         alt="Spiritual Town Map" 
         className="w-full h-auto block"
       />
