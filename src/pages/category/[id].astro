@@ -3,6 +3,7 @@
 import '../../styles/global.css';
 import navData from '../../data/navigation.json';
 import spotsData from '../../data/spots.json';
+import Header from '../../components/Header.astro';
 
 export function getStaticPaths() {
   return [
@@ -36,7 +37,7 @@ const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
     </head>
     <body class="bg-slate-50 antialiased pt-16">
         
-        <nav class="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-50">
+        <!-- <nav class="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-50">
             <div class="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
                 <a href="/" class="text-xl font-bold text-slate-800 tracking-wider hover:opacity-80 transition-opacity">
                     {navData.siteName}
@@ -45,7 +46,8 @@ const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
                     ← 街のマップに戻る
                 </a>
             </div>
-        </nav>
+        </nav> -->
+                <Header />
 
         <div class={`w-full py-24 md:py-32 ${currentBg} text-white text-center px-4 shadow-sm relative overflow-hidden`}>
             <div class="max-w-3xl mx-auto relative z-10">
