@@ -4,7 +4,6 @@ import '../../styles/global.css';
 import navData from '../../data/navigation.json';
 import spotsData from '../../data/spots.json';
 
-// 2. Astroに「5つのページ（uranai, iyashi...）を作ってね」と指示する設定
 export function getStaticPaths() {
   return [
     { params: { id: 'uranai' } },
@@ -15,10 +14,18 @@ export function getStaticPaths() {
   ];
 }
 
-// 3. 現在どのページ（URL）が開かれているかを取得
 const { id } = Astro.params;
-// 開かれているURLに応じたデータをspots.jsonから自動抽出
 const currentCategory = spotsData[id as keyof typeof spotsData];
+
+// 【修正：パージ対策】動的クラスを使わず、ここで完全にクラス名を確定させます
+const bgGradients = {
+  uranai: "bg-gradient-to-r from-purple-500 to-indigo-600",
+  iyashi: "bg-gradient-to-r from-emerald-500 to-teal-600",
+  shop: "bg-gradient-to-r from-amber-500 to-orange-600",
+  counseling: "bg-gradient-to-r from-rose-500 to-pink-600",
+  meiso: "bg-gradient-to-r from-sky-500 to-blue-600"
+};
+const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
 ---
 
 <html lang="ja">
@@ -40,7 +47,7 @@ const currentCategory = spotsData[id as keyof typeof spotsData];
             </div>
         </nav>
 
-        <div class={`w-full py-16 bg-gradient-to-r ${currentCategory.bgGradient} text-white text-center px-4`}>
+        <div class={`w-full py-16 ${currentBg} text-white text-center px-4`}>
             <div class="max-w-3xl mx-auto">
                 <h1 class="text-3xl md:text-4xl font-extrabold tracking-wide mb-3">
                     {currentCategory.title}
