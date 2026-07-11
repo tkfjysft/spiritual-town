@@ -1,6 +1,21 @@
 import React, { useState, useEffect } from 'react';
 
-const buttons = {
+// ボタン1つのデータの型を定義
+interface ButtonConfig {
+  name: string;
+  top: string;
+  left: string;
+  width: string;
+  height: string;
+}
+
+// ボタン全体の型定義（mobileとpcの配列を持つ）
+interface ButtonPositions {
+  mobile: ButtonConfig[];
+  pc: ButtonConfig[];
+}
+
+const buttons: ButtonPositions = {
   // スマホ用の座標設定
   mobile: [
     { name: '占い', top: "5%", left: "3%", width: "28%", height: "15%" },
@@ -9,7 +24,7 @@ const buttons = {
     { name: 'カウンセリング', top: "52%", left: "65%", width: "25%", height: "15%" },
     { name: '瞑想', top: "88%", left: "69%", width: "28%", height: "11%" }
   ],
-  // PC用の座標設定（※適宜数値を調整してください）
+  // PC用の座標設定
   pc: [
     { name: '占い', top: "10%", left: "10%", width: "15%", height: "10%" },
     { name: '癒やし', top: "10%", left: "70%", width: "15%", height: "10%" },
@@ -20,8 +35,8 @@ const buttons = {
 };
 
 const SpiritualTown = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [menu, setMenu] = useState({ visible: false, title: "" });
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [menu, setMenu] = useState<{ visible: boolean; title: string }>({ visible: false, title: "" });
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -30,17 +45,19 @@ const SpiritualTown = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleAddressClick = (name) => {
+  // 引数 name が文字列(string)であることを指定
+  const handleAddressClick = (name: string) => {
     setMenu({ visible: true, title: name });
   };
 
-  const styles = {
+  // スタイルの型を React.CSSProperties に指定して安全にする
+  const styles: { [key: string]: React.CSSProperties } = {
     container: { position: "relative", width: "100%", height: "auto" },
     mapImage: { width: "100%", height: "auto", display: "block" },
     clickableArea: {
       position: "absolute",
-      backgroundColor: "rgba(255, 0, 0, 0.2)", //transparent 調整時は "rgba(255, 0, 0, 0.2)" に変更
-      border: "1px solid red",                 //none 調整時は "1px solid red" に変更
+      backgroundColor: "rgba(255, 0, 0, 0.2)", 
+      border: "1px solid red",                 
       cursor: "pointer",
       zIndex: 100
     },

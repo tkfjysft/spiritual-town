@@ -1,15 +1,82 @@
 ---
-// ここでコンポーネントを読み込みます
-import SpiritualTown from '../components/SpiritualTown.jsx';
+// 1. スタイルと動くマップコンポーネントを読み込み
+import '../styles/global.css';
+import SpiritualTown from '../components/SpiritualTown.tsx';
+
+// 2. 分割したJSONデータをそれぞれ個別に読み込み
+import navData from '../data/navigation.json';
+import heroData from '../data/hero.json';
+import categoriesData from '../data/categories.json';
 ---
 
-<html lang="ja">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Spiritual Town</title>
-	</head>
-	<body>
-		<SpiritualTown client:load />
-	</body>
+<html lang="ja" class="scroll-smooth">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{heroData.siteTitle}</title>
+    </head>
+    <body class="bg-slate-50 antialiased pt-16">
+        
+        <nav class="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-50">
+            <div class="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
+                <a href="/" class="text-xl font-bold text-slate-800 tracking-wider hover:opacity-80 transition-opacity">
+                    {navData.siteName}
+                </a>
+                <div class="flex items-center gap-6">
+                    {navData.links.map((link) => (
+                        <a href={link.url} class="text-sm font-medium text-slate-600 hover:text-teal-600 transition-colors">
+                            {link.label}
+                        </a>
+                    ))}
+                </div>
+            </div>
+        </nav>
+
+        <main class="max-w-6xl mx-auto px-4 py-8">
+            
+            <header class="text-center my-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-slate-800 tracking-tight mb-4">
+                    {heroData.title}
+                </h1>
+                <p class="text-lg text-slate-600 font-medium">
+                    {heroData.subtitle}
+                </p>
+            </header>
+
+            <section class="bg-white border border-slate-100 shadow-sm max-w-3xl mx-auto p-6 rounded-2xl text-center leading-relaxed text-slate-600 mb-16">
+                <p>{heroData.introText}</p>
+            </section>
+
+            <section id="map" class="mb-20 scroll-mt-24">
+                <SpiritualTown client:load />
+            </section>
+
+            <section id="categories" class="mb-20 scroll-mt-24">
+                <h2 class="text-2xl font-bold text-slate-800 text-center mb-8">
+                    {categoriesData.title}
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {categoriesData.items.map((category) => (
+                        <div class="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200">
+                            <div class="text-4xl mb-4">{category.icon}</div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">
+                                {category.name}
+                            </h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                                {category.description}
+                            </p>
+                            <a href={`/category/${category.id}`} class="inline-flex items-center text-sm font-semibold text-teal-600 hover:text-teal-700 transition-colors">
+                                このエリアを散策する →
+                            </a>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            <footer class="text-center py-8 text-sm text-slate-400 border-t border-slate-200/60">
+                <p>{navData.copyright}</p>
+            </footer>
+
+        </main>
+    </body>
 </html>

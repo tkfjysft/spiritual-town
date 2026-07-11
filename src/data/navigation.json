@@ -1,0 +1,10 @@
+{
+  "siteName": "Spiritual Town",
+  "links": [
+    { "label": "ホーム", "url": "/" },
+    { "label": "街のマップ", "url": "#map" },
+    { "label": "カテゴリ一覧", "url": "#categories" },
+    { "label": "このサイトについて", "url": "/about" }
+  ],
+  "copyright": "© 2026 Spiritual Town. All rights reserved."
+}
