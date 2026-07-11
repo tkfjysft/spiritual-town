@@ -17,7 +17,7 @@ export function getStaticPaths() {
 const { id } = Astro.params;
 const currentCategory = spotsData[id as keyof typeof spotsData];
 
-// 【修正：パージ対策】動的クラスを使わず、ここで完全にクラス名を確定させます
+// パージ対策を施した背景グラデーションの設定
 const bgGradients = {
   uranai: "bg-gradient-to-r from-purple-500 to-indigo-600",
   iyashi: "bg-gradient-to-r from-emerald-500 to-teal-600",
@@ -47,18 +47,17 @@ const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
             </div>
         </nav>
 
-        <div class={`w-full py-16 ${currentBg} text-white text-center px-4`}>
-            <div class="max-w-3xl mx-auto">
-                <h1 class="text-3xl md:text-4xl font-extrabold tracking-wide mb-3">
+        <div class={`w-full py-24 md:py-32 ${currentBg} text-white text-center px-4 shadow-sm relative overflow-hidden`}>
+            <div class="max-w-3xl mx-auto relative z-10">
+                <h1 class="text-3xl md:text-5xl font-extrabold tracking-widest mb-4 drop-shadow-sm">
                     {currentCategory.title}
                 </h1>
-                <p class="text-white/90 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+                <p class="text-white/90 text-sm md:text-lg max-w-xl mx-auto leading-relaxed tracking-wide font-medium">
                     {currentCategory.description}
                 </p>
             </div>
-        </div>
-
-        <main class="max-w-4xl mx-auto px-4 py-12">
+            <div class="absolute inset-0 bg-black/5 pointer-events-none"></div>
+        </div> <main class="max-w-4xl mx-auto px-4 py-12">
             <div class="space-y-6">
                 {currentCategory.spots.map((spot) => (
                     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md transition-shadow duration-200">
