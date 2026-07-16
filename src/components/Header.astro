@@ -1,5 +1,6 @@
 ---
-// JSONデータのパスは適宜調整してください
+import * as Icons from 'lucide-astro';
+
 import navData from '../data/navigation.json';
 import heroData from '../data/hero.json';
 ---
@@ -18,15 +19,27 @@ import heroData from '../data/hero.json';
             />
         </a>
 
-        <div class="hidden md:flex items-center gap-6">
-            {navData.links.map((link) => (
-                <a href={link.url} class="text-sm font-medium text-slate-600 hover:text-teal-800 transition-colors">
-                    {link.label}
-                </a>
-            ))}
-        </div>
+<div class="hidden lg:flex items-center gap-6">
+    {navData.links.map((link) => {
+        // アイコン名に対応するコンポーネントを動的に取得
+        const IconComponent = Icons[link.icon as keyof typeof Icons];
+								const isExternal = link.url.startsWith('http');
 
-        <button id="menu-btn" class="md:hidden p-2 text-slate-800" aria-label="メニューを開く">
+        
+        return (
+            <a href={link.url} class="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-teal-800 transition-colors"
+                onclick="document.getElementById('drawer').classList.add('translate-x-full')"
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+            >
+                {IconComponent && <IconComponent size={24} />}
+                {link.label}
+            </a>
+        );
+    })}
+</div>
+
+        <button id="menu-btn" class="lg:hidden p-2 text-slate-800" aria-label="メニューを開く">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
@@ -34,7 +47,7 @@ import heroData from '../data/hero.json';
     </div>
 </nav>
 
-    <div id="drawer" class="md:hidden fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300">
+    <div id="drawer" class="lg:hidden fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300">
         <div class="p-4 flex justify-end">
             <button id="close-btn" class="p-2 text-slate-800" aria-label="メニューを閉じる">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,15 +56,22 @@ import heroData from '../data/hero.json';
             </button>
         </div>
         <div class="flex flex-col items-center gap-8 mt-10">
-            {navData.links.map((link) => (
-                <a 
-                    href={link.url} 
-                    class="text-2xl font-medium text-slate-800" 
-                    onclick="document.getElementById('drawer').classList.add('translate-x-full')"
-                >
-                    {link.label}
-                </a>
-            ))}
+            {navData.links.map((link) => {
+				        const IconComponent = Icons[link.icon as keyof typeof Icons];
+						const isExternal = link.url.startsWith('http');
+                return (
+<a 
+                href={link.url} 
+                class="flex items-center gap-2 text-2xl font-medium text-slate-800" 
+                onclick="document.getElementById('drawer').classList.add('translate-x-full')"
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+            >
+                {IconComponent && <IconComponent size={24} />}
+                {link.label}
+            </a>
+        );
+    })}
         </div>
     </div>
 

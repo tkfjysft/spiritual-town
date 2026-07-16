@@ -8,6 +8,7 @@ import navData from '../data/navigation.json';
 import heroData from '../data/hero.json';
 import categoriesData from '../data/categories.json';
 import featuredData from '../data/featuredSpots.json';
+import applicationData from '../data/application.json';
 import Header from '../components/Header.astro';
 import { DESCRIPTION } from '../data/site';
 ---
@@ -24,89 +25,92 @@ import { DESCRIPTION } from '../data/site';
         <!-- グローバルナビゲーション（ヘッダー） -->
         <Header />
 
-        <main class="max-w-6xl mx-auto px-4 py-8">
+        <main class="mx-auto py-8">
             
             <!-- ヘッダー・メインビジュアル部分 -->
             <header class="text-center mb-16">
                 <h1>
-<img 
-  src={heroData.titleImage} 
-  alt={heroData.title}
-  fetchpriority="high"
-  width="542" 
-  height="600" 
-  class="w-[70vw] md:w-120 mx-auto mb-4"
-  fetchpriority="high" 
-  loading="eager"
-/>
+					<img 
+					src={heroData.titleImage} 
+					alt={heroData.title}
+					fetchpriority="high"
+					width="542" 
+					height="600" 
+					class="w-[70vw] md:w-120 mx-auto mb-4"
+					fetchpriority="high" 
+					loading="eager"
+					/>
                 </h1>
                 <p class="text-lg md:text-xl text-slate-500 font-medium tracking-wide">
-                    {heroData.subtitle}
+                    			{heroData.subtitle.split('、')[0]}、
+			<span class="block sm:inline">
+				{heroData.subtitle.split('、')[1]}
+			</span>
                 </p>
             </header>
 
             <!-- イントロダクション（説明文）部分 -->
-            <section class="bg-white border border-slate-100/80 shadow-md shadow-slate-100 max-w-3xl mx-auto p-8 rounded-3xl text-center leading-relaxed text-slate-600 mb-20 relative">
+            <section class="bg-white border border-slate-100/80 shadow-md shadow-slate-100 p-8 rounded-3xl text-center leading-relaxed text-slate-600 mb-20 relative mx-[2vw] md:mx-10 lg:mx-auto lg:max-w-3xl">
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal-50 text-teal-700 text-xs font-bold px-4 py-1 rounded-full uppercase tracking-widest">Welcome</div>
-                <p class="text-base md:text-lg">{heroData.introText}</p>
+                <p class="text-base md:text-lg text-left">{heroData.introText}</p>
             </section>
 
             <!-- メイン機能（街のマップ）部分 -->
-            <section id="map" class="mb-24 scroll-mt-24">
+            <section id="map" class="mb-24 scroll-mt-24 mx-[2vw] md:mx-10 lg:mx-20">
                 <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
                     <SpiritualTown client:load />
                 </div>
             </section>
 
-            <!-- 今週のピックアップエリア（動的URL対応版） -->
-            <section id="featured" class="mb-24">
-                <div class="text-center mb-12">
-                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-3">
-                        {featuredData.title}
-                    </h2>
-                    <p class="text-sm text-slate-500">{featuredData.subtitle}</p>
-                </div>
+
+
+            <!-- 新着 -->
+<section id="featured" class="mb-24 py-16 w-full bg-white">
+    <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-amber-900 mb-3">
+            {featuredData.title}
+        </h2>
+        <p class="text-sm text-slate-600 tracking-wide">{featuredData.subtitle}</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-8 max-w-4xl mx-auto px-6">
+        {featuredData.items.map((spot) => (
+            <div class="bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.1)] flex flex-col group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div class="h-3 bg-gradient-to-r from-pink-200 via-sky-200 to-amber-200 rounded-t-3xl"></div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {featuredData.items.map((spot) => (
-                        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group hover:-translate-y-1 transition-all duration-300 hover:shadow-md">
-                            <!-- ダミー画像代わりのアイキャッチ背景 -->
-                            <div class="h-32 bg-gradient-to-br from-teal-50 to-slate-50 flex items-center justify-center text-4xl border-b border-slate-50">
-                                {spot.image}
-                            </div>
-                            <!-- コンテンツ -->
-                            <div class="p-6 flex-1 flex flex-col">
-                                <span class="text-xs font-bold text-teal-800 uppercase tracking-wider mb-2 block">{spot.category}</span>
-                                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-teal-800 transition-colors">
-                                    {spot.name}
-                                </h3>
-                                <p class="text-slate-500 text-sm leading-relaxed mb-6 flex-1">
-                                    {spot.description}
-                                </p>
-                                
-                                <!-- タグとボタンを綺麗に横並びにするエリア -->
-                                <div class="flex items-end justify-between pt-4 border-t border-slate-50 gap-2">
-                                    <!-- 左側：タグ -->
-                                    <div class="flex flex-wrap gap-1 max-w-[60%]">
-                                        {spot.tags.map((tag) => (
-                                            <span class="text-[10px] font-medium bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
-                                                #{tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                    <!-- 右側：【修正】動的なURLを設定 -->
-                                    <a href={spot.url} class="text-xs font-bold bg-slate-900 text-white px-3 py-2 rounded-xl shadow-sm hover:bg-teal-600 transition-colors duration-200 whitespace-nowrap">
-                                        詳細を見る
-                                    </a>
-                                </div>
-                            </div>
+                <div class="p-8 flex-1 flex flex-col">
+                    <span class="text-[11px] font-bold text-sky-600 uppercase tracking-widest mb-3 block bg-sky-50 px-2 py-1 rounded-full w-fit">
+                        {spot.category}
+                    </span>
+                    <h3 class="text-xl font-bold text-amber-900 mb-4">
+                        {spot.name}
+                    </h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-8 flex-1">
+                        {spot.description}
+                    </p>
+                    
+                    <div class="flex items-center justify-between pt-6 border-t border-amber-50 gap-2">
+                        <div class="flex flex-wrap gap-1.5 max-w-[60%]">
+                            {spot.tags.map((tag) => (
+                                <span class="text-[10px] font-medium bg-pink-50 text-pink-700 px-2 py-1 rounded-full">
+                                    #{tag}
+                                </span>
+                            ))}
                         </div>
-                    ))}
+                        <a href={spot.url} class="text-xs font-bold bg-amber-200 text-amber-900 px-4 py-2 rounded-full hover:bg-amber-300 transition-all duration-200 shadow-sm whitespace-nowrap">
+                            詳細を見る
+                        </a>
+                    </div>
                 </div>
-            </section>
+            </div>
+        ))}
+    </div>
+</section>
+
+
 
             <!-- 街の案内所（カテゴリ一覧カード）部分 -->
-            <section id="categories" class="mb-24 scroll-mt-24">
+            <section id="categories" class="mb-24 scroll-mt-24 mx-[2vw] md:mx-10 lg:mx-20">
                 <div class="text-center mb-12">
                     <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-3">
                         {categoriesData.title}
@@ -130,6 +134,38 @@ import { DESCRIPTION } from '../data/site';
                     ))}
                 </div>
             </section>
+
+
+
+<section class="py-16 px-6 mt-12 bg-white rounded-3xl border border-stone-200 shadow-sm mx-[2vw] md:mx-10 lg:mx-20">
+  <div class="max-w-3xl mx-auto text-center">
+    <h2 class="text-2xl md:text-3xl font-bold text-stone-800 mb-4 tracking-tight">
+      {applicationData.title}
+    </h2>
+    <p class="text-stone-600 mb-10 text-lg">
+      {applicationData.description}
+    </p>
+
+    <ul class="flex flex-col md:flex-row justify-center gap-6 mb-12">
+      {applicationData.steps.map((step, index) => (
+        <li class="flex items-center justify-center gap-2">
+          <span class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700 font-bold">
+            {index + 1}
+          </span>
+          <span class="text-stone-700 font-medium">{step}</span>
+        </li>
+      ))}
+    </ul>
+
+    <a 
+      href={applicationData.button.link} target="_blank" rel="noopener noreferrer"
+      class="inline-block px-8 py-4 bg-amber-200 text-amber-900 font-bold rounded-full hover:bg-amber-300 transition-all shadow-md hover:shadow-lg"
+    >
+      {applicationData.button.text}
+    </a>
+  </div>
+</section>
+
 
             <!-- フッター部分 -->
             <footer class="text-center py-8 text-sm text-slate-400 border-t border-slate-200/60">

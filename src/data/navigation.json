@@ -2,10 +2,11 @@
   "siteName": "Spiritual Town",
   "siteNameImage": "/logo_ci_header.avif",
   "links": [
-    { "label": "ホーム", "url": "/" },
-    { "label": "街のマップ", "url": "#map" },
-    { "label": "カテゴリ一覧", "url": "#categories" },
-    { "label": "このサイトについて", "url": "/about" }
+    { "label": "ホーム", "url": "/", "icon": "Home" },
+    { "label": "街のマップ", "url": "#map", "icon": "Map" },
+    { "label": "カテゴリ一覧", "url": "#categories", "icon": "LayoutGrid" },
+    { "label": "このサイトについて", "url": "/about", "icon": "Info" },
+    { "label": "掲載を申し込む", "url": "https://forms.gle/1Q5Mq1qipnwdaUas6", "icon": "Send" }
   ],
   "copyright": "© 2026 Spiritual Town. All rights reserved."
 }
