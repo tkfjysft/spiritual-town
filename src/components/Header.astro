@@ -27,12 +27,12 @@ import heroData from '../data/hero.json';
 
         
         return (
-            <a href={link.url} class="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-teal-800 transition-colors"
+            <a href={link.url} class="flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-teal-800 transition-colors"
                 onclick="document.getElementById('drawer').classList.add('translate-x-full')"
                 target={isExternal ? "_blank" : undefined}
                 rel={isExternal ? "noopener noreferrer" : undefined}
             >
-                {IconComponent && <IconComponent size={24} />}
+                {IconComponent && <IconComponent size={18} />}
                 {link.label}
             </a>
         );

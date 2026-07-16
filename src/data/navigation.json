@@ -6,7 +6,8 @@
     { "label": "街のマップ", "url": "#map", "icon": "Map" },
     { "label": "カテゴリ一覧", "url": "#categories", "icon": "LayoutGrid" },
     { "label": "このサイトについて", "url": "/about", "icon": "Info" },
-    { "label": "掲載を申し込む", "url": "https://forms.gle/1Q5Mq1qipnwdaUas6", "icon": "Send" }
+    { "label": "掲載を申し込む", "url": "https://forms.gle/1Q5Mq1qipnwdaUas6", "icon": "Send" },
+    { "label": "お問い合せ", "url": "https://forms.gle/dtMHv1mHwetdmajq7", "icon": "Mail" }
   ],
   "copyright": "© 2026 Spiritual Town. All rights reserved."
 }
