@@ -17,11 +17,11 @@ interface ButtonPositions {
 
 const buttons: ButtonPositions = {
   mobile: [
-    { id: 'fortune', name: '占い', top: "15%", left: "5%", width: "28%", height: "12%" },
-    { id: 'healing', name: '癒やし', top: "12%", left: "70%", width: "25%", height: "10%" },
-    { id: 'shop', name: 'ショップ', top: "47%", left: "4.5%", width: "32%", height: "12%" },
-    { id: 'counseling', name: 'カウンセリング', top: "55%", left: "72%", width: "25%", height: "12%" },
-    { id: 'meditation', name: '瞑想', top: "86%", left: "69%", width: "28%", height: "11%" }
+    { id: 'fortune', name: '占い番地', top: "15%", left: "5%", width: "28%", height: "12%" },
+    { id: 'healing', name: '癒やし番地', top: "12%", left: "70%", width: "25%", height: "10%" },
+    { id: 'shop', name: 'ショップ番地', top: "47%", left: "4.5%", width: "32%", height: "12%" },
+    { id: 'counseling', name: 'カウンセリング番地', top: "55%", left: "72%", width: "25%", height: "12%" },
+    { id: 'meditation', name: '瞑想番地', top: "86%", left: "69%", width: "28%", height: "11%" }
   ],
   pc: [
     { id: 'fortune', name: '占い番地', top: "12%", left: "6%", width: "17%", height: "19%" },
