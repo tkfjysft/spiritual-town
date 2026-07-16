@@ -1,7 +1,7 @@
 ---
 import siteData from '@/data/site.json';
 ---
-<footer class="bg-[#fdfbf7] border-t border-[#ece8e1] py-12 mt-16">
+<footer class="bg-[#fdfbf7] border-t border-[#ece8e1] pt-12 mt-16">
   <div class="max-w-4xl mx-auto px-6 md:flex justify-between gap-8">
     <div class="pb-12">
       <h3 class="font-serif text-[#4a423d] font-bold mb-4">{siteData.title}</h3>
@@ -11,7 +11,7 @@ import siteData from '@/data/site.json';
     </div>
 <div>
   <h3 class="font-serif text-[#4a423d] font-bold mb-4">メニュー</h3>
-  <ul class="space-y-2 text-sm text-[#7a726b] md:flex gap-4">
+  <ul class="space-y-2 text-sm text-[#7a726b] sm:flex gap-4">
     {siteData.navigation.links.map((link) => (
       <li>
         <a href={link.url} class="hover:text-[#4a423d] transition-colors">
@@ -23,15 +23,27 @@ import siteData from '@/data/site.json';
 </div>
   </div>
 
-<div class="px-40">
-    <ul class="flex justify-center gap-8 text-sm text-stone-500 mt-6 border-y-1 border-slate-200 py-6">
+
+  		<div class="flex flex-wrap justify-end gap-6 mt-6 pt-4 border-t-1 border-slate-200 px-[5vw] sm:px-40">
+			<div class="flex items-center gap-8">
+				
+				{/* Instagram */}
+				<a href="https://www.instagram.com/spi_town?utm_source=qr" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram text-2xl text-stone-500"></i></a>
+				{/* LINE */}
+				<a href="https://lin.ee/wsdI1Xn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-line text-2xl text-stone-500"></i></a>
+			</div>
+		</div>
+		
+
+<div class="px-[5vw] sm:px-40">
+    <ul class="flex justify-end gap-8 text-sm text-stone-500 mt-2 border-b-1 border-slate-200 py-6">
         <li><a href="/privacy-policy">プライバシーポリシー</a></li>
         <li><a href="/terms">免責事項</a></li>
     </ul>
 </div>
 
 
-      <div class="text-center text-sm text-[#7a726b] mt-6">
+      <div class="text-center text-sm bg-[#7a726b] text-white py-6">
       <p>&copy; {new Date().getFullYear()} Spiritual Town</p>
     </div>
 </footer>

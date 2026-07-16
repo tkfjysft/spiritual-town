@@ -1,6 +1,8 @@
 ---
 // 1. スタイルの読み込みとデータの読み込み
 import '../../styles/global.css';
+import Layout from '@/layouts/Layout.astro';
+import { Image } from 'astro:assets';
 
 import siteData from '@/data/site.json';
 import spotsData from '@/data/common/spots.json';
@@ -30,38 +32,30 @@ const bgGradients = {
 const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
 ---
 
-<html lang="ja">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{currentCategory.title} | {siteData.title}</title>
-    </head>
-    <body class="bg-slate-50 antialiased pt-16">
-        
-        <!-- <nav class="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-50">
-            <div class="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
-                <a href="/" class="text-xl font-bold text-slate-800 tracking-wider hover:opacity-80 transition-opacity">
-                    {siteData.title}
-                </a>
-                <a href="/" class="text-sm font-semibold text-teal-800 hover:text-teal-700 transition-colors">
-                    ← 街のマップに戻る
-                </a>
-            </div>
-        </nav> -->
-                <Header />
+<Layout title="占い番地">
 
-        <div class={`w-full py-24 md:py-32 ${currentBg} text-white text-center px-4 shadow-sm relative overflow-hidden`}>
-            <div class="max-w-3xl mx-auto relative z-10">
-                <h1 class="text-3xl md:text-5xl font-extrabold tracking-widest mb-4 drop-shadow-sm">
-                    {currentCategory.title}
-                </h1>
-                <p class="text-white/90 text-sm md:text-lg max-w-xl mx-auto leading-relaxed tracking-wide font-medium">
-                    {currentCategory.description}
-                </p>
-            </div>
-            <div class="absolute inset-0 bg-black/5 pointer-events-none"></div>
-        </div>
-        
+<div class={`w-full py-18 md:py-24 md:mt-8 ${currentBg} text-white text-center px-4 shadow-sm relative overflow-hidden`}>
+    
+    <div class="absolute inset-0 z-0">
+        <img 
+          src={`/${id}.png`} 
+          alt="Spiritual Town" 
+          class="w-full h-full object-cover opacity-15"
+          loading="eager" 
+        />
+    </div>
+
+    <div class="max-w-3xl mx-auto relative z-10">
+        <h1 class="text-3xl md:text-5xl font-extrabold tracking-widest mb-4 drop-shadow-sm">
+            {currentCategory.title}
+        </h1>
+        <p class="text-white/90 text-sm md:text-lg max-w-xl mx-auto leading-relaxed tracking-wide font-medium">
+            {currentCategory.description}
+        </p>
+    </div>
+
+    <div class="absolute inset-0 bg-black/20 pointer-events-none z-[1]"></div>
+</div>        
         
         
         <main class="max-w-4xl mx-auto px-4 py-12">
@@ -118,8 +112,4 @@ const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
             </div>
         </main>
 
-        <footer class="text-center py-8 text-sm text-slate-400 border-t border-slate-200/60 mt-12">
-            <p>{siteData.copyright}</p>
-        </footer>
-    </body>
-</html>
+	</Layout>
