@@ -1,0 +1,20 @@
+{
+  "title": "お知らせ",
+  "subtitle": "ご登録いただいた、今話題の素敵なウェブサイトをご紹介します。",
+  "items": [
+    {
+      "date": "2026/7/14",
+      "name": "「一樂 迦哩無 公式サイト」様が参加しました",
+      "description": "リニューアルオープンしました。",
+      "image": "/thum/kalina-ichiraku.com.avif",
+      "url": "https://kalina-ichiraku.com/"
+    },
+    {
+      "date": "2026/7/14",
+      "name": "「Kalinart」様が参加しました",
+      "description": "リニューアルオープンしました。",
+      "image": "/thum/kalinart.base.shop.avif",
+      "url": "https://kalinart.base.shop/"
+    }
+  ]
+}

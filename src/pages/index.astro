@@ -8,6 +8,7 @@ import navData from '../data/navigation.json';
 import heroData from '../data/hero.json';
 import categoriesData from '../data/categories.json';
 import featuredData from '../data/featuredSpots.json';
+import newsDate from '../data/news.json';
 import applicationData from '../data/application.json';
 import Header from '../components/Header.astro';
 import { DESCRIPTION } from '../data/site';
@@ -65,7 +66,7 @@ import { DESCRIPTION } from '../data/site';
 
 
             <!-- 新着 -->
-<section id="featured" class="mb-24 py-16 w-full bg-white">
+<!-- <section id="featured" class="mb-24 py-16 w-full bg-white">
     <div class="text-center mb-12">
         <h2 class="text-2xl md:text-3xl font-bold text-amber-900 mb-3">
             {featuredData.title}
@@ -105,7 +106,63 @@ import { DESCRIPTION } from '../data/site';
             </div>
         ))}
     </div>
+</section> -->
+
+
+
+<section id="featured" class="mb-24 py-16 w-full bg-white">
+    <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-amber-900 mb-3">
+            {newsDate.title}
+        </h2>
+        <p class="text-sm text-slate-600 tracking-wide">{newsDate.subtitle}</p>
+    </div>
+    
+<div class="grid grid-cols-1 md:grid-cols-1 gap-8 max-w-4xl mx-auto px-6">
+    {newsDate.items.map((spot) => (
+        <div class="bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.1)] flex flex-col group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+            <div class="h-3 bg-gradient-to-r from-pink-200 via-sky-200 to-amber-200 rounded-t-3xl"></div>
+            
+            <div class="p-8 flex-1 flex flex-col md:flex-row gap-8">
+                
+                <div class="web-thum md:w-1/3 shrink-0">
+                    <a href={spot.url} class="block h-full hover:opacity-80 transition-opacity" target="_blank" rel="noopener noreferrer">
+<img 
+    src={spot.image && spot.image.trim() !== "" ? spot.image : "/thum/nothum.avif"} 
+    alt={spot.name}
+    loading="eager" 
+    fetchpriority="high"
+    class="w-full h-full aspect-[4/3] object-cover rounded-2xl" 
+/>
+                    </a>
+                </div>
+
+                <div class="web-detail md:w-2/3 flex flex-col">
+                    <span class="text-[11px] font-bold text-sky-600 uppercase tracking-widest mb-3 block bg-sky-50 px-2 py-1 rounded-full w-fit">
+                        {spot.date}
+                    </span>
+                    <h3 class="text-xl font-bold text-amber-900 mb-4">
+                        {spot.name}
+                    </h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-8 flex-1">
+                        {spot.description}
+                    </p>
+                    
+                    <div class="flex items-center justify-between pt-6 border-t border-amber-50 gap-2">
+                        <a href={spot.url} class="text-xs font-bold bg-amber-200 text-amber-900 px-4 py-2 rounded-full hover:bg-amber-300 transition-all duration-200 shadow-sm whitespace-nowrap" target="_blank" rel="noopener noreferrer">
+                            詳細を見る
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    ))}
+</div>
 </section>
+
+
+
+
 
 
 
