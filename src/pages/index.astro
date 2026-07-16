@@ -1,30 +1,21 @@
 ---
 // 1. スタイルと動くマップコンポーネントを読み込み
 import '../styles/global.css';
-import SpiritualTown from '../components/SpiritualTown.tsx';
+import Layout from '../layouts/Layout.astro';
+import SpiritualTown from '@/components/SpiritualTown.tsx';
+import Header from '@/components/Header.astro';
 
 // 2. 分割したJSONデータをそれぞれ読み込み
-import navData from '../data/navigation.json';
-import heroData from '../data/hero.json';
-import categoriesData from '../data/categories.json';
-import featuredData from '../data/featuredSpots.json';
-import newsDate from '../data/news.json';
-import applicationData from '../data/application.json';
-import Header from '../components/Header.astro';
-import { DESCRIPTION } from '../data/site';
+import siteData from '@/data/site.json';
+
+
+import categoriesData from '@/data/common/categories.json';
+// import featuredData from '@/data/index/featuredSpots.json';
+import newsDate from '@/data/index/news.json';
+import applicationData from '@/data/index/application.json';
 ---
 
-<html lang="ja" class="scroll-smooth">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="description" content={ DESCRIPTION }>
-        <title>{heroData.siteTitle}</title>
-    </head>
-    <body class="bg-slate-50 antialiased pt-16">
-        
-        <!-- グローバルナビゲーション（ヘッダー） -->
-        <Header />
+<Layout title="ホーム">
 
         <main class="mx-auto py-8">
             
@@ -32,8 +23,8 @@ import { DESCRIPTION } from '../data/site';
             <header class="text-center mb-16">
                 <h1>
 					<img 
-					src={heroData.titleImage} 
-					alt={heroData.title}
+					src={siteData.titleImage} 
+					alt={siteData.title}
 					fetchpriority="high"
 					width="542" 
 					height="600" 
@@ -43,9 +34,9 @@ import { DESCRIPTION } from '../data/site';
 					/>
                 </h1>
                 <p class="text-lg md:text-xl text-slate-500 font-medium tracking-wide">
-                    			{heroData.subtitle.split('、')[0]}、
+                    			{siteData.subtitle.split('、')[0]}、
 			<span class="block sm:inline">
-				{heroData.subtitle.split('、')[1]}
+				{siteData.subtitle.split('、')[1]}
 			</span>
                 </p>
             </header>
@@ -53,7 +44,7 @@ import { DESCRIPTION } from '../data/site';
             <!-- イントロダクション（説明文）部分 -->
             <section class="bg-white border border-slate-100/80 shadow-md shadow-slate-100 p-8 rounded-3xl text-center leading-relaxed text-slate-600 mb-20 relative mx-[2vw] md:mx-10 lg:mx-auto lg:max-w-3xl">
                 <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal-50 text-teal-700 text-xs font-bold px-4 py-1 rounded-full uppercase tracking-widest">Welcome</div>
-                <p class="text-base md:text-lg text-left">{heroData.introText}</p>
+                <p class="text-base md:text-lg text-left">{siteData.description}</p>
             </section>
 
             <!-- メイン機能（街のマップ）部分 -->
@@ -224,18 +215,12 @@ import { DESCRIPTION } from '../data/site';
 </section>
 
     <a 
-      href={navData.links[5].url} target="_blank" rel="noopener noreferrer"
+      href={siteData.navigation.links[5].url} target="_blank" rel="noopener noreferrer"
       class="flex items-center justify-center px-8 py-4 my-10 bg-pink-100 text-amber-900 font-bold rounded-full hover:bg-amber-300 transition-all shadow-md hover:shadow-lg mx-[2vw] md:mx-10 lg:mx-20"
     >
-      {navData.links[5].label}
+      {siteData.navigation.links[5].label}
     </a>
 
 
-            <!-- フッター部分 -->
-            <footer class="text-center py-8 text-sm text-slate-400 border-t border-slate-200/60">
-                <p>{navData.copyright}</p>
-            </footer>
-
         </main>
-    </body>
-</html>
+	</Layout>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import categoriesData from '../data/categories.json';
+import categoriesData from '@/data/common/categories.json';
 
 interface ButtonConfig {
   id: string;

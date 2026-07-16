@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import aboutData from '@/data/about/about.json';
+import { Image } from 'astro:assets';
+
+---
+
+<Layout title={aboutData.pageTitle}>
+  <article class="max-w-4xl mx-auto py-16 px-6 bg-[#fdfbf7] text-[#5c544d]">
+    
+    <section class="flex items-center justify-center mx-auto mb-16">
+      <div class="rounded-2xl overflow-hidden shadow-md border border-gray-300 bg-white p-2">
+        <Image 
+          src={aboutData.image} 
+          alt="Spiritual Town" 
+          width={1408} 
+          height={768}
+          class="rounded-xl saturate-[1.2] contrast-[1.05]" 
+        />
+      </div>
+    </section>
+
+    <section class="text-center mb-16">
+      <h1 class="text-4xl font-serif text-[#4a423d] mb-6">{aboutData.hero.title}</h1>
+      <p class="text-lg leading-relaxed text-[#7a726b] max-w-2xl mx-auto">
+        {aboutData.hero.description}
+      </p>
+    </section>
+
+    <section class="mb-16 bg-white p-10 rounded-2xl border border-gray-300 shadow-sm p-8">
+      <h2 class="text-2xl font-serif text-amber-900 mb-6 text-center">
+        {aboutData.sections[0].title}
+      </h2>
+      <p class="leading-loose text-center text-lg text-[#7a726b]">
+        {aboutData.sections[0].content}
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-serif text-[#4a423d] mb-10 text-center">
+        {aboutData.sections[1].title}
+      </h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        {aboutData.sections[1].features.map((item) => (
+          <div class="bg-white p-6 rounded-xl border border-gray-300 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="text-lg font-bold text-[#4a423d] mb-3">{item.title}</h3>
+            <p class="text-[#7a726b] text-sm leading-relaxed">{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </article>
+</Layout>
