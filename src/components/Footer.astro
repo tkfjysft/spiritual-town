@@ -1,6 +1,37 @@
 ---
 import siteData from '@/data/site.json';
 ---
-<footer class="text-center py-8 text-sm text-slate-400 border-t border-slate-200/60 mt-12">
-    <p>{siteData.copyright}</p>
+<footer class="bg-[#fdfbf7] border-t border-[#ece8e1] py-12 mt-16">
+  <div class="max-w-4xl mx-auto px-6 md:flex justify-between gap-8">
+    <div class="pb-12">
+      <h3 class="font-serif text-[#4a423d] font-bold mb-4">{siteData.title}</h3>
+      <p class="text-sm text-[#7a726b] leading-relaxed">
+        心と体のバランスを整え、<br>明日をもっと前向きに。
+      </p>
+    </div>
+<div>
+  <h3 class="font-serif text-[#4a423d] font-bold mb-4">メニュー</h3>
+  <ul class="space-y-2 text-sm text-[#7a726b] md:flex gap-4">
+    {siteData.navigation.links.map((link) => (
+      <li>
+        <a href={link.url} class="hover:text-[#4a423d] transition-colors">
+          {link.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+  </div>
+
+<div class="px-40">
+    <ul class="flex justify-center gap-8 text-sm text-stone-500 mt-6 border-y-1 border-slate-200 py-6">
+        <li><a href="/privacy-policy">プライバシーポリシー</a></li>
+        <li><a href="/terms">免責事項</a></li>
+    </ul>
+</div>
+
+
+      <div class="text-center text-sm text-[#7a726b] mt-6">
+      <p>&copy; {new Date().getFullYear()} Spiritual Town</p>
+    </div>
 </footer>
