@@ -19,6 +19,9 @@ const { title, description = siteData.description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <title>{title ? `${title} | ${siteData.title}` : siteData.title}</title>
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/avif" href="/favicon.avif">
+<link rel="icon" type="image/webp" href="/favicon.webp">
   </head>
   <body class="bg-slate-50 antialiased pt-16">
     <Header />
