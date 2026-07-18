@@ -193,7 +193,9 @@ import applicationData from '@/data/index/application.json';
     <p class="text-stone-600 mb-10 text-lg">
       {applicationData.description}
     </p>
-
+    <p class="text-red-400 font-bold mb-10 text-lg">
+      {applicationData.text}
+    </p>
     <ul class="flex flex-col md:flex-row justify-center gap-6 mb-12">
       {applicationData.steps.map((step, index) => (
         <li class="flex items-center justify-center gap-2">
