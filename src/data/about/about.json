@@ -18,6 +18,14 @@
         { "title": "厳選された空間", "description": "癒しや導きを専門とする、信頼できるサイトのみを掲載しています。" },
         { "title": "日々のヒント", "description": "占いや瞑想を通じて、今のあなたに必要な前向きなヒントを受け取ってください。" }
       ]
+    },
+	{
+      "id": "sns",
+      "title": "スピリチュアルタウンのSNSについて",
+      "features": [
+        { "title": "Instagramでのご紹介", "icon": "fa-brands fa-instagram", "url": "https://www.instagram.com/spi_town?utm_source=qr", "qr": "qr_insta.png", "description": "スピリチュアルタウンへサイト登録をしていただきましたら、スピリチュアルタウンのインスタグラムの投稿で紹介させていただきます" },
+        { "title": "LINEでのお知らせ", "icon": "fa-brands fa-line", "url": "https://lin.ee/wsdI1Xn", "qr": "qr_line.png", "description": "定期的にお知らせやお得な情報などを発信します。" }
+      ]
     }
   ],
   "image": "/town.avif"
