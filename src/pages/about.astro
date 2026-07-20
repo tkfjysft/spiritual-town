@@ -48,7 +48,7 @@ import { Image } from 'astro:assets';
         {aboutData.sections[1].features.map((item) => (
           <div class="bg-white p-6 rounded-xl border border-gray-300 shadow-sm hover:shadow-md transition-shadow">
             <h3 class="text-lg font-bold text-[#4a423d] mb-3">{item.title}</h3>
-            <p class="text-[#7a726b] text-sm leading-relaxed">{item.description}</p>
+            <p class="text-[#7a726b] text-base leading-relaxed">{item.description}</p>
           </div>
         ))}
       </div>
@@ -70,7 +70,7 @@ import { Image } from 'astro:assets';
 			<div class="text-center pb-4">
 				<a href={item.url} target="_blank" rel="noopener noreferrer"><i class={`${item.icon} text-6xl text-stone-500`}></i></a>
 				</div>
-            <p class="text-[#7a726b] text-sm leading-relaxed">{item.description}</p>
+            <p class="text-[#7a726b] text-base leading-relaxed">{item.description}</p>
 			<div class="w-30 flex items-center justify-center mx-auto pt-4">
 				<img src={`/${item.qr}`} alt={item.url} />
 			</div>

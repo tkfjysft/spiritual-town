@@ -25,7 +25,7 @@ import siteData from '@/data/site.json';
 
         
         return (
-            <a href={link.url} class="flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-teal-800 transition-colors"
+            <a href={link.url} class="flex items-center gap-1 text-base font-medium text-slate-600 hover:text-teal-800 transition-colors"
                 onclick="document.getElementById('drawer').classList.add('translate-x-full')"
                 target={isExternal ? "_blank" : undefined}
                 rel={isExternal ? "noopener noreferrer" : undefined}

@@ -95,20 +95,20 @@ const SpiritualTown = () => {
               {activeData.name}へようこそ
             </h2>
             
-            <p className="text-slate-500 text-sm leading-relaxed mb-6">
+            <p className="text-slate-500 text-base leading-relaxed mb-6">
               {activeData.description}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button 
-                className="px-4 py-2.5 text-sm font-medium text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors order-2 sm:order-1"
+                className="px-4 py-2.5 text-base font-medium text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors order-2 sm:order-1"
                 onClick={() => setSelectedCategory(null)}
               >
                 街に戻る
               </button>
               <a 
                 href={`/category/${activeData.id}`}
-                className="px-5 py-2.5 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md shadow-teal-600/10 transition-colors inline-flex items-center justify-center gap-1 order-1 sm:order-2"
+                className="px-5 py-2.5 text-base font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md shadow-teal-600/10 transition-colors inline-flex items-center justify-center gap-1 order-1 sm:order-2"
               >
                 このエリアを散策する →
               </a>

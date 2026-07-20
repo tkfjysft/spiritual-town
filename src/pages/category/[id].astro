@@ -49,7 +49,7 @@ const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
         <h1 class="text-3xl md:text-5xl font-extrabold tracking-widest mb-4 drop-shadow-sm">
             {currentCategory.title}
         </h1>
-        <p class="text-white/90 text-sm md:text-lg max-w-xl mx-auto leading-relaxed tracking-wide font-medium">
+        <p class="text-white/90 text-base md:text-lg max-w-xl mx-auto leading-relaxed tracking-wide font-medium">
             {currentCategory.description}
         </p>
     </div>
@@ -58,7 +58,7 @@ const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
 </div>        
         
         
-        <main class="max-w-4xl mx-auto px-4 py-12">
+        <main class="max-w-7xl mx-auto px-6 md:px-16 py-12">
             <div class="space-y-6">
 {currentCategory.spots.map((spot) => (
     <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 md:p-8 flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow duration-200">
@@ -74,7 +74,7 @@ const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
                 alt={spot.name}
                 loading="eager" 
                 fetchpriority="high"
-                class="w-full aspect-[4/3] object-cover rounded-2xl" 
+                class="w-full aspect-[4/3] object-cover rounded-2xl shadow-md" 
             />
 			</a>
         </div>
@@ -87,7 +87,7 @@ const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
 				<h3 class="text-lg font-bold text-slate-800 mb-2">
                     {spot.subtitle}
                 </h3>
-                <p class="text-slate-500 text-sm leading-relaxed mb-4">
+                <p class="text-slate-500 text-base leading-relaxed mb-4">
                     {spot.description}
                 </p>
                 <div class="flex flex-wrap gap-1.5 mb-6">
