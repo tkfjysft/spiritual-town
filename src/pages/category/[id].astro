@@ -70,7 +70,7 @@ const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
                     rel="noopener noreferrer" 
                 >
             <img 
-                src={`/thum/${ spot.image && spot.image.trim() !== "" ? spot.image : "/thum/nothum.avif"} `}
+                src={`/thum/${spot.image && spot.image.trim().length > 0 ? spot.image : "nothum.avif"} `}
                 alt={spot.name}
                 loading="eager" 
                 fetchpriority="high"
@@ -81,9 +81,12 @@ const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
 
         <div class="web-detail md:w-[70%] flex flex-col justify-between">
             <div class="flex-1">
-                <h2 class="text-xl font-bold text-slate-800 mb-2">
+                <h2 class={`text-xl font-bold text-white mb-2 w-full ${currentBg} px-4 shadow-sm relative overflow-hidden`}>
                     {spot.name}
                 </h2>
+				<h3 class="text-lg font-bold text-slate-800 mb-2">
+                    {spot.subtitle}
+                </h3>
                 <p class="text-slate-500 text-sm leading-relaxed mb-4">
                     {spot.description}
                 </p>
