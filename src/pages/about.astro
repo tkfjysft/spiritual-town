@@ -31,13 +31,30 @@ import { Image } from 'astro:assets';
     <div class="max-w-4xl mx-auto">
 
 
-    <section class="mb-16 bg-white p-10 rounded-2xl border border-gray-300 shadow-sm p-8">
+    <section id={aboutData.sections[3].id} class="mb-16 bg-white p-10 rounded-2xl border border-gray-300 shadow-sm p-8">
       <h2 class="text-2xl font-serif text-amber-900 mb-6 text-center">
         {aboutData.sections[0].title}
       </h2>
       <p class="leading-loose text-center text-lg text-[#7a726b]">
         {aboutData.sections[0].content}
       </p>
+    </section>
+
+    <section class="mb-16 bg-white p-10 rounded-2xl border border-gray-300 shadow-sm p-8">
+      <h2 class="text-2xl font-serif text-amber-900 mb-6 text-center">
+        {aboutData.sections[3].title}
+      </h2>
+      <p class="leading-loose text-center text-lg text-[#7a726b]">
+        {aboutData.sections[3].content}
+      </p>
+	  <h3 class="text-2xl text-amber-900 mt-6 mb-6 text-center">{aboutData.sections[3].subTitle}</h3>
+	  <ul class="text-center">
+        {aboutData.sections[3].list.map((item) => (
+            <li class="my-2 font-bold">{item.text}</li>
+        ))}
+	  </ul>
+	  <p class="text-center">{aboutData.sections[3].content2}</p>
+	  <p class="mt-6">{aboutData.sections[3].content3}</p>
     </section>
 
     <section>

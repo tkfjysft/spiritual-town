@@ -26,6 +26,19 @@
         { "title": "Instagramでのご紹介", "icon": "fa-brands fa-instagram", "url": "https://www.instagram.com/spi_town?utm_source=qr", "qr": "qr_insta.avif", "description": "スピリチュアルタウンへサイト登録をしていただきましたら、スピリチュアルタウンのインスタグラムの投稿で紹介させていただきます" },
         { "title": "LINEでのお知らせ", "icon": "fa-brands fa-line", "url": "https://lin.ee/wsdI1Xn", "qr": "qr_line.avif", "description": "定期的にお知らせやお得な情報などを発信します。" }
       ]
+    },
+	{
+      "id": "freeReason",
+      "title": "なぜ無料で掲載できるのか",
+      "content": "現在は基本的なサービスを提供させていただいており、それらはこの先ずっと完全無料で使っていただけます。",
+	  "subTitle":  "スピリチュアルタウンはこれからますます進化していきます！",
+	"list": [
+		{"text": "新たなサービス"},
+	  	{"text": "より集客に役立つサービス"},
+		{"text": "アクセスアップにつながるサービス"}
+	  ],
+	  "content2": "を追加予定です。",
+	  "content3": "新たな追加サービスは有料とさせて頂く予定です。もちろん、無料利用のままでも引き続き「スピリチュアルタウン」をご利用いただけます。"
     }
   ],
   "image": "/town.avif"
