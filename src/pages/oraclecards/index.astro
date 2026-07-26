@@ -1,0 +1,71 @@
+---
+// src/pages/oraclecards/index.astro
+import { fetchOracleCards } from '../../utils/loadOracleCards';
+import Layout from '@/layouts/Layout.astro';
+
+// スプレッドシートから全カードを取得
+const cards = await fetchOracleCards();
+---
+
+<Layout title="オラクルカード一覧 | Spiritual Town">
+  <main class="max-w-[1000px] xl:max-w-[1600px] mx-auto pt-28 pb-16 px-4 sm:px-6">
+    
+    {/* パンくずリスト */}
+    <nav class="mb-8 text-sm text-gray-500" aria-label="パンくずリスト">
+      <ol class="flex items-center space-x-2">
+        <li>
+          <a href="/" class="hover:text-amber-600 transition-colors">ホーム</a>
+        </li>
+        <li><span class="text-gray-300">/</span></li>
+        <li>
+          <span class="text-gray-700 font-medium">オラクルカード一覧</span>
+        </li>
+      </ol>
+    </nav>
+
+    {/* ページタイトル */}
+    <header class="text-center mb-12">
+      <h1 class="text-3xl font-bold text-gray-900 mb-3">
+        ✨ オラクルカード一覧
+      </h1>
+      <p class="text-gray-600">
+        スピリチュアルタウンの全オラクルカード（全{cards.length}枚）をご覧いただけます。
+      </p>
+    </header>
+
+    {/* カード一覧グリッド */}
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-6">
+      {cards.map((card) => (
+        <a 
+          href={`/oraclecards/${card.id}`} 
+          class="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 flex flex-col items-center text-center transform hover:-translate-y-1"
+        >
+          {/* 画像コンテナ：object-contain に変更して画像が切れないように調整 */}
+          <div class="mb-3 rounded-xl aspect-[2/3] w-full bg-amber-50/30 flex items-center justify-center p-2 overflow-hidden">
+            <img 
+              src={`/oraclecards/${card.image}`} 
+              alt={card.title_jp} 
+              class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
+          </div>
+          <span class="text-xs text-gray-400 mb-1">No. {card.id}</span>
+          <h2 class="text-sm font-bold text-gray-800 group-hover:text-amber-600 transition-colors line-clamp-1">
+            {card.title_jp}
+          </h2>
+        </a>
+      ))}
+    </div>
+
+    {/* ホームに戻るボタン */}
+    <div class="text-center mt-14">
+      <a 
+        href="/" 
+        class="inline-block bg-gray-800 hover:bg-gray-900 text-white font-bold px-8 py-3 rounded-full transition-colors shadow-sm"
+      >
+        ホームに戻る
+      </a>
+    </div>
+
+  </main>
+</Layout>

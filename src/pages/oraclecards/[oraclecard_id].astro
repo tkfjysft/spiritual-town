@@ -1,0 +1,145 @@
+---
+// src/pages/oraclecards/[oraclecard_id].astro
+import { fetchOracleCards, type OracleCard } from '../../utils/loadOracleCards';
+import Layout from '@/layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const cards = await fetchOracleCards();
+
+  return cards.map((card) => {
+    return {
+      params: { oraclecard_id: card.id },
+      props: { card },
+    };
+  });
+}
+
+interface Props {
+  card: OracleCard;
+}
+
+const { card } = Astro.props;
+
+if (!card) {
+  return Astro.redirect('/404');
+}
+
+// スラッグ（英語）から日本語の表示名に変換するマップ
+const categoryNameMap: Record<string, string> = {
+  fortune: "占い番地",
+  healing: "ヒーリング番地",
+  shop: "ショップ番地",
+  counseling: "カウンセリング番地",
+  meditation: "瞑想番地",
+};
+
+// card.categoryName が英語スラッグ（例: "fortune"）なので、対応する日本語名を取得する（登録されていない場合はそのまま表示）
+const categorySlug = card.categoryName;
+const categoryDisplayName = categorySlug ? (categoryNameMap[categorySlug] || categorySlug) : "";
+---
+
+<Layout title={`${card.title_jp} | Spiritual Town オラクルカード`}>
+  <div class="max-w-[720px] mx-auto pt-10 sm:pt-20 pb-12 px-4 sm:px-6">
+    
+    {/* メインのカード詳細コンテナ */}
+    <div class="bg-white p-6 sm:p-10 rounded-3xl shadow-sm border border-gray-100">
+      
+{/* パンくずリスト */}
+      <nav class="mb-8 text-sm text-gray-500" aria-label="パンくずリスト">
+        <ol class="flex items-center space-x-2 flex-wrap">
+          <li>
+            <a href="/" class="hover:text-amber-600 transition-colors">ホーム</a>
+          </li>
+          <li><span class="text-gray-300">/</span></li>
+          <li>
+            <a href="/oraclecards/" class="hover:text-amber-600 transition-colors">オラクルカード一覧</a>
+          </li>
+          <li><span class="text-gray-300">/</span></li>
+          <li>
+            <span class="text-gray-700 font-medium truncate max-w-[150px] sm:max-w-[200px] inline-block align-bottom">{card.title_jp}</span>
+          </li>
+        </ol>
+      </nav>
+
+      
+      {/* カード画像エリア */}
+      <div class="flex justify-center mb-10">
+        <img 
+          src={`/oraclecards/${card.image}`} 
+          alt={card.title_jp} 
+          style="max-width: 280px; width: 100%; height: auto;"
+          class="block rounded-xl shadow-lg"
+        />
+      </div>
+
+      {/* タイトルセクション */}
+      <header class="text-center mb-10 border-b border-gray-100 pb-8">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 tracking-wide">
+          {card.title_jp}
+        </h1>
+        <p class="text-base sm:text-lg text-gray-600 italic font-serif m-0">
+          {card.title_en}
+        </p>
+
+        {/* カテゴリ & 推奨アイテム */}
+        <div class="flex justify-center gap-3 mt-6 flex-wrap">
+          {categorySlug && (
+            <a 
+              href={`/category/${categorySlug}`} 
+              class="bg-gray-100 hover:bg-amber-50 hover:text-amber-700 text-gray-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
+            >
+              📂 {categoryDisplayName}
+            </a>
+          )}
+          {card.recommendedItem && (
+            <span class="bg-indigo-50 text-indigo-700 px-4 py-1.5 rounded-full text-sm font-medium">
+              ✨ #{card.recommendedItem}
+            </span>
+          )}
+        </div>
+      </header>
+
+      {/* 各メッセージセクション */}
+      <section class="mb-8 p-6 sm:p-8 rounded-2xl bg-[#faf8f5] border-l-4 border-amber-400">
+        <h2 class="text-lg font-bold text-gray-900 mt-0 mb-3 flex items-center gap-2">
+          <span class="text-amber-500">🌸</span> {card.messageTitle_jp || "メッセージ"}
+        </h2>
+        <p class="leading-relaxed text-gray-700 whitespace-pre-wrap m-0 text-base">
+          {card.message_jp}
+        </p>
+      </section>
+
+      {card.explanation_jp && (
+        <section class="mb-8 p-6 sm:p-8 rounded-2xl bg-white border border-gray-100">
+          <h2 class="text-lg font-bold text-gray-900 mt-0 mb-3 flex items-center gap-2">
+            <span class="text-amber-500">📖</span> {card.explanationTitle_jp || "解説"}
+          </h2>
+          <p class="leading-relaxed text-gray-700 whitespace-pre-wrap m-0 text-base">
+            {card.explanation_jp}
+          </p>
+        </section>
+      )}
+
+      {card.action_jp && (
+        <section class="mb-6 p-6 sm:p-8 rounded-2xl bg-[#f0fdf4] border-l-4 border-emerald-400">
+          <h2 class="text-lg font-bold text-emerald-900 mt-0 mb-3 flex items-center gap-2">
+            <span class="text-emerald-500">🍀</span> {card.actionTitle_jp || "今日のアクション"}
+          </h2>
+          <p class="leading-relaxed text-[#166534] whitespace-pre-wrap m-0 text-base">
+            {card.action_jp}
+          </p>
+        </section>
+      )}
+
+      <div class="text-center mt-10">
+        <a 
+          href="/" 
+          class="inline-block bg-gray-800 hover:bg-gray-900 text-white font-bold px-8 py-3 rounded-full transition-colors"
+        >
+          ホームに戻る
+        </a>
+      </div>
+
+    </div>
+  </div>
+</Layout>

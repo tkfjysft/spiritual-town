@@ -1,0 +1,50 @@
+---
+// src/components/OracleCard.astro
+import type { OracleCard } from '../utils/loadOracleCards';
+
+// 親から受け取るデータの型定義
+interface Props {
+  card: OracleCard;
+}
+
+const { card } = Astro.props;
+---
+
+<div style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: sans-serif;">
+  
+  {/* 画像表示 */}
+  <div style="text-align: center; margin-bottom: 20px;">
+    <img 
+      src={`/oraclecards/${card.image}`} 
+      alt={card.title_jp} 
+      style="max-width: 300px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"
+    />
+  </div>
+
+  {/* カードタイトル */}
+  <h2 style="font-size: 1.5rem; text-align: center;">
+    {card.title_jp} 
+    <span style="font-size: 0.8rem; color: #666; display: block; font-weight: normal;">{card.title_en}</span>
+  </h2>
+  
+  {/* カテゴリ ＆ recommendedItem */}
+  <div style="display: flex; justify-content: center; gap: 10px; margin: 20px 0;">
+    {card.categoryName && (
+      <span style="background: #f0f0f0; padding: 6px 12px; border-radius: 20px; font-size: 0.9rem;">
+        📂 {card.categoryName}
+      </span>
+    )}
+    {card.recommendedItem && (
+      <span style="background: #eef2ff; color: #4f46e5; padding: 6px 12px; border-radius: 20px; font-size: 0.9rem;">
+        🏷️ #{card.recommendedItem}
+      </span>
+    )}
+  </div>
+
+  {/* メッセージ本文 */}
+  <section style="margin-top: 30px; background: #fafafa; padding: 20px; border-radius: 8px;">
+    <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: #333;">{card.messageTitle_jp}</h3>
+    <p style="line-height: 1.6; color: #444; white-space: pre-wrap;">{card.message_jp}</p>
+  </section>
+
+</div>
