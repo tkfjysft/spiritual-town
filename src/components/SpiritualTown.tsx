@@ -53,15 +53,25 @@ const SpiritualTown = () => {
   return (
     <div className="relative w-full h-auto overflow-hidden rounded-2xl select-none group/map">
       {/* マップ画像 */}
-      <img 
-        src={isMobile ? "/town-map-mobile.avif" : "/town-map.avif"} 
-        alt="Spiritual Town Map"
-		width={isMobile ? "660" : "1184"} 
-		height={isMobile ? "2201" : "1228"} 
-        className={`w-full h-auto block
-			${isMobile ? "aspect-[660/1184]" : "aspect-[2201/1228]"}
-			`}
-      />
+{/* スマホ用画像（md: で非表示） */}
+<img 
+  src="/town-map-mobile.avif" 
+  alt="Spiritual Town Map"
+  width="660" 
+  height="2201" 
+  className="w-full h-auto block md:hidden aspect-[660/2201]"
+  loading="lazy"
+/>
+
+{/* PC用画像（スマホでは非表示、md: 以上で表示） */}
+<img 
+  src="/town-map.avif" 
+  alt="Spiritual Town Map"
+  width="2201" 
+  height="1228" 
+  className="w-full h-auto hidden md:block aspect-[2201/1228]"
+  loading="lazy"
+/>
 
       {/* クリックエリア ＆ キャプションテキスト */}
       {currentButtons.map((btn, index) => (
