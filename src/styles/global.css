@@ -8,3 +8,8 @@
   font-display: swap; /* ←ここを指定するのがポイントです */
   src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2") format("woff2");
 }
+
+
+html {
+  scroll-behavior: smooth;
+}

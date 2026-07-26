@@ -1,6 +1,7 @@
 ---
 // src/components/OracleDraw.astro
 import { fetchOracleCards } from '../utils/loadOracleCards';
+import siteData from '@/data/site.json';
 
 // 全カードデータを取得（ランダム抽選用）
 const cards = await fetchOracleCards();
@@ -54,7 +55,7 @@ const cardsJson = JSON.stringify(cards);
       </button>
 
       <a 
-        href="/oraclecards/" 
+        href={siteData.navigation.links[2].children[1].url} 
         class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-bold px-8 py-3.5 rounded-full shadow-2xs transition-colors flex items-center justify-center"
       >
         📚 カード一覧を見る

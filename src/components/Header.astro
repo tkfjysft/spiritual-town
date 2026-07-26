@@ -6,88 +6,176 @@ import siteData from '@/data/site.json';
 <nav class="fixed top-0 left-0 right-0 h-16 md:h-24 min-h-[64px] bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-50">
 <div class="max-w-6xl mx-auto h-full px-4 flex items-center justify-between">
     <a href="/" class="flex items-center justify-center h-16 md:h-20 hover:opacity-80 transition-opacity">
-                    <img 
-                src={siteData.navigation.siteNameImage} 
-                alt={siteData.title}
-                loading="eager" 
-                fetchpriority="high"
-                width="300" 
-                height="37" 
-                class="w-[45vw] md:w-70 block aspect-[300/37]" 
-            />
-        </a>
+        <img 
+            src={siteData.navigation.siteNameImage} 
+            alt={siteData.title}
+            loading="eager" 
+            fetchpriority="high"
+            width="300" 
+            height="37" 
+            class="w-[45vw] md:w-70 block aspect-[300/37]" 
+        />
+    </a>
 
-<div class="hidden lg:flex items-center gap-6">
-    {siteData.navigation.links.map((link) => {
-        // アイコン名に対応するコンポーネントを動的に取得
-        const IconComponent = Icons[link.icon as keyof typeof Icons];
-								const isExternal = link.url.startsWith('http');
+    {/* PC用グローバルナビゲーション */}
+    <div class="hidden lg:flex items-center gap-6">
+        {siteData.navigation.links.map((link) => {
+            const IconComponent = Icons[link.icon as keyof typeof Icons];
+            const isExternal = link.url.startsWith('http');
+            const hasChildren = link.children && link.children.length > 0;
 
-        
-        return (
-            <a href={link.url} class="flex items-center gap-1 text-base font-medium text-slate-600 hover:text-teal-800 transition-colors"
-                onclick="document.getElementById('drawer').classList.add('translate-x-full')"
-                target={isExternal ? "_blank" : undefined}
-                rel={isExternal ? "noopener noreferrer" : undefined}
-            >
-                {IconComponent && <IconComponent size={18} />}
-                {link.label}
-            </a>
-        );
-    })}
+            // 1. ホーム用（labelが空の場合）
+            if (link.label === "") {
+                return (
+                    <a href={link.url} class="flex items-center text-slate-600 hover:text-teal-800 transition-colors p-2" aria-label="ホーム">
+                        {IconComponent && <IconComponent size={20} />}
+                    </a>
+                );
+            }
+
+            // 2. 子メニュー（ドロップダウン）がある場合
+            if (hasChildren) {
+                return (
+                    <div class="relative group py-2">
+                        <a 
+                            href={link.url}
+                            class="flex items-center gap-1 text-base font-medium text-slate-600 group-hover:text-teal-800 transition-colors cursor-pointer"
+                        >
+                            {IconComponent && <IconComponent size={18} />}
+                            {link.label}
+                            <Icons.ChevronDown size={14} class="transition-transform group-hover:rotate-180" />
+                        </a>
+                        
+                        {/* ドロップダウンメニュー（ホバーで表示） */}
+                        <div class="absolute top-full left-0 w-max bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-xl shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 translate-y-1 group-hover:translate-y-0">
+                            {link.children.map((child) => {
+                                const ChildIcon = Icons[child.icon as keyof typeof Icons];
+                                return (
+                                    <a 
+                                        href={child.url} 
+                                        class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-teal-800 hover:bg-teal-50/50 transition-colors"
+                                    >
+                                        {ChildIcon && <ChildIcon size={16} />}
+                                        {child.label}
+                                    </a>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            }
+
+            // 3. 通常のリンク（掲載を申し込む、お問い合わせなど）
+            return (
+                <a 
+                    href={link.url} 
+                    class="flex items-center gap-1 text-base font-medium text-slate-600 hover:text-teal-800 transition-colors"
+                    target={isExternal ? "_blank" : undefined}
+                    rel={isExternal ? "noopener noreferrer" : undefined}
+                >
+                    {IconComponent && <IconComponent size={18} />}
+                    {link.label}
+                </a>
+            );
+        })}
+    </div>
+
+    <button id="menu-btn" class="lg:hidden p-2 text-slate-800" aria-label="メニューを開く">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+    </button>
 </div>
+</nav>
 
-        <button id="menu-btn" class="lg:hidden p-2 text-slate-800" aria-label="メニューを開く">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+
+{/* モバイル用ドロワーメニュー */}
+<div id="drawer" class="lg:hidden fixed inset-0 bg-white/95 backdrop-blur-lg z-50 transform translate-x-full transition-transform duration-300 overflow-y-auto">
+    <div class="p-4 flex justify-end">
+        <button id="close-btn" class="p-2 text-slate-800" aria-label="メニューを閉じる">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
         </button>
     </div>
-</nav>
+    <div class="flex flex-col items-center gap-6 px-6 py-6 pb-20">
+        {siteData.navigation.links.map((link) => {
+            const IconComponent = Icons[link.icon as keyof typeof Icons];
+            const isExternal = link.url.startsWith('http');
+            const hasChildren = link.children && link.children.length > 0;
 
-    <div id="drawer" class="lg:hidden fixed inset-0 bg-white z-50 transform translate-x-full transition-transform duration-300">
-        <div class="p-4 flex justify-end">
-            <button id="close-btn" class="p-2 text-slate-800" aria-label="メニューを閉じる">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </div>
-        <div class="flex flex-col items-center gap-8 mt-10">
-            {siteData.navigation.links.map((link) => {
-				        const IconComponent = Icons[link.icon as keyof typeof Icons];
-						const isExternal = link.url.startsWith('http');
+            // ホーム用（labelが空の場合）はスマホでもアイコン付きで表示する
+            if (link.label === "") {
                 return (
-<a 
-                href={link.url} 
-                class="flex items-center gap-2 text-2xl font-medium text-slate-800" 
-                onclick="document.getElementById('drawer').classList.add('translate-x-full')"
-                target={isExternal ? "_blank" : undefined}
-                rel={isExternal ? "noopener noreferrer" : undefined}
-            >
-                {IconComponent && <IconComponent size={24} />}
-                {link.label}
-            </a>
-        );
-    })}
-        </div>
-    </div>
+                    <a 
+                        href={link.url} 
+                        class="drawer-link flex items-center gap-2 text-xl font-medium text-slate-800 hover:text-teal-800 transition-colors"
+                    >
+                        {IconComponent && <IconComponent size={22} />}
+                        <span>ホーム</span>
+                    </a>
+                );
+            }
 
+            if (hasChildren) {
+                return (
+                    <div class="w-full flex flex-col items-center gap-3">
+                        <a href={link.url} class="drawer-link flex items-center gap-2 text-xl font-medium text-slate-800 hover:text-teal-800 transition-colors">
+                            {IconComponent && <IconComponent size={22} />}
+                            {link.label}
+                        </a>
+                        <div class="flex flex-col items-center gap-2 w-full bg-slate-50 py-3 rounded-xl">
+                            {link.children.map((child) => {
+                                const ChildIcon = Icons[child.icon as keyof typeof Icons];
+                                return (
+                                    <a 
+                                        href={child.url} 
+                                        class="drawer-link flex items-center gap-2 text-base font-medium text-slate-600 hover:text-teal-800 py-2"
+                                    >
+                                        {ChildIcon && <ChildIcon size={18} />}
+                                        {child.label}
+                                    </a>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <a 
+                    href={link.url} 
+                    class="drawer-link flex items-center gap-2 text-xl font-medium text-slate-800 hover:text-teal-800 transition-colors"
+                    target={isExternal ? "_blank" : undefined}
+                    rel={isExternal ? "noopener noreferrer" : undefined}
+                >
+                    {IconComponent && <IconComponent size={22} />}
+                    {link.label}
+                </a>
+            );
+        })}
+    </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('menu-btn');
-    const closeBtn = document.getElementById('close-btn');
-    const drawer = document.getElementById('drawer');
+        const btn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const drawer = document.getElementById('drawer');
+        const drawerLinks = document.querySelectorAll('.drawer-link');
 
-    // 開く処理
-    btn?.addEventListener('click', () => {
-        drawer?.classList.remove('translate-x-full');
-    });
+        btn?.addEventListener('click', () => {
+            drawer?.classList.remove('translate-x-full');
+        });
 
-    // 閉じる処理
-    closeBtn?.addEventListener('click', () => {
-        drawer?.classList.add('translate-x-full');
-    });
+        closeBtn?.addEventListener('click', () => {
+            drawer?.classList.add('translate-x-full');
+        });
+
+        drawerLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                drawer?.classList.add('translate-x-full');
+            });
+        });
     });
 </script>

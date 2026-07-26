@@ -28,6 +28,10 @@ const { title, description = siteData.description } = Astro.props;
 
 
 	<script defer src="https://cloud.umami.is/script.js" data-website-id="43f6bba1-d438-4869-8636-201924c6ab9e"></script>
+
+
+
+
   </head>
   <body class="bg-slate-50 antialiased pt-16">
     <Header />
@@ -35,4 +39,21 @@ const { title, description = siteData.description } = Astro.props;
       <slot /> </main>
     <Footer />
   </body>
+
+  	<script>
+  // ページ読み込み時にハッシュ（#mapや#categories）がある場合
+  if (window.location.hash) {
+    // 1. まずブラウザのデフォルトのジャンプ動作を防ぐため、一時的にスクロールを一番上に固定した状態でレンダリングさせる
+    window.scrollTo(0, 0);
+
+    // 2. ページのDOM読み込みが完了した直後に、ターゲット要素へ一瞬で（またはスムーズに）移動させる
+    window.addEventListener('DOMContentLoaded', () => {
+      const targetElement = document.querySelector(window.location.hash);
+      if (targetElement) {
+        // 'auto' にすると一瞬の滞在もなくスーッとその場に現れます
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+</script>
 </html>

@@ -1,0 +1,16 @@
+---
+// src/pages/oraclecards/index.astro
+import { fetchOracleCards } from '../../utils/loadOracleCards';
+import Layout from '@/layouts/Layout.astro';
+import OracleDraw from '@/components/OracleDraw.astro';
+
+// スプレッドシートから全カードを取得
+const cards = await fetchOracleCards();
+---
+
+<Layout title="オラクルカード一覧 | Spiritual Town">
+  <main class="max-w-[1000px] xl:max-w-[1600px] mx-auto pt-28 pb-16 px-4 sm:px-6">
+    
+<OracleDraw />
+  </main>
+</Layout>
