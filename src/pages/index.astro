@@ -32,7 +32,6 @@ import applicationData from '@/data/index/application.json';
 					width="542" 
 					height="600" 
 					class="w-[70vw] md:w-120 mx-auto mb-4"
-					fetchpriority="high" 
 					loading="eager"
 					/>
                 </h1>
@@ -195,8 +194,7 @@ import applicationData from '@/data/index/application.json';
 <img 
     src={spot.image && spot.image.trim() !== "" ? spot.image : "/thum/nothum.avif"} 
     alt={spot.name}
-    loading="eager" 
-    fetchpriority="high"
+    loading="lazy"
     class="w-full h-full aspect-[4/3] object-cover rounded-2xl shadow-md" 
 />
                     </a>
