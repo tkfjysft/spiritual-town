@@ -56,10 +56,10 @@ const SpiritualTown = () => {
       <img 
         src={isMobile ? "/town-map-mobile.avif" : "/town-map.avif"} 
         alt="Spiritual Town Map"
-		width={isMobile ? "1228" : "2201"} 
-		height={isMobile ? "2203" : "1228"} 
+		width={isMobile ? "660" : "1184"} 
+		height={isMobile ? "2201" : "1228"} 
         className={`w-full h-auto block
-			${isMobile ? "aspect-[1228/2203]" : "aspect-[2201/1228]"}
+			${isMobile ? "aspect-[660/1184]" : "aspect-[2201/1228]"}
 			`}
       />
 
