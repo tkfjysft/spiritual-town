@@ -58,8 +58,8 @@ const SpiritualTown = () => {
   src="/town-map-mobile.avif" 
   alt="Spiritual Town Map"
   width="660" 
-  height="2201" 
-  className="w-full h-auto block md:hidden aspect-[660/2201]"
+  height="1184" 
+  className="w-full h-auto block md:hidden aspect-[660/1184]"
   loading="lazy"
 />
 
