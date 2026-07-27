@@ -36,9 +36,15 @@ const categoryNameMap: Record<string, string> = {
 // card.categoryName が英語スラッグ（例: "fortune"）なので、対応する日本語名を取得する（登録されていない場合はそのまま表示）
 const categorySlug = card.categoryName;
 const categoryDisplayName = categorySlug ? (categoryNameMap[categorySlug] || categorySlug) : "";
+
+const cardDescription = card.message_jp 
+  ? `${card.message_jp.slice(0, 100)}...（${card.title_jp}のメッセージと意味）` 
+  : `${card.title_jp}のオラクルカードメッセージと意味をご紹介します。`;
 ---
 
-<Layout title={`${card.title_jp} | Spiritual Town オラクルカード`}>
+<Layout title={`${card.title_jp}のメッセージ・意味 | Spiritual Town オラクルカード`}
+description={cardDescription}
+>
   <div class="max-w-[720px] mx-auto pt-10 sm:pt-20 pb-12 px-4 sm:px-6">
     
     {/* メインのカード詳細コンテナ */}

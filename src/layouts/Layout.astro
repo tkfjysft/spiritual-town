@@ -10,15 +10,42 @@ interface Props {
   description?: string;
 }
 
-const { title, description = siteData.description } = Astro.props;
+
+//meta
+//meta
+import metaData from '@/data/meta.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+// 1. 現在のパスを取得し、末尾のスラッシュをいったん統一する（またはそのまま）
+const rawPath = Astro.url.pathname;
+
+// 末尾のスラッシュを安全に取り除いたキーでも検索できるようにする
+// 例: "/category/fortune/" も "/category/fortune" も両方に対応させる
+const normalizedPath = rawPath.endsWith('/') && rawPath !== '/' ? rawPath.slice(0, -1) : rawPath;
+const normalizedPathWithSlash = normalizedPath + '/';
+
+// meta.json から、スラッシュあり・なしのどちらかで一致するものを探す
+const matchedPage = metaData.pages[rawPath] || metaData.pages[normalizedPath] || metaData.pages[normalizedPathWithSlash];
+
+const currentTitle = title || matchedPage?.title || metaData.defaultTitle;
+const currentDescription = description || matchedPage?.description || metaData.defaultDescription;
+//meta
+//meta
+
 ---
 
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
-    <title>{title ? `${title} | ${siteData.title}` : siteData.title}</title>
+	<title>{currentTitle}</title>
+    <meta name="description" content={currentDescription} />
     <link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
 	<link rel="icon" type="image/avif" href="/favicon.avif">
 	<link rel="icon" type="image/webp" href="/favicon.webp">
