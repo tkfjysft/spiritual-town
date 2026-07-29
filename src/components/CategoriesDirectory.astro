@@ -17,16 +17,15 @@ const { category } = Astro.props;
                         ▼
                     </span>
                 </summary>
-                <div class="mt-3 pt-3 border-t border-pink-100/40 flex flex-wrap gap-1.5">
-                    {sub.items.map((item) => (
-                        <span 
-                            
-                            class="inline-block bg-white hover:bg-pink-100 text-slate-600 hover:text-pink-600 text-xs px-2.5 py-1 rounded-full border border-pink-100 transition-colors shadow-2xs"
-                        >
-                            {item}
-                        </span>
-                    ))}
-                </div>
+<div class="mt-3 pt-3 border-t border-pink-100/40 flex flex-wrap gap-1.5">
+    {sub.items.map((item) => (
+        <span 
+            class="inline-block bg-pink-50/60 text-slate-500 text-xs px-2.5 py-1 rounded-full border border-pink-100/60"
+        >
+            {item}
+        </span>
+    ))}
+</div>
             </details>
         ))}
     </div>

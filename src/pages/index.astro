@@ -67,10 +67,10 @@ import applicationData from '@/data/index/application.json';
 							<div class="md:flex md:items-center md:justify-center md:gap-8">
 							<div class="mb-8 mx-auto text-white font-bold bg-[#e55a53] shadow-md shadow-slate-100 p-8 rounded-full w-[200px] h-[200px]">ライトワーカーの<br class="block sm:hidden" />皆様！<br />ぜひ、あなたの<br />サイトを<br />ご登録ください</div>
 							<div class="space-y-4">
-							<h2 class="text-3xl text-[#e55a53] font-bold">サイト掲載の<br class="block sm:hidden" />登録料・掲載料<br />完全無料！</h2>
+							<h2 class="text-2xl sm:text-3xl text-[#e55a53] font-bold">占い・ヒーリングなどの<br>集客・宣伝なら！<br>掲載料・登録料<br class="block sm:hidden">完全無料</h2>
 							
 							<!-- その中のさらに小見出しなので h3 に変更 -->
-							<h3 class="text-2xl text-[#ba980c] font-bold">サイトを登録するメリット</h3>
+							<h3 class="text-2xl text-[#ba980c] font-bold">スピリチュアルタウンに<br class="block sm:hidden">掲載するメリット</h3>
 							<div class="flex items-center justify-center">
 							<ol class="text-left" style="list-style: decimal;">
 								<li>無料であなたの活動・サイトを宣伝できる！</li>
@@ -118,57 +118,19 @@ import applicationData from '@/data/index/application.json';
 
 
 
-            <!-- 新着 -->
-<!-- <section id="featured" class="mb-24 py-16 w-full bg-white">
-    <div class="text-center mb-12">
-        <h2 class="text-2xl md:text-3xl font-bold text-amber-900 mb-3">
-            {featuredData.title}
-        </h2>
-        <p class="text-base text-slate-600 tracking-wide">{featuredData.subtitle}</p>
-    </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-1 gap-8 max-w-4xl mx-auto px-6">
-        {featuredData.items.map((spot) => (
-            <div class="bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.1)] flex flex-col group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                <div class="h-3 bg-gradient-to-r from-pink-200 via-sky-200 to-amber-200 rounded-t-3xl"></div>
-                
-                <div class="p-8 flex-1 flex flex-col">
-                    <span class="text-[11px] font-bold text-sky-600 uppercase tracking-widest mb-3 block bg-sky-50 px-2 py-1 rounded-full w-fit">
-                        {spot.category}
-                    </span>
-                    <h3 class="text-xl font-bold text-amber-900 mb-4">
-                        {spot.name}
-                    </h3>
-                    <p class="text-slate-600 text-base leading-relaxed mb-8 flex-1">
-                        {spot.description}
-                    </p>
-                    
-                    <div class="flex items-center justify-between pt-6 border-t border-amber-50 gap-2">
-                        <div class="flex flex-wrap gap-1.5 max-w-[60%]">
-                            {spot.tags.map((tag) => (
-                                <span class="text-[10px] font-medium bg-pink-50 text-pink-700 px-2 py-1 rounded-full">
-                                    #{tag}
-                                </span>
-                            ))}
-                        </div>
-                        <a href={spot.url} class="text-xs font-bold bg-amber-200 text-amber-900 px-4 py-2 rounded-full hover:bg-amber-300 transition-all duration-200 shadow-sm whitespace-nowrap">
-                            詳細を見る
-                        </a>
-                    </div>
-                </div>
-            </div>
-        ))}
-    </div>
-</section> -->
+
+
+
+
 
 
 
 <section id="featured" class="mb-24 py-16 w-full bg-white">
-    <div class="text-center mb-12">
+    <div class="text-center mb-12 max-w-7xl mx-auto px-6 md:px-16">
         <h2 class="text-2xl md:text-3xl font-bold text-amber-900 mb-3">
             {newsDate.title}
         </h2>
-        <p class="text-base text-slate-600 tracking-wide">{newsDate.subtitle}</p>
+        <p class="text-base text-left text-slate-600 tracking-wide">{newsDate.subtitle}</p>
     </div>
     
 <div class="grid grid-cols-1 md:grid-cols-1 gap-8 max-w-7xl mx-auto px-6 md:px-16">
@@ -224,7 +186,7 @@ import applicationData from '@/data/index/application.json';
                     <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-3">
                         {categoriesData.title}
                     </h2>
-                    <p class="text-base text-slate-500">目的のジャンルが決まっている方はこちらからどうぞ</p>
+                    <p class="text-base text-slate-500">{categoriesData.subTitle}</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {categoriesDirectoryData.categories.map((category) => (
@@ -236,9 +198,15 @@ import applicationData from '@/data/index/application.json';
                             <p class="text-slate-600 text-base leading-relaxed mb-4">
                                 {category.description}
                             </p>
-                            <a href={`/category/${category.id}`} class="inline-flex items-center text-sm font-semibold text-teal-800 hover:text-teal-700 transition-colors">
-                                このエリアを散策する →
-                            </a>
+<a 
+    href={`/category/${category.id}`} 
+    class="group/btn inline-flex items-center justify-between w-full bg-teal-50 hover:bg-teal-100 text-teal-800 text-base font-bold px-6 py-6 rounded-xl border border-teal-200/60 transition-all shadow-2xs"
+>
+    <span>{category.name}を散策する</span>
+    <span class="ml-2 transform group-hover/btn:translate-x-1 transition-transform duration-200 text-teal-600">
+        →
+    </span>
+</a>
 
 													<CategoriesDirectory category={category} />
 
