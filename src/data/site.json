@@ -17,7 +17,7 @@
 			"url": "/#map", 
 			"icon": "Map",
 			"children": [
-			{ "label": "街の番地一覧", "url": "/#categories", "icon": "LayoutGrid" },
+			{ "label": "街の案内所", "url": "/#categories", "icon": "LayoutGrid" },
 			{ "label": "街について", "url": "/about", "icon": "Info" }
 			]
 		},
