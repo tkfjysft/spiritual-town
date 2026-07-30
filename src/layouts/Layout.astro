@@ -10,9 +10,13 @@ interface Props {
   title?: string;
   description?: string;
   pageTitle?: string;
+  category?: { 
+    name: string;
+    slug: string;
+  };
 }
 
-const { title, description, pageTitle } = Astro.props;
+const { title, description, pageTitle, category } = Astro.props;
 
 // --- Meta情報の処理 ---
 const rawPath = Astro.url.pathname;
@@ -124,17 +128,39 @@ const finalLabel = pageTitle || pageLabel;
                 <span class="text-gray-700 font-medium truncate max-w-[150px] sm:max-w-[200px] inline-block align-bottom">{finalLabel}</span>
               </li>
             </>
-          ) : segments[0] === "blog" && segments.length > 1 ? (
-            /* ★追加：ブログ詳細用のパンくず（ホーム > ブログ > 記事タイトル） */
+          ) : segments[0] === "blog" ? (
             <>
               <li><span class="text-gray-300">/</span></li>
               <li>
                 <a href="/blog/" class="hover:text-amber-600 transition-colors">ブログ</a>
               </li>
-              <li><span class="text-gray-300">/</span></li>
-              <li>
-                <span class="text-gray-700 font-medium truncate max-w-[150px] sm:max-w-[200px] inline-block align-bottom">{finalLabel}</span>
-              </li>
+
+              {/* パターンA：カテゴリ一覧ページの場合 (/blog/category/xxx) */}
+              {segments[1] === "category" && segments[2] ? (
+                <>
+                  <li><span class="text-gray-300">/</span></li>
+                  <li>
+                    <span class="text-gray-700 font-medium truncate max-w-[150px] sm:max-w-[200px] inline-block align-bottom">{finalLabel}</span>
+                  </li>
+                </>
+              ) : segments.length > 1 ? (
+                <>
+                  {category && (
+                    <>
+                      <li><span class="text-gray-300">/</span></li>
+                      <li>
+                        <a href={`/blog/category/${category.slug}`} class="hover:text-amber-600 transition-colors">
+                          {category.name}
+                        </a>
+                      </li>
+                    </>
+                  )}
+                  <li><span class="text-gray-300">/</span></li>
+                  <li>
+                    <span class="text-gray-700 font-medium truncate max-w-[150px] sm:max-w-[200px] inline-block align-bottom">{finalLabel}</span>
+                  </li>
+                </>
+              ) : null}
             </>
           ) : (
             finalLabel && (
