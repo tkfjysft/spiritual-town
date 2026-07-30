@@ -30,6 +30,7 @@
 			{ "label": "オラクルカード一覧", "url": "/oraclecards", "icon": "BookOpen" }
 			]
 		},
+		{ "label": "ブログ", "url": "/blog", "icon": "Send" },
 		{ "label": "掲載を申し込む", "url": "https://forms.gle/1Q5Mq1qipnwdaUas6", "icon": "Send" },
 		{ "label": "お問い合わせ", "url": "https://forms.gle/dtMHv1mHwetdmajq7", "icon": "Mail" }
 		]

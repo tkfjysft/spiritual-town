@@ -40,6 +40,14 @@ if (segments.length > 0) {
   else if (segments[0] === "oraclecards" && segments.length > 1) {
     // 詳細ページのタイトルは pageTitle プロパティから受け取る
   } 
+
+  // ★追加：ブログ詳細ページの場合 (/blog/〇〇 など)
+else if (segments[0] === "blog" && segments.length > 1) {
+    // 各ページから渡される pageTitle を pageLabel に代入する
+    pageLabel = pageTitle || "無題";
+  }
+
+
   // パターン2: カテゴリページの場合 (/category/counseling など)
   else {
     const targetId = segments.length > 1 && segments[0] === "category" ? segments[1] : segments[0];
@@ -110,6 +118,18 @@ const finalLabel = pageTitle || pageLabel;
               <li><span class="text-gray-300">/</span></li>
               <li>
                 <a href="/oraclecards/" class="hover:text-amber-600 transition-colors">オラクルカード一覧</a>
+              </li>
+              <li><span class="text-gray-300">/</span></li>
+              <li>
+                <span class="text-gray-700 font-medium truncate max-w-[150px] sm:max-w-[200px] inline-block align-bottom">{finalLabel}</span>
+              </li>
+            </>
+          ) : segments[0] === "blog" && segments.length > 1 ? (
+            /* ★追加：ブログ詳細用のパンくず（ホーム > ブログ > 記事タイトル） */
+            <>
+              <li><span class="text-gray-300">/</span></li>
+              <li>
+                <a href="/blog/" class="hover:text-amber-600 transition-colors">ブログ</a>
               </li>
               <li><span class="text-gray-300">/</span></li>
               <li>

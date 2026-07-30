@@ -21,6 +21,7 @@ export interface OracleCard {
   action_jp: string;
   categoryName: string;
   recommendedItem: string; // ← スプレッドシートの列名に合わせています
+  slug: string;
 }
 
 export async function fetchOracleCards(): Promise<OracleCard[]> {

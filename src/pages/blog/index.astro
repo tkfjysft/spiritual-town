@@ -1,0 +1,51 @@
+---
+// src/pages/blog/index.astro
+import { client, type BlogResponse } from '@/lib/microcms';
+import Layout from '@/layouts/Layout.astro';
+
+
+// microCMSからブログ記事一覧を取得
+const response = await client.get<BlogResponse>({
+  endpoint: 'spitown-blog', // ご自身のAPIのエンドポイント名に合わせてください（例: 'blog' など）
+  queries: { orders: '-date' }, // 日付の新しい順に並び替え
+});
+
+const blogs = response.contents;
+---
+
+<Layout>
+	<div class="max-w-8xl mx-auto px-6 md:px-16">
+			<h1 class="font-serif text-3xl font-bold mb-8 text-center">ブログ記事一覧</h1>
+
+			{blogs.length === 0 ? (
+				<p class="text-center text-stone-500">まだ記事がありません。</p>
+			) : (
+				<div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+					{blogs.map((blog) => (
+						<article class="bg-white border border-[#ece8e1] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+							<a href={`/blog/${blog.slug || blog.id}`} class="block">
+								{/* アイキャッチ画像がある場合 */}
+								{blog.eyecatch && (
+									<div class="aspect-video w-full overflow-hidden bg-stone-100">
+										<img 
+											src={blog.eyecatch.url} 
+											alt="" 
+											class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+										/>
+									</div>
+								)}
+								<div class="p-6">
+									<time class="text-xs text-stone-500 block mb-2">
+										{blog.date ? new Date(blog.date).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
+									</time>
+									<h2 class="font-serif font-bold text-lg text-[#4a423d] hover:text-amber-600 transition-colors line-clamp-2">
+										{blog.title}
+									</h2>
+								</div>
+							</a>
+						</article>
+					))}
+				</div>
+			)}
+			</div>
+</Layout>
