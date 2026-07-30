@@ -30,6 +30,20 @@ const safeContent = blog.content
 					<article>
 				<!-- 記事ヘッダー -->
 				<header class="mb-8">
+
+					<!-- ★ カテゴリバッジ（カテゴリが存在する場合のみ表示） -->
+{blog.category && (
+      <div class="mb-4">
+        <a 
+          href={`/blog/category/${blog.category.slug}`}
+          class="inline-block px-3 py-1 text-xs font-medium bg-amber-50 text-amber-800 rounded-full hover:bg-amber-100 transition-colors"
+        >
+          {blog.category.name}
+        </a>
+      </div>
+    )}
+
+	
 					<time class="text-sm text-stone-500 block mb-3">
 						{blog.date ? new Date(blog.date).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
 					</time>
@@ -41,7 +55,7 @@ const safeContent = blog.content
 					{/* アイキャッチ画像 */}
 					{blog.eyecatch && (
 						<div class="flex items-center justify-center">
-						<div class="aspect-video w-[40vw] overflow-hidden">
+						<div class="aspect-video w-[80vw] md:w-[40vw] overflow-hidden">
 							<img 
 								src={blog.eyecatch.url} 
 								alt="" 

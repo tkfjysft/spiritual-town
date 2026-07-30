@@ -7,9 +7,18 @@ export const client = createClient({
 });
 
 // ブログの型定義
+export interface Category {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  slug: string;
+}
+
 export type Blog = {
   id: string;
   title: string;
+  slug: string;
   content: string;
   date?: string; // ご自身で作られた公開日用フィールド
   eyecatch?: {
@@ -19,6 +28,7 @@ export type Blog = {
   };
   publishedAt: string; // システム標準の公開日時
   updatedAt: string;
+  category?: Category;
 };
 
 export type BlogResponse = {
