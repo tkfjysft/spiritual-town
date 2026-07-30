@@ -1,0 +1,30 @@
+---
+// src/components/Breadcrumbs.astro
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+// 呼び出し元からページの階層配列を受け取る
+const { items } = Astro.props<{ items: BreadcrumbItem[] }>();
+---
+
+<nav class="mb-8 text-sm text-gray-500" aria-label="パンくずリスト">
+  <ol class="flex items-center space-x-2 flex-wrap">
+    <li>
+      <a href="/" class="hover:text-amber-600 transition-colors">ホーム</a>
+    </li>
+    {items.map((item, index) => (
+      <>
+        <li><span class="text-gray-300">/</span></li>
+        <li>
+          {item.href ? (
+            <a href={item.href} class="hover:text-amber-600 transition-colors">{item.label}</a>
+          ) : (
+            <span class="text-gray-700 font-medium truncate max-w-[150px] sm:max-w-[200px] inline-block align-bottom">{item.label}</span>
+          )}
+        </li>
+      </>
+    ))}
+  </ol>
+</nav>  

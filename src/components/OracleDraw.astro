@@ -8,16 +8,17 @@ const cards = await fetchOracleCards();
 const cardsJson = JSON.stringify(cards);
 ---
 
-<section class="my-16 px-4 text-center">
-  <div class="mx-auto bg-gradient-to-b from-amber-50/60 to-white p-8 sm:p-10 rounded-3xl border border-amber-200/60 shadow-sm">
+<section class="my-16 px-4 text-center max-w-8xl mx-auto px-6 md:px-16">
+  <div class="bg-gradient-to-b from-amber-50/60 to-white p-8 sm:p-10 rounded-3xl border border-amber-200/60 shadow-sm">
     <span class="text-amber-600 font-bold text-sm tracking-wider uppercase">Daily Oracle</span>
-    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-4">
-      今日のオラクルカードを引く
-    </h2>
-    <p class="text-gray-600 mb-8 leading-relaxed">
-      心静かに今のあなたに必要なメッセージを受け取りましょう。<br>
-      カードをクリック（またはボタンを押して）引いてみてください。
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-4">
+      今日のオラクルカード <br class="block sm:hidden"><span class="text-sm font-normal text-amber-600">今のあなたに必要なメッセージを引く</span>
+    </h1>
+	<div class="flex items-center justify-center">
+    <p class="text-gray-600 mb-8 leading-relaxed text-left">
+      心静かに今のあなたに必要なメッセージを受け取りましょう。無料のオラクルカード占いで、今日の運勢や心を整えるヒントを引いてみてください。<br>カードをクリック（またはボタンを押して）引いてみてください。
     </p>
+	</div>
 
     {/* カードの背表紙を表示するエリア */}
 <div class="flex justify-center mb-8">
@@ -55,12 +56,45 @@ const cardsJson = JSON.stringify(cards);
       </button>
 
       <a 
-        href={siteData.navigation.links[2].children[1].url} 
+        href={siteData.navigation.links[2].children[0].url} 
         class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-bold px-8 py-3.5 rounded-full shadow-2xs transition-colors flex items-center justify-center"
       >
         📚 カード一覧を見る
       </a>
     </div>
+  </div>
+  
+</section>
+
+<!-- SEO強化・コンテンツ解説セクション -->
+<section class=" max-w-8xl mx-auto px-6 md:px-16">
+  <div class="bg-white p-8 sm:p-10 rounded-3xl border border-amber-100 shadow-sm space-y-8">
+    
+    <!-- 解説1: オラクルカードとは -->
+    <div>
+      <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+        <span class="text-amber-600">🔮</span> オラクルカードとは？
+      </h3>
+      <p class="text-gray-600 leading-relaxed text-sm sm:text-base">
+        オラクルカードは、今のあなたに必要なメッセージや、心を整えるためのポジティブなヒントを授けてくれるカードです。タロットカードのような吉凶（良い・悪い）を占うものではなく、いつでも優しく背中を押してくれる言葉や、日常を心地よく過ごすための気づきを与えてくれます。
+      </p>
+    </div>
+
+    <hr class="border-amber-100">
+
+    <!-- 解説2: 今日のカードを引いたあとの過ごし方 -->
+    <div>
+      <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+        <span class="text-amber-600">🌿</span> 今日のカードを引いたあとの過ごし方
+      </h3>
+      <p class="text-gray-600 leading-relaxed text-sm sm:text-base mb-3">
+        引いたカードに書かれているメッセージやイラストから、直感的に感じたことを大切にしてみてください。「なんだか気になるな」「今の自分にしっくりくるな」と感じたそのインスピレーションこそが、今日一日を前向きに過ごすための大切な羅針盤になります。
+      </p>
+      <p class="text-gray-600 leading-relaxed text-sm sm:text-base">
+        当サイトの無料オラクルカード占いは、毎日の運勢チェックや、心をリセットしたいとき、悩みに対して新しい視点を取り入れたいときにいつでも何度でもご利用いただけます。
+      </p>
+    </div>
+
   </div>
 </section>
 

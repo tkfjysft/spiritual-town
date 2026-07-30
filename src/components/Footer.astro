@@ -2,27 +2,59 @@
 import siteData from '@/data/site.json';
 ---
 <footer class="bg-[#fdfbf7] border-t border-[#ece8e1] pt-12 mt-16">
-	<div class="max-w-7xl mx-auto px-6 md:px-16">
-  <div class="lg:flex justify-between gap-8">
-    <div class="pb-12">
-      <h3 class="font-serif text-[#4a423d] font-bold mb-4">{siteData.title}</h3>
-      <p class="text-sm text-[#7a726b] leading-relaxed">
-        心と体のバランスを整え、<br class="hidden lg:block">明日をもっと前向きに。
-      </p>
+	<div class="max-w-8xl mx-auto px-6 md:px-16">
+
+
+
+
+
+
+        <!-- 上部コンテンツ：左（サイト紹介）＆ 右（ナビゲーション） -->
+        <div class="lg:flex justify-between items-start gap-12 pb-12">
+            
+            <!-- 左側：サイト紹介 -->
+            <div class="lg:w-1/4 mb-8 lg:mb-0">
+                <h3 class="font-serif text-[#4a423d] font-bold text-lg mb-3">{siteData.title_en} <br /><span class="text-sm">（{siteData.title_jp}）</span></h3>
+                <p class="text-sm text-[#7a726b] leading-relaxed">
+                    心と体のバランスを整え、明日をもっと前向きに。無料のオラクルカードいやしと占い、信頼できる癒しのスポットを集めた総合ポータルサイトです。
+                </p>
+            </div>
+
+<!-- 右側：サイトマップ・メニュー -->
+<div class="lg:w-2/3">
+    <h3 class="font-serif text-[#4a423d] font-bold text-sm tracking-wider uppercase mb-6">スピリチュアルタウンの案内</h3>
+    
+    <!-- PCでは3列、または2列などにして綺麗に2段に折り返す -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-x-10 gap-y-8 text-sm">
+        {siteData.navigation.links.map((link) => (
+            <div class="space-y-2">
+                {/* 親メニュー */}
+                {link.url ? (
+                    <a href={link.url} class="font-bold text-[#4a423d] hover:text-amber-600 transition-colors block whitespace-nowrap">
+                        {link.label || "ホーム"}
+                    </a>
+                ) : (
+                    <span class="font-bold text-[#4a423d] block whitespace-nowrap">{link.label}</span>
+                )}
+
+                {/* 子メニュー */}
+                {link.children && link.children.length > 0 && (
+                    <ul class="space-y-1.5 text-xs text-[#7a726b]">
+                        {link.children.map((child) => (
+                            <li>
+                                <a href={child.url} class="hover:text-[#4a423d] transition-colors block whitespace-nowrap">
+                                    {child.label}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+        ))}
     </div>
-<div>
-  <h3 class="font-serif text-[#4a423d] font-bold mb-4">メニュー</h3>
-  <ul class="space-y-2 text-base text-[#7a726b] sm:flex gap-4">
-    {siteData.navigation.links.map((link) => (
-      <li>
-        <a href={link.url} class="hover:text-[#4a423d] transition-colors">
-          {link.label}
-        </a>
-      </li>
-    ))}
-  </ul>
 </div>
-  </div>
+        </div>
+
 
 
   		<div class="flex flex-wrap justify-end gap-6 mt-6 pt-4 border-t-1 border-slate-200">
@@ -44,7 +76,9 @@ import siteData from '@/data/site.json';
 </div>
 
 </div>
+
+
       <div class="text-center text-sm bg-[#7a726b] text-white py-6">
-      <p>&copy; {new Date().getFullYear()} Spiritual Town</p>
+      <p>&copy; {new Date().getFullYear()} {siteData.copyright}</p>
     </div>
 </footer>

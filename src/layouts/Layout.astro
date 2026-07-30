@@ -1,43 +1,76 @@
 ---
-// src/layouts/Layout.astro
 import '@/styles/global.css';
 import Header from '@/components/Header.astro';
-import Footer from '@/components/Footer.astro'; // 共通化推奨
+import Footer from '@/components/Footer.astro';
 import siteData from '@/data/site.json';
-
-interface Props {
-  title?: string;
-  description?: string;
-}
-
-
-//meta
-//meta
+import categoriesData from '@/data/common/categories.json';
 import metaData from '@/data/meta.json';
 
 interface Props {
   title?: string;
   description?: string;
+  pageTitle?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, pageTitle } = Astro.props;
 
-// 1. 現在のパスを取得し、末尾のスラッシュをいったん統一する（またはそのまま）
+// --- Meta情報の処理 ---
 const rawPath = Astro.url.pathname;
-
-// 末尾のスラッシュを安全に取り除いたキーでも検索できるようにする
-// 例: "/category/fortune/" も "/category/fortune" も両方に対応させる
 const normalizedPath = rawPath.endsWith('/') && rawPath !== '/' ? rawPath.slice(0, -1) : rawPath;
 const normalizedPathWithSlash = normalizedPath + '/';
 
-// meta.json から、スラッシュあり・なしのどちらかで一致するものを探す
 const matchedPage = metaData.pages[rawPath] || metaData.pages[normalizedPath] || metaData.pages[normalizedPathWithSlash];
-
 const currentTitle = title || matchedPage?.title || metaData.defaultTitle;
 const currentDescription = description || matchedPage?.description || metaData.defaultDescription;
-//meta
-//meta
 
+// --- パンくずリストの自動判定処理 ---
+const segments = rawPath.split("/").filter(Boolean);
+let pageLabel = "";
+
+if (segments.length > 0) {
+  // ★追加：オラクルカードを引くページ (/oraclecards/draw) の場合の特例判定
+  if (rawPath === "/oraclecards/draw" || rawPath === "/oraclecards/draw/") {
+    pageLabel = "オラクルカードを引く";
+  }
+  // パターン1: オラクルカードの一覧ページの場合 (/oraclecards または /oraclecards/)
+  else if (segments[0] === "oraclecards" && segments.length === 1) {
+    pageLabel = "オラクルカード一覧";
+  }
+  // パターン1-2: オラクルカードの詳細ページの場合 (/oraclecards/hoge など)
+  else if (segments[0] === "oraclecards" && segments.length > 1) {
+    // 詳細ページのタイトルは pageTitle プロパティから受け取る
+  } 
+  // パターン2: カテゴリページの場合 (/category/counseling など)
+  else {
+    const targetId = segments.length > 1 && segments[0] === "category" ? segments[1] : segments[0];
+    const matchedCategory = categoriesData.items.find(item => item.id === targetId);
+
+    if (matchedCategory) {
+      pageLabel = matchedCategory.name;
+    } else {
+      // パターン3: site.json から探す
+      function findLabelFromNavigation(links: any[], path: string): string | null {
+        for (const link of links) {
+          const cleanLinkUrl = link.url.replace(/\/$/, "");
+          const cleanPath = path.replace(/\/$/, "");
+          if (cleanLinkUrl === cleanPath || link.url === path) {
+            return link.label;
+          }
+          if (link.children && link.children.length > 0) {
+            const found = findLabelFromNavigation(link.children, path);
+            if (found) return found;
+          }
+        }
+        return null;
+      }
+      
+      const foundLabel = findLabelFromNavigation(siteData.navigation.links, rawPath);
+      pageLabel = foundLabel || segments[segments.length - 1];
+    }
+  }
+}
+
+const finalLabel = pageTitle || pageLabel;
 ---
 
 <html lang="ja">
@@ -62,6 +95,44 @@ const currentDescription = description || matchedPage?.description || metaData.d
   </head>
   <body class="bg-slate-50 antialiased pt-16">
     <Header />
+
+
+<!-- パンくずリスト -->
+{rawPath !== "/" && (
+      <nav class="mt-2 md:mt-10 mb-8 text-sm text-gray-500 max-w-8xl mx-auto px-6 md:px-16" aria-label="パンくずリスト">
+        <ol class="flex items-center space-x-2 flex-wrap">
+          <li>
+            <a href="/" class="hover:text-amber-600 transition-colors">ホーム</a>
+          </li>
+
+          {segments[0] === "oraclecards" && segments.length > 1 ? (
+            <>
+              <li><span class="text-gray-300">/</span></li>
+              <li>
+                <a href="/oraclecards/" class="hover:text-amber-600 transition-colors">オラクルカード一覧</a>
+              </li>
+              <li><span class="text-gray-300">/</span></li>
+              <li>
+                <span class="text-gray-700 font-medium truncate max-w-[150px] sm:max-w-[200px] inline-block align-bottom">{finalLabel}</span>
+              </li>
+            </>
+          ) : (
+            finalLabel && (
+              <>
+                <li><span class="text-gray-300">/</span></li>
+                <li>
+                  <span class="text-gray-700 font-medium truncate max-w-[200px] inline-block align-bottom">{finalLabel}</span>
+                </li>
+              </>
+            )
+          )}
+        </ol>
+      </nav>
+    )}
+	<!-- パンくずリストここまで -->
+
+
+
     <main>
       <slot /> </main>
     <Footer />

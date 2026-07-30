@@ -1,5 +1,6 @@
 {
-  "title": "Spiritual Town",
+  "title_en": "Spiritual Town",
+  "title_jp": "スピリチュアルタウン",
   "titleImage": "/logo_ci.avif",
   "subtitle": "あなたの心に寄り添う、小さなお店が集まる街",
   "description": "人間関係の悩みや、日々のメンテナンスに疲れた心の癒やしを求めていませんか？ 「スピリチュアルタウン」は、厳選された占い・ヒーリング・カウンセリングの小さなお店やサロンが集まるポータルサイトです。",
@@ -22,11 +23,10 @@
 			]
 		},
 		{ 
-			"label": "オラクルカード", 
+			"label": "オラクルカードを引く", 
 			"url": "/oraclecards/draw", 
 			"icon": "Sparkles",
 			"children": [
-			{ "label": "オラクルカードを引く", "url": "/oraclecards/draw", "icon": "Compass" },
 			{ "label": "オラクルカード一覧", "url": "/oraclecards", "icon": "BookOpen" }
 			]
 		},
@@ -34,5 +34,5 @@
 		{ "label": "お問い合わせ", "url": "https://forms.gle/dtMHv1mHwetdmajq7", "icon": "Mail" }
 		]
 	},
-  "copyright": "© 2026 Spiritual Town. All rights reserved."
+  "copyright": "Spiritual Town. All rights reserved."
 }
