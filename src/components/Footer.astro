@@ -30,7 +30,10 @@ import siteData from '@/data/site.json';
             <div class="space-y-2">
                 {/* 親メニュー */}
                 {link.url ? (
-                    <a href={link.url} class="font-bold text-[#4a423d] hover:text-amber-600 transition-colors block whitespace-nowrap">
+                    <a href={link.url} class="font-bold text-[#4a423d] hover:text-amber-600 transition-colors block whitespace-nowrap"
+						target={link.target} 
+          				rel={link.rel}
+						>
                         {link.label || "ホーム"}
                     </a>
                 ) : (
@@ -42,7 +45,10 @@ import siteData from '@/data/site.json';
                     <ul class="space-y-1.5 text-xs text-[#7a726b]">
                         {link.children.map((child) => (
                             <li>
-                                <a href={child.url} class="hover:text-[#4a423d] transition-colors block whitespace-nowrap">
+                                <a href={child.url} class="hover:text-[#4a423d] transition-colors block whitespace-nowrap"
+									target={child.target} 
+          							rel={child.rel}
+								>
                                     {child.label}
                                 </a>
                             </li>

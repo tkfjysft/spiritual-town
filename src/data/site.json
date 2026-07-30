@@ -30,9 +30,23 @@
 			{ "label": "オラクルカード一覧", "url": "/oraclecards", "icon": "BookOpen" }
 			]
 		},
-		{ "label": "ブログ", "url": "/blog", "icon": "Send" },
-		{ "label": "掲載を申し込む", "url": "https://forms.gle/1Q5Mq1qipnwdaUas6", "icon": "Send" },
-		{ "label": "お問い合わせ", "url": "https://forms.gle/dtMHv1mHwetdmajq7", "icon": "Mail" }
+		{ "label": "ブログ", "url": "/blog", "icon": "PenTool" },
+		{
+			"label": "掲載を申し込む",
+			"url": "https://forms.gle/1Q5Mq1qipnwdaUas6",
+			"icon": "Send",
+			"target": "_blank",
+            "rel": "noopener noreferrer",
+			"children": [
+				{ 
+					"label": "お問い合わせ",
+					"url": "https://forms.gle/dtMHv1mHwetdmajq7", 
+					"icon": "Mail",
+					"target": "_blank",
+                    "rel": "noopener noreferrer"
+				}
+			]
+		 }
 		]
 	},
   "copyright": "Spiritual Town. All rights reserved."

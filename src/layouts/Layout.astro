@@ -5,6 +5,7 @@ import Footer from '@/components/Footer.astro';
 import siteData from '@/data/site.json';
 import categoriesData from '@/data/common/categories.json';
 import metaData from '@/data/meta.json';
+import BackToTop from '@/components/BackToTop.astro';
 
 interface Props {
   title?: string;
@@ -104,6 +105,15 @@ const finalLabel = pageTitle || pageLabel;
 	<!-- サチコ -->
 	<meta name="google-site-verification" content="kOdlstDKziPtP9fDlvEZB6SQe4MHe71SwF2a9A6pYPs" />
 
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-78JY0151Q0"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'G-78JY0151Q0');
+	</script>
   </head>
   <body class="bg-slate-50 antialiased pt-16">
     <Header />
@@ -180,8 +190,20 @@ const finalLabel = pageTitle || pageLabel;
 
 
     <main>
-      <slot /> </main>
+      <slot />
+	</main>
+
+	<div class="my-24 max-w-8xl mx-auto px-6 md:px-16">
+    <a 
+      href={siteData.navigation.links[4].children[0].url} target="_blank" rel="noopener noreferrer"
+      class="flex items-center justify-center px-8 py-4 my-10 bg-pink-100 text-amber-900 font-bold rounded-full hover:bg-amber-300 transition-all shadow-md hover:shadow-lg"
+    >
+      {siteData.navigation.links[4].children[0].label}
+    </a>
+	</div>
+
     <Footer />
+	<BackToTop />
   </body>
 
 
