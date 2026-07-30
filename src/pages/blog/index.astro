@@ -37,7 +37,7 @@ const blogs = response.contents;
 							</a>
 								<div class="p-6">
 									<time class="text-xs text-stone-500 block mb-2">
-										{blog.date ? new Date(blog.date).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
+										{blog.pubDate ? new Date(blog.pubDate).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
 									</time>
 
 									{/* ★ ここにカテゴリバッジを追加 */}

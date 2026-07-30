@@ -42,7 +42,7 @@ const { category, blogs } = Astro.props;
       <ul class="space-y-6">
         {blogs.map((blog) => (
           <li class="border-b pb-8 border-slate-400 sm:flex text-left sm:justify-between max-w-5xl mx-auto gap-6">
-			            <p class="text-gray-500 text-sm mt-1">{new Date(blog.publishedAt).toLocaleDateString()}</p>
+			            <p class="text-gray-500 text-sm mt-1">{blog.pubDate ? new Date(blog.pubDate).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}</p>
 
             <a href={`/blog/${blog.slug || blog.id}`} class="text-xl font-semibold text-slate-700 hover:underline">
               {blog.title}

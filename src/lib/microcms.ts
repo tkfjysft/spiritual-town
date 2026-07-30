@@ -20,7 +20,7 @@ export type Blog = {
   title: string;
   slug: string;
   content: string;
-  date?: string; // ご自身で作られた公開日用フィールド
+  pubDate?: string; // ご自身で作られた公開日用フィールド
   eyecatch?: {
     url: string;
     height: number;

@@ -46,7 +46,7 @@ const safeContent = blog.content
 
 	
 					<time class="text-sm text-stone-500 block mb-3">
-						{blog.date ? new Date(blog.date).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
+						{blog.pubDate ? new Date(blog.pubDate).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
 					</time>
 					<h1 class="font-serif text-3xl md:text-4xl font-bold text-[#4a423d] leading-tight mb-6">
 						{blog.title}
