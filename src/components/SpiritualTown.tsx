@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import categoriesData from '@/data/common/categories.json';
+import categoriesData from '@/data/jp/townCategoryInfo.json';
 
 interface ButtonConfig {
   id: string;
@@ -48,30 +48,31 @@ const SpiritualTown = () => {
   };
 
   const currentButtons = isMobile ? buttons.mobile : buttons.pc;
-  const activeData = categoriesData.items.find(item => item.id === selectedCategory?.id);
+  // categoriesData.categories から該当データを検索するように変更
+  const activeData = categoriesData.categories.find(item => item.id === selectedCategory?.id);
 
   return (
     <div className="relative w-full h-auto overflow-hidden rounded-2xl select-none group/map">
       {/* マップ画像 */}
-{/* スマホ用画像（md: で非表示） */}
-<img 
-  src="/town-map-mobile.avif" 
-  alt="Spiritual Town Map"
-  width="660" 
-  height="1184" 
-  className="w-full h-auto block md:hidden aspect-[660/1184]"
-  loading="lazy"
-/>
+      {/* スマホ用画像（md: で非表示） */}
+      <img 
+        src="/town-map-mobile.avif" 
+        alt="Spiritual Town Map"
+        width="660" 
+        height="1184" 
+        className="w-full h-auto block md:hidden aspect-[660/1184]"
+        loading="lazy"
+      />
 
-{/* PC用画像（スマホでは非表示、md: 以上で表示） */}
-<img 
-  src="/town-map.avif" 
-  alt="Spiritual Town Map"
-  width="2201" 
-  height="1228" 
-  className="w-full h-auto hidden md:block aspect-[2201/1228]"
-  loading="lazy"
-/>
+      {/* PC用画像（スマホでは非表示、md: 以上で表示） */}
+      <img 
+        src="/town-map.avif" 
+        alt="Spiritual Town Map"
+        width="2201" 
+        height="1228" 
+        className="w-full h-auto hidden md:block aspect-[2201/1228]"
+        loading="lazy"
+      />
 
       {/* クリックエリア ＆ キャプションテキスト */}
       {currentButtons.map((btn, index) => (
@@ -80,7 +81,7 @@ const SpiritualTown = () => {
           className="absolute z-40 flex flex-col items-center justify-center"
           style={{ top: btn.top, left: btn.left, width: btn.width, height: btn.height }}
         >
-          {/* 【新設】看板の上に浮かぶ文字キャプション */}
+          {/* 看板の上に浮かぶ文字キャプション */}
           <span className="absolute -top-7 px-2 py-0.5 text-[11px] md:text-xs font-bold text-slate-700 bg-white/90 backdrop-blur-[2px] rounded-md shadow-sm border border-slate-200/60 pointer-events-none whitespace-nowrap transition-transform duration-200 scale-95 group-hover/map:scale-100">
             {btn.name}
           </span>

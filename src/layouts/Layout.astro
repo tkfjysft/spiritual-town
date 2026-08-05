@@ -3,7 +3,7 @@ import '@/styles/global.css';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import siteData from '@/data/site.json';
-import categoriesData from '@/data/common/categories.json';
+import townCategoryInfo from '@/data/jp/townCategoryInfo.json';
 import metaData from '@/data/meta.json';
 import BackToTop from '@/components/BackToTop.astro';
 
@@ -19,8 +19,16 @@ interface Props {
 
 const { title, description, pageTitle, category } = Astro.props;
 
-// --- Meta情報の処理 ---
+// --- 現在の言語（jp または en）をパスから判定 ---
 const rawPath = Astro.url.pathname;
+const segments = rawPath.split("/").filter(Boolean);
+const lang = segments[0] === 'en' ? 'en' : 'jp';
+
+const siteText = lang === 'en' 
+  ? (await import('@/data/en/siteText')).siteText 
+  : (await import('@/data/jp/siteText')).siteText;
+
+// --- Meta情報の処理 ---
 const normalizedPath = rawPath.endsWith('/') && rawPath !== '/' ? rawPath.slice(0, -1) : rawPath;
 const normalizedPathWithSlash = normalizedPath + '/';
 
@@ -29,56 +37,44 @@ const currentTitle = title || matchedPage?.title || metaData.defaultTitle;
 const currentDescription = description || matchedPage?.description || metaData.defaultDescription;
 
 // --- パンくずリストの自動判定処理 ---
-const segments = rawPath.split("/").filter(Boolean);
 let pageLabel = "";
 
 if (segments.length > 0) {
-  // ★追加：オラクルカードを引くページ (/oraclecards/draw) の場合の特例判定
-  if (rawPath === "/oraclecards/draw" || rawPath === "/oraclecards/draw/") {
-    pageLabel = "オラクルカードを引く";
-  }
-  // パターン1: オラクルカードの一覧ページの場合 (/oraclecards または /oraclecards/)
-  else if (segments[0] === "oraclecards" && segments.length === 1) {
-    pageLabel = "オラクルカード一覧";
-  }
-  // パターン1-2: オラクルカードの詳細ページの場合 (/oraclecards/hoge など)
-  else if (segments[0] === "oraclecards" && segments.length > 1) {
-    // 詳細ページのタイトルは pageTitle プロパティから受け取る
-  } 
+  // 多言語のプレフィックス（jp や en）を除外したセグメントで判定を行う
+  const pathSegments = (segments[0] === 'jp' || segments[0] === 'en') ? segments.slice(1) : segments;
 
-  // ★追加：ブログ詳細ページの場合 (/blog/〇〇 など)
-else if (segments[0] === "blog" && segments.length > 1) {
-    // 各ページから渡される pageTitle を pageLabel に代入する
-    pageLabel = pageTitle || "無題";
-  }
-
-
-  // パターン2: カテゴリページの場合 (/category/counseling など)
-  else {
-    const targetId = segments.length > 1 && segments[0] === "category" ? segments[1] : segments[0];
-    const matchedCategory = categoriesData.items.find(item => item.id === targetId);
-
-    if (matchedCategory) {
-      pageLabel = matchedCategory.name;
+  if (pathSegments.length > 0) {
+    if (rawPath.includes("/oraclecards/draw")) {
+      pageLabel = "オラクルカードを引く";
+    } else if (pathSegments[0] === "oraclecards" && pathSegments.length === 1) {
+      pageLabel = "オラクルカード一覧";
+    } else if (pathSegments[0] === "blog" && pathSegments.length > 1) {
+      pageLabel = pageTitle || "無題";
     } else {
-      // パターン3: site.json から探す
-      function findLabelFromNavigation(links: any[], path: string): string | null {
-        for (const link of links) {
-          const cleanLinkUrl = link.url.replace(/\/$/, "");
-          const cleanPath = path.replace(/\/$/, "");
-          if (cleanLinkUrl === cleanPath || link.url === path) {
-            return link.label;
+      const targetId = pathSegments.length > 1 && pathSegments[0] === "category" ? pathSegments[1] : pathSegments[0];
+      const matchedCategory = townCategoryInfo.categories.find(item => item.id === targetId);
+
+      if (matchedCategory) {
+        pageLabel = matchedCategory.name;
+      } else {
+        function findLabelFromNavigation(links: any[], path: string): string | null {
+          for (const link of links) {
+            const cleanLinkUrl = link.url.replace(/\/$/, "");
+            const cleanPath = path.replace(/\/$/, "");
+            if (cleanLinkUrl === cleanPath || link.url === path) {
+              return link.label;
+            }
+            if (link.children && link.children.length > 0) {
+              const found = findLabelFromNavigation(link.children, path);
+              if (found) return found;
+            }
           }
-          if (link.children && link.children.length > 0) {
-            const found = findLabelFromNavigation(link.children, path);
-            if (found) return found;
-          }
+          return null;
         }
-        return null;
+        
+        const foundLabel = findLabelFromNavigation(siteData.navigation.links, rawPath);
+        pageLabel = foundLabel || pathSegments[pathSegments.length - 1];
       }
-      
-      const foundLabel = findLabelFromNavigation(siteData.navigation.links, rawPath);
-      pageLabel = foundLabel || segments[segments.length - 1];
     }
   }
 }
@@ -86,126 +82,69 @@ else if (segments[0] === "blog" && segments.length > 1) {
 const finalLabel = pageTitle || pageLabel;
 ---
 
-<html lang="ja">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>{currentTitle}</title>
+    <title>{currentTitle}</title>
     <meta name="description" content={currentDescription} />
     <link rel="icon" href="/favicon.ico?v=2" sizes="32x32">
-	<link rel="icon" type="image/avif" href="/favicon.avif">
-	<link rel="icon" type="image/webp" href="/favicon.webp">
+    <link rel="icon" type="image/avif" href="/favicon.avif">
+    <link rel="icon" type="image/webp" href="/favicon.webp">
 
-	<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-	<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
 
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="43f6bba1-d438-4869-8636-201924c6ab9e"></script>
 
-	<script defer src="https://cloud.umami.is/script.js" data-website-id="43f6bba1-d438-4869-8636-201924c6ab9e"></script>
+    <meta name="google-site-verification" content="kOdlstDKziPtP9fDlvEZB6SQe4MHe71SwF2a9A6pYPs" />
 
-	<!-- サチコ -->
-	<meta name="google-site-verification" content="kOdlstDKziPtP9fDlvEZB6SQe4MHe71SwF2a9A6pYPs" />
-
-	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-78JY0151Q0"></script>
-	<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-
-	gtag('config', 'G-78JY0151Q0');
-	</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-78JY0151Q0"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-78JY0151Q0');
+    </script>
   </head>
   <body class="bg-slate-50 antialiased pt-16">
-    <Header />
+    <Header lang={lang} siteText={siteText} />
 
-
-<!-- パンくずリスト -->
-{rawPath !== "/" && (
+    <!-- パンくずリスト -->
+    {rawPath !== `/${lang}/` && rawPath !== "/" && (
       <nav class="mt-2 md:mt-10 mb-8 text-sm text-gray-500 max-w-6xl mx-auto px-6 md:px-16" aria-label="パンくずリスト">
         <ol class="flex items-center space-x-2 flex-wrap">
           <li>
-            <a href="/" class="hover:text-amber-600 transition-colors">ホーム</a>
+            <a href={`/${lang}/`} class="hover:text-amber-600 transition-colors">ホーム</a>
           </li>
 
-          {segments[0] === "oraclecards" && segments.length > 1 ? (
+          {finalLabel && (
             <>
               <li><span class="text-gray-300">/</span></li>
               <li>
-                <a href="/oraclecards/" class="hover:text-amber-600 transition-colors">オラクルカード一覧</a>
-              </li>
-              <li><span class="text-gray-300">/</span></li>
-              <li>
-                <span class="text-gray-700 font-medium truncate max-w-[150px] sm:max-w-[200px] inline-block align-bottom">{finalLabel}</span>
+                <span class="text-gray-700 font-medium truncate max-w-[200px] inline-block align-bottom">{finalLabel}</span>
               </li>
             </>
-          ) : segments[0] === "blog" ? (
-            <>
-              <li><span class="text-gray-300">/</span></li>
-              <li>
-                <a href="/blog/" class="hover:text-amber-600 transition-colors">ブログ</a>
-              </li>
-
-              {/* パターンA：カテゴリ一覧ページの場合 (/blog/category/xxx) */}
-              {segments[1] === "category" && segments[2] ? (
-                <>
-                  <li><span class="text-gray-300">/</span></li>
-                  <li>
-                    <span class="text-gray-700 font-medium truncate max-w-[150px] sm:max-w-[200px] inline-block align-bottom">{finalLabel}</span>
-                  </li>
-                </>
-              ) : segments.length > 1 ? (
-                <>
-                  {category && (
-                    <>
-                      <li><span class="text-gray-300">/</span></li>
-                      <li>
-                        <a href={`/blog/category/${category.slug}`} class="hover:text-amber-600 transition-colors">
-                          {category.name}
-                        </a>
-                      </li>
-                    </>
-                  )}
-                  <li><span class="text-gray-300">/</span></li>
-                  <li>
-                    <span class="text-gray-700 font-medium truncate max-w-[150px] sm:max-w-[200px] inline-block align-bottom">{finalLabel}</span>
-                  </li>
-                </>
-              ) : null}
-            </>
-          ) : (
-            finalLabel && (
-              <>
-                <li><span class="text-gray-300">/</span></li>
-                <li>
-                  <span class="text-gray-700 font-medium truncate max-w-[200px] inline-block align-bottom">{finalLabel}</span>
-                </li>
-              </>
-            )
           )}
         </ol>
       </nav>
     )}
-	<!-- パンくずリストここまで -->
-
-
+    <!-- パンくずリストここまで -->
 
     <main>
       <slot />
-	</main>
+    </main>
 
-	<div class="my-24 max-w-6xl mx-auto px-6 md:px-16">
-    <a 
-      href={siteData.navigation.links[4].children[0].url} target="_blank" rel="noopener noreferrer"
-      class="flex items-center justify-center px-8 py-4 my-10 bg-pink-100 text-amber-900 font-bold rounded-full hover:bg-amber-300 transition-all shadow-md hover:shadow-lg"
-    >
-      {siteData.navigation.links[4].children[0].label}
-    </a>
-	</div>
+    <div class="my-24 max-w-6xl mx-auto px-6 md:px-16">
+      <a 
+        href={siteData.navigation.links[4]?.children?.[0]?.url || '#'} target="_blank" rel="noopener noreferrer"
+        class="flex items-center justify-center px-8 py-4 my-10 bg-pink-100 text-amber-900 font-bold rounded-full hover:bg-amber-300 transition-all shadow-md hover:shadow-lg"
+      >
+        {siteData.navigation.links[4]?.children?.[0]?.label || 'お問い合わせ'}
+      </a>
+    </div>
 
     <Footer />
-	<BackToTop />
+    <BackToTop />
   </body>
-
-
-
 </html>

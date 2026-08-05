@@ -1,0 +1,14 @@
+{
+  "title": "List Your Site",
+  "description": "We are looking for lightworkers to join us.",
+  "text": "100% Free",
+  "steps": [
+    "Check details",
+    "Apply via form",
+    "Publication"
+  ],
+  "button": {
+    "text": "Apply Now",
+    "link": "https://forms.gle/1Q5Mq1qipnwdaUas6"
+  }
+}
