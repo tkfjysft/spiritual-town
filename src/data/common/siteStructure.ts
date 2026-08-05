@@ -26,7 +26,8 @@ export interface SiteStructure {
   copyrightYear: string;
 }
 
-export const siteStructure: SiteStructure = {
+export const getSiteStructure = (langPrefix: string = "") => {
+  return {
   titleEn: "Spiritual Town",
   titleImage: "/logo_ci.avif",
   contact: {
@@ -35,23 +36,23 @@ export const siteStructure: SiteStructure = {
   navigation: {
     siteNameImage: "/logo_ci_header.avif",
     links: [
-      { url: "/", icon: "Home" },
+      { url: `${langPrefix}/`, icon: "Home" },
       { 
-        url: "/#map", 
+        url: `${langPrefix}/#map`, 
         icon: "Map",
         children: [
-          { url: "/#categories", icon: "LayoutGrid" },
-          { url: "/about", icon: "Info" }
+          { url: `${langPrefix}/#categories`, icon: "LayoutGrid" },
+          { url: `${langPrefix}/about`, icon: "Info" }
         ]
       },
       { 
-        url: "/oraclecards/draw", 
+        url: `${langPrefix}/oraclecards/draw`, 
         icon: "Sparkles",
         children: [
-          { url: "/oraclecards", icon: "BookOpen" }
+          { url: `${langPrefix}/oraclecards`, icon: "BookOpen" }
         ]
       },
-      { url: "/blog", icon: "PenTool" },
+      { url: `${langPrefix}/blog`, icon: "PenTool" },
       {
         url: "https://forms.gle/1Q5Mq1qipnwdaUas6",
         icon: "Send",
@@ -69,4 +70,5 @@ export const siteStructure: SiteStructure = {
     ]
   },
   copyrightYear: "Spiritual Town. All rights reserved."
+};
 };

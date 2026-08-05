@@ -8,6 +8,7 @@ export interface NavItemText {
 }
 
 export interface SiteText {
+  langPrefix: string;
   titleJp: string;
   subtitle: string;
   description: string;
@@ -22,6 +23,7 @@ export interface SiteText {
 }
 
 export const siteText: SiteText = {
+  langPrefix: "",
   titleJp: "スピリチュアルタウン",
   subtitle: "あなたの心に寄り添う、小さなお店が集まる街",
   description: `
@@ -36,9 +38,9 @@ export const siteText: SiteText = {
     links: [
       { label: "" },
       { 
-        label: "街街ｓのマップ", 
+        label: "街のマップ", 
         children: [
-          { label: "街の案内所街の案内所" },
+          { label: "街の案内所" },
           { label: "街について" }
         ]
       },

@@ -1,6 +1,7 @@
 import type { SiteText } from '@/data/jp/siteText';
 
 export const siteText: SiteText = {
+  langPrefix: "/en",
   titleJp: "Spiritual Town",
   subtitle: "A town of small shops, close to your heart",
   description: `
