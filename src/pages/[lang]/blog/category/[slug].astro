@@ -37,6 +37,17 @@ export async function getStaticPaths() {
 // 2. パスに対応するパラメータとプロパティを受け取る
 const { lang = 'jp' } = Astro.params;
 const { category, blogs } = Astro.props;
+
+// --- コンポーネントのフロントマター ---
+// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
+const pathname = Astro.url.pathname;
+const isEn = pathname.startsWith('/en');
+
+// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
+// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
+const prefix = isEn 
+  ? '/en' 
+  : (import.meta.env.DEV ? '/jp' : '');
 ---
 
 <Layout pageTitle={`${category.name}の記事一覧`}>
@@ -58,7 +69,7 @@ const { category, blogs } = Astro.props;
                 </time>
 
                 {/* 記事詳細へのリンクに言語プレフィックスを付与 */}
-                <a href={`/${lang}/blog/${blog.slug || blog.id}`} class="text-xl font-semibold text-slate-700 hover:text-amber-600 transition-colors flex-1">
+                <a href={`${prefix}/blog/${blog.slug || blog.id}`} class="text-xl font-semibold text-slate-700 hover:text-amber-600 transition-colors flex-1">
                   {blog.title}
                 </a>
               </li>

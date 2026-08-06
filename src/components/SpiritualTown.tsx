@@ -58,11 +58,22 @@ const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp' }) => {
   const categoriesData = lang === 'en' ? enCategoriesData : jpCategoriesData;
   const activeData = categoriesData.categories.find(item => item.id === selectedCategory?.id);
 
+  // --- コンポーネントのフロントマター ---
+// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
+const pathname = Astro.url.pathname;
+const isEn = pathname.startsWith('/en');
+
+// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
+// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
+const prefix = isEn 
+  ? '/en' 
+  : (import.meta.env.DEV ? '/jp' : '');
+
   return (
     <div className="relative w-full h-auto overflow-hidden rounded-2xl select-none group/map">
       {/* マップ画像 */}
       <img 
-        src="/town-map-mobile.avif" 
+        src="/images/town-map-mobile.avif" 
         alt="Spiritual Town Map"
         width="660" 
         height="1184" 
@@ -71,7 +82,7 @@ const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp' }) => {
       />
 
       <img 
-        src="/town-map.avif" 
+        src="/images/town-map.avif" 
         alt="Spiritual Town Map"
         width="2201" 
         height="1228" 
@@ -122,7 +133,7 @@ const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp' }) => {
               </button>
               {/* 言語プレフィックス付きのURL（例: /jp/category/fortune）に変更 */}
               <a 
-                href={`/${lang}/category/${activeData.id}`}
+                href={`${prefix}/category/${activeData.id}`}
                 className="px-5 py-2.5 text-base font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md shadow-teal-600/10 transition-colors inline-flex items-center justify-center gap-1 order-1 sm:order-2"
               >
                 このエリアを散策する →

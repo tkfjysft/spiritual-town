@@ -18,7 +18,7 @@ export function getStaticPaths() {
 }
 
 // 4. パラメータから現在の言語を取得
-const { lang } = Astro.params;
+const { lang = 'jp' } = Astro.params;
 
 // 5. 言語に応じたテキストデータを動的に読み込み
 const siteText = lang === 'en'
@@ -38,6 +38,17 @@ const applicationData = lang === 'en'
   : (await import('@/data/jp/index/application.json')).default;
 
 const siteStructure = getSiteStructure(siteText.langPrefix);
+
+// --- コンポーネントのフロントマター ---
+// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
+const pathname = Astro.url.pathname;
+const isEn = pathname.startsWith('/en');
+
+// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
+// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
+const prefix = isEn 
+  ? '/en' 
+  : (import.meta.env.DEV ? '/jp' : '');
 ---
 
 <Layout>
@@ -47,7 +58,7 @@ const siteStructure = getSiteStructure(siteText.langPrefix);
         <header class="text-center mb-16">
             <h1>
                 <img 
-                src={siteStructure.titleImage} 
+                src={`/images/${siteStructure.titleImage}`} 
                 alt={siteText.titleJp}
                 fetchpriority="high"
                 width="542" 
@@ -93,7 +104,7 @@ const siteStructure = getSiteStructure(siteText.langPrefix);
             </div>
             <div class="mt-8">
 <a 
-    href={`/${lang}/about/#freeReason`}
+    href={`${prefix}/about/#freeReason`}
     class="inline-block mb-4 px-8 py-4 text-amber-900 hover:text-amber-500 transition-all"
 >
     なぜ無料で掲載できるの？
@@ -134,7 +145,7 @@ const siteStructure = getSiteStructure(siteText.langPrefix);
                             <div class="web-thum md:w-[300px] md:h-[225px] lg:w-[400px] lg:h-[300px] shrink-0">
                                 <a href={spot.url} class="block h-full hover:opacity-80 transition-opacity" target="_blank" rel="noopener noreferrer">
                                     <img 
-                                        src={spot.image && spot.image.trim() !== "" ? spot.image : "/thum/nothum.avif"} 
+                                        src={`/images/${spot.image}` && `/images/${spot.image}`.trim() !== "" ? spot.image : "images/thum/nothum.avif"} 
                                         alt={spot.name}
                                         loading="lazy"
                                         class="w-full h-full aspect-[4/3] object-cover rounded-2xl shadow-md" 
@@ -185,7 +196,8 @@ const siteStructure = getSiteStructure(siteText.langPrefix);
                             {category.detailDescription}
                         </p>
 <a 
-    href={`/${lang}/category/${category.id}`} 
+
+    href={`${prefix}/category/${category.id}`} 
     class="group/btn inline-flex items-center justify-between w-full bg-teal-50 hover:bg-teal-100 text-teal-800 text-base font-bold px-6 py-6 rounded-xl border border-teal-200/60 transition-all shadow-2xs"
 >
     <span>{category.name}を散策する</span>

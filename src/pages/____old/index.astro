@@ -20,7 +20,7 @@ import applicationData from '@/data/jp/index/application.json';
         <header class="text-center mb-16">
             <h1>
                 <img 
-                src={siteData.titleImage} 
+                src={`/images/${siteData.titleImage}`} 
                 alt={siteData.title}
                 fetchpriority="high"
                 width="542" 
@@ -100,7 +100,7 @@ import applicationData from '@/data/jp/index/application.json';
                             <div class="web-thum md:w-[300px] md:h-[225px] lg:w-[400px] lg:h-[300px] shrink-0">
                                 <a href={spot.url} class="block h-full hover:opacity-80 transition-opacity" target="_blank" rel="noopener noreferrer">
                                     <img 
-                                        src={spot.image && spot.image.trim() !== "" ? spot.image : "/thum/nothum.avif"} 
+                                        src={`/images/thum/${spot.image}` && `/images/thum/${spot.image}`.trim() !== "" ? `/images/thum/${spot.image}` : "/thum/nothum.avif"} 
                                         alt={spot.name}
                                         loading="lazy"
                                         class="w-full h-full aspect-[4/3] object-cover rounded-2xl shadow-md" 

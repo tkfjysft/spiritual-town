@@ -12,7 +12,18 @@ export function getStaticPaths() {
 }
 
 // 2. 現在の言語を取得
-const { lang } = Astro.params;
+const { lang = 'jp' } = Astro.params;
+
+// --- コンポーネントのフロントマター ---
+// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
+const pathname = Astro.url.pathname;
+const isEn = pathname.startsWith('/en');
+
+// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
+// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
+const prefix = isEn 
+  ? '/en' 
+  : (import.meta.env.DEV ? '/jp' : '');
 
 // スプレッドシートから全カードを取得
 const cards = await fetchOracleCards();
@@ -35,13 +46,13 @@ const cards = await fetchOracleCards();
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-6">
       {cards.map((card) => (
         <a 
-          href={`/${lang}/oraclecards/${card.id}`} 
+          href={`${prefix}/oraclecards/${card.id}`} 
           class="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 flex flex-col items-center text-center transform hover:-translate-y-1"
         >
           {/* 画像コンテナ */}
           <div class="mb-3 rounded-xl aspect-[2/3] w-full bg-amber-50/30 flex items-center justify-center p-2 overflow-hidden">
             <img 
-              src={`/oraclecards/${card.image}`} 
+              src={`/images/oraclecards/${card.image}`} 
               alt={card.title_jp} 
               class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
@@ -58,7 +69,7 @@ const cards = await fetchOracleCards();
     {/* ホームに戻るボタン（ミドルウェアで /jp にリライトされるため / でOK） */}
     <div class="text-center mt-14">
       <a 
-        href="/" 
+          href={`/${prefix}`}  
         class="inline-block bg-gray-800 hover:bg-gray-900 text-white font-bold px-8 py-3 rounded-full transition-colors shadow-sm"
       >
         ホームに戻る
