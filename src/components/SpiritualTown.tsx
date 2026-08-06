@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import categoriesData from '@/data/jp/townCategoryInfo.json';
+import jpCategoriesData from '@/data/jp/townCategoryInfo.json';
+import enCategoriesData from '@/data/en/townCategoryInfo.json';
 
 interface ButtonConfig {
   id: string;
@@ -13,6 +14,10 @@ interface ButtonConfig {
 interface ButtonPositions {
   mobile: ButtonConfig[];
   pc: ButtonConfig[];
+}
+
+interface SpiritualTownProps {
+  lang?: string; // 言語を受け取れるようにプロパティを追加
 }
 
 const buttons: ButtonPositions = {
@@ -32,7 +37,7 @@ const buttons: ButtonPositions = {
   ]
 };
 
-const SpiritualTown = () => {
+const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp' }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<{ id: string; name: string } | null>(null);
 
@@ -48,13 +53,14 @@ const SpiritualTown = () => {
   };
 
   const currentButtons = isMobile ? buttons.mobile : buttons.pc;
-  // categoriesData.categories から該当データを検索するように変更
+  
+  // 言語に応じてデータを切り替え
+  const categoriesData = lang === 'en' ? enCategoriesData : jpCategoriesData;
   const activeData = categoriesData.categories.find(item => item.id === selectedCategory?.id);
 
   return (
     <div className="relative w-full h-auto overflow-hidden rounded-2xl select-none group/map">
       {/* マップ画像 */}
-      {/* スマホ用画像（md: で非表示） */}
       <img 
         src="/town-map-mobile.avif" 
         alt="Spiritual Town Map"
@@ -64,7 +70,6 @@ const SpiritualTown = () => {
         loading="lazy"
       />
 
-      {/* PC用画像（スマホでは非表示、md: 以上で表示） */}
       <img 
         src="/town-map.avif" 
         alt="Spiritual Town Map"
@@ -81,12 +86,10 @@ const SpiritualTown = () => {
           className="absolute z-40 flex flex-col items-center justify-center"
           style={{ top: btn.top, left: btn.left, width: btn.width, height: btn.height }}
         >
-          {/* 看板の上に浮かぶ文字キャプション */}
           <span className="absolute -top-7 px-2 py-0.5 text-[11px] md:text-xs font-bold text-slate-700 bg-white/90 backdrop-blur-[2px] rounded-md shadow-sm border border-slate-200/60 pointer-events-none whitespace-nowrap transition-transform duration-200 scale-95 group-hover/map:scale-100">
             {btn.name}
           </span>
 
-          {/* クリック判定ボタン本体 */}
           <button
             className="w-full h-full cursor-pointer rounded-lg transition-all duration-200
                    bg-teal-500/0 hover:bg-teal-500/15 border border-transparent hover:border-teal-400/60 shadow-sm"
@@ -117,8 +120,9 @@ const SpiritualTown = () => {
               >
                 街に戻る
               </button>
+              {/* 言語プレフィックス付きのURL（例: /jp/category/fortune）に変更 */}
               <a 
-                href={`/category/${activeData.id}`}
+                href={`/${lang}/category/${activeData.id}`}
                 className="px-5 py-2.5 text-base font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md shadow-teal-600/10 transition-colors inline-flex items-center justify-center gap-1 order-1 sm:order-2"
               >
                 このエリアを散策する →
