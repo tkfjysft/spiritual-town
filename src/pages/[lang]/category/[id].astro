@@ -1,6 +1,6 @@
 ---
 // 1. スタイルの読み込みとデータの読み込み
-import '../../styles/global.css';
+import '@/styles/global.css';
 import Layout from '@/layouts/Layout.astro';
 import { Image } from 'astro:assets';
 
@@ -8,19 +8,25 @@ import categoriesData from '@/data/jp/townCategoryInfo.json';
 import spotsData from '@/data/jp/townRegisteredSites.json';
 
 
+// ★ lang と id の両方の組み合わせを返すように修正
 export function getStaticPaths() {
-  return [
-    { params: { id: 'fortune' } },
-    { params: { id: 'healing' } },
-    { params: { id: 'shop' } },
-    { params: { id: 'counseling' } },
-    { params: { id: 'meditation' } },
-  ];
+  const langs = ['jp', 'en'];
+  const ids = ['fortune', 'healing', 'shop', 'counseling', 'meditation'];
+
+  const paths = [];
+  for (const lang of langs) {
+    for (const id of ids) {
+      paths.push({ params: { lang, id } });
+    }
+  }
+  return paths;
 }
 
-const { id } = Astro.params;
+// ★ lang も一緒に受け取る
+const { lang, id } = Astro.params;
 const currentSpotData = spotsData[id as keyof typeof spotsData];
 const currentCategoriesData = categoriesData.categories.find(item => item.id === id);
+
 
 // パージ対策を施した背景グラデーションの設定
 const bgGradients = {

@@ -1,0 +1,25 @@
+---
+// src/pages/oraclecards/index.astro
+import { fetchOracleCards } from '@/utils/loadOracleCards';
+import Layout from '@/layouts/Layout.astro';
+import OracleDraw from '@/components/OracleDraw.astro';
+
+
+// ★ これを追加：動的ルート（jp / en）をビルド時に生成させるため
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'jp' } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params;
+
+
+// スプレッドシートから全カードを取得
+const cards = await fetchOracleCards();
+---
+
+<Layout>
+<OracleDraw />
+</Layout>

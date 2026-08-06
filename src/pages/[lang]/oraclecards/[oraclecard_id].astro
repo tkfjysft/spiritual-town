@@ -1,17 +1,22 @@
 ---
-// src/pages/oraclecards/[oraclecard_id].astro
-import { fetchOracleCards, type OracleCard } from '../../utils/loadOracleCards';
+// src/pages/[lang]/oraclecards/[oraclecard_id].astro
+import { fetchOracleCards, type OracleCard } from '@/utils/loadOracleCards';
 import Layout from '@/layouts/Layout.astro';
 
 export async function getStaticPaths() {
   const cards = await fetchOracleCards();
+  const langs = ['jp', 'en'];
 
-  return cards.map((card) => {
-    return {
-      params: { oraclecard_id: card.id },
-      props: { card },
-    };
-  });
+  const paths = [];
+  for (const lang of langs) {
+    for (const card of cards) {
+      paths.push({
+        params: { lang, oraclecard_id: card.id },
+        props: { card },
+      });
+    }
+  }
+  return paths;
 }
 
 interface Props {
@@ -19,6 +24,7 @@ interface Props {
 }
 
 const { card } = Astro.props;
+const { lang } = Astro.params;
 
 if (!card) {
   return Astro.redirect('/404');
@@ -33,7 +39,7 @@ const categoryNameMap: Record<string, string> = {
   meditation: "瞑想番地",
 };
 
-// card.categoryName が英語スラッグ（例: "fortune"）なので、対応する日本語名を取得する（登録されていない場合はそのまま表示）
+// card.categoryName が英語スラッグなので対応する日本語名を取得
 const categorySlug = card.categoryName;
 const categoryDisplayName = categorySlug ? (categoryNameMap[categorySlug] || categorySlug) : "";
 
@@ -50,7 +56,6 @@ description={cardDescription} pageTitle={card.title_jp}
     {/* メインのカード詳細コンテナ */}
     <div class="bg-white p-6 sm:p-10 rounded-3xl shadow-sm border border-gray-100">
 
-      
       {/* カード画像エリア */}
       <div class="flex justify-center mb-10">
         <img 
@@ -74,7 +79,7 @@ description={cardDescription} pageTitle={card.title_jp}
         <div class="flex justify-center gap-3 mt-6 flex-wrap">
           {categorySlug && (
             <a 
-              href={`/category/${categorySlug}`} 
+              href={`/${lang}/category/${categorySlug}`} 
               class="bg-gray-100 hover:bg-amber-50 hover:text-amber-700 text-gray-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
             >
               📂 {categoryDisplayName}

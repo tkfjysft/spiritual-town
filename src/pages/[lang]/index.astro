@@ -92,12 +92,12 @@ const siteStructure = getSiteStructure(siteText.langPrefix);
                 </div>
             </div>
             <div class="mt-8">
-                <a 
-                    href={`/${lang}/about/#freeReason`}
-                    class="inline-block mb-4 px-8 py-4 text-amber-900 hover:text-amber-500 transition-all"
-                >
-                    なぜ無料で掲載できるの？
-                </a>
+<a 
+    href={lang === 'jp' ? '/about/#freeReason' : `/${lang}/about/#freeReason`}
+    class="inline-block mb-4 px-8 py-4 text-amber-900 hover:text-amber-500 transition-all"
+>
+    なぜ無料で掲載できるの？
+</a>
                 <div>
                     <a 
                         href={applicationData.button.link} target="_blank" rel="noopener noreferrer"
@@ -184,15 +184,15 @@ const siteStructure = getSiteStructure(siteText.langPrefix);
                         <p class="text-slate-600 text-base leading-relaxed mb-4">
                             {category.detailDescription}
                         </p>
-                        <a 
-                            href={`/${lang}/category/${category.id}`} 
-                            class="group/btn inline-flex items-center justify-between w-full bg-teal-50 hover:bg-teal-100 text-teal-800 text-base font-bold px-6 py-6 rounded-xl border border-teal-200/60 transition-all shadow-2xs"
-                        >
-                            <span>{category.name}を散策する</span>
-                            <span class="ml-2 transform group-hover/btn:translate-x-1 transition-transform duration-200 text-teal-600">
-                                →
-                            </span>
-                        </a>
+<a 
+    href={lang === 'jp' ? `/category/${category.id}` : `/${lang}/category/${category.id}`} 
+    class="group/btn inline-flex items-center justify-between w-full bg-teal-50 hover:bg-teal-100 text-teal-800 text-base font-bold px-6 py-6 rounded-xl border border-teal-200/60 transition-all shadow-2xs"
+>
+    <span>{category.name}を散策する</span>
+    <span class="ml-2 transform group-hover/btn:translate-x-1 transition-transform duration-200 text-teal-600">
+        →
+    </span>
+</a>
 
                         <CategoriesDirectory category={category} />
                     </div>

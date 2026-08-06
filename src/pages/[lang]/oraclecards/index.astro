@@ -1,7 +1,18 @@
 ---
-// src/pages/oraclecards/index.astro
-import { fetchOracleCards } from '../../utils/loadOracleCards';
+// src/pages/[lang]/oraclecards/index.astro
+import { fetchOracleCards } from '@/utils/loadOracleCards';
 import Layout from '@/layouts/Layout.astro';
+
+// 1. 動的ルート（jp / en）のビルド設定
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'jp' } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+// 2. 現在の言語を取得
+const { lang } = Astro.params;
 
 // スプレッドシートから全カードを取得
 const cards = await fetchOracleCards();
@@ -24,10 +35,10 @@ const cards = await fetchOracleCards();
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-6">
       {cards.map((card) => (
         <a 
-          href={`/oraclecards/${card.id}`} 
+          href={`/${lang}/oraclecards/${card.id}`} 
           class="group bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 flex flex-col items-center text-center transform hover:-translate-y-1"
         >
-          {/* 画像コンテナ：object-contain に変更して画像が切れないように調整 */}
+          {/* 画像コンテナ */}
           <div class="mb-3 rounded-xl aspect-[2/3] w-full bg-amber-50/30 flex items-center justify-center p-2 overflow-hidden">
             <img 
               src={`/oraclecards/${card.image}`} 
@@ -44,7 +55,7 @@ const cards = await fetchOracleCards();
       ))}
     </div>
 
-    {/* ホームに戻るボタン */}
+    {/* ホームに戻るボタン（ミドルウェアで /jp にリライトされるため / でOK） */}
     <div class="text-center mt-14">
       <a 
         href="/" 
