@@ -121,7 +121,7 @@ const cardsJson = JSON.stringify(cards);
   </div>
 </section>
 
-<script define:vars={{ cardsJson }}>
+<script define:vars={{ cardsJson, lang }}>
   const cards = JSON.parse(cardsJson);
 
   function drawCard() {
@@ -130,7 +130,8 @@ const cardsJson = JSON.stringify(cards);
     const randomIndex = Math.floor(Math.random() * cards.length);
     const selectedCard = cards[randomIndex];
 
-    window.location.href = `/oraclecards/${selectedCard.id}`;
+    // 末尾のスラッシュをつけて確実にファイルにヒットさせる
+    window.location.href = `/${lang}/oraclecards/${selectedCard.id}/`;
   }
 
   const btn = document.getElementById('draw-card-btn');

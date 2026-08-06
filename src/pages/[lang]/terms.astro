@@ -1,5 +1,16 @@
 ---
+// src/pages/[lang]/terms.astro
 import Layout from '@/layouts/Layout.astro';
+
+// 1. 動的ルート（jp / en）のビルド設定
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'jp' } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang = 'jp' } = Astro.params;
 ---
 
 <Layout title="免責事項 | Spiritual Town">

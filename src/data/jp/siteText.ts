@@ -23,7 +23,7 @@ export interface SiteText {
 }
 
 export const siteText: SiteText = {
-  langPrefix: "",
+  langPrefix: "/jp",
   titleJp: "スピリチュアルタウン",
   subtitle: "あなたの心に寄り添う、小さなお店が集まる街",
   description: `

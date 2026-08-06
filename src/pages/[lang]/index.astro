@@ -93,7 +93,7 @@ const siteStructure = getSiteStructure(siteText.langPrefix);
             </div>
             <div class="mt-8">
 <a 
-    href={lang === 'jp' ? '/about/#freeReason' : `/${lang}/about/#freeReason`}
+    href={`/${lang}/about/#freeReason`}
     class="inline-block mb-4 px-8 py-4 text-amber-900 hover:text-amber-500 transition-all"
 >
     なぜ無料で掲載できるの？
@@ -185,7 +185,7 @@ const siteStructure = getSiteStructure(siteText.langPrefix);
                             {category.detailDescription}
                         </p>
 <a 
-    href={lang === 'jp' ? `/category/${category.id}` : `/${lang}/category/${category.id}`} 
+    href={`/${lang}/category/${category.id}`} 
     class="group/btn inline-flex items-center justify-between w-full bg-teal-50 hover:bg-teal-100 text-teal-800 text-base font-bold px-6 py-6 rounded-xl border border-teal-200/60 transition-all shadow-2xs"
 >
     <span>{category.name}を散策する</span>
