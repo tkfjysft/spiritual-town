@@ -3,35 +3,40 @@ import '@/styles/global.css';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import BackToTop from '@/components/BackToTop.astro';
 
 import { getSiteStructure } from '@/data/common/siteStructure';
 import metaData from '@/data/meta.json';
-import BackToTop from '@/components/BackToTop.astro';
 
 interface Props {
   title?: string;
   description?: string;
   pageTitle?: string;
-  category?: { 
-    name: string;
-    slug: string;
-  };
 }
 
-const { title, description, pageTitle, category } = Astro.props;
+const { title, description, pageTitle } = Astro.props;
 
-// --- 現在の言語（jp または en）をパスから判定 ---
+// --- 1. 言語と環境の判定 ---
 const rawPath = Astro.url.pathname;
 const segments = rawPath.split("/").filter(Boolean);
-const lang = segments[0] === 'en' ? 'en' : 'jp';
+const isEn = segments[0] === 'en';
+const lang = isEn ? 'en' : 'jp';
 
-const siteText = lang === 'en' 
+// 開発環境かつ日本語なら '/jp'、英語なら '/en'、本番日本語なら ''
+const prefix = isEn ? '/en' : (import.meta.env.DEV ? '/jp' : '');
+
+// --- 2. 各種データの動的インポート（Layoutで一括管理） ---
+const siteText = isEn 
   ? (await import('@/data/en/siteText')).siteText 
   : (await import('@/data/jp/siteText')).siteText;
 
+const townCategoryInfo = isEn
+  ? (await import('@/data/en/townCategoryInfo.json')).default
+  : (await import('@/data/jp/townCategoryInfo.json')).default;
+
 const siteStructure = getSiteStructure(siteText.langPrefix);
 
-// --- Meta情報の処理 ---
+// --- 3. Meta情報の処理 ---
 const normalizedPath = rawPath.endsWith('/') && rawPath !== '/' ? rawPath.slice(0, -1) : rawPath;
 const normalizedPathWithSlash = normalizedPath + '/';
 
