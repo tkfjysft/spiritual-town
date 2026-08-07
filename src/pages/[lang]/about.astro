@@ -4,16 +4,13 @@ import Layout from '@/layouts/Layout.astro';
 import aboutData from '@/data/about/about.json';
 import { Image } from 'astro:assets';
 
-// 1. 動的ルート（jp / en）のビルド設定
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
 export function getStaticPaths() {
-  return [
-    { params: { lang: 'jp' } },
-    { params: { lang: 'en' } },
-  ];
+  return getLangStaticPaths();
 }
 
-// 現在の言語を取得
-const { lang } = Astro.params;
+const { siteText, townCategoryInfo, newsDate, applicationData, siteStructure, prefix } = await getPageData(Astro.url);
 ---
 
 <Layout>
