@@ -60,4 +60,4 @@ export const siteText: SiteText = {
     ]
   },
   copyright: "Spiritual Town. All rights reserved."
-};  
+}; 

@@ -14,6 +14,18 @@ export function getStaticPaths() {
 // 現在の言語を取得
 const { lang = 'jp' } = Astro.params;
 
+// --- コンポーネントのフロントマター ---
+// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
+const pathname = Astro.url.pathname;
+const isEn = pathname.startsWith('/en');
+
+// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
+// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
+const prefix = isEn 
+  ? '/en' 
+  : (import.meta.env.DEV ? '/jp' : '');
+
+
 // microCMSからブログ記事一覧を取得
 const response = await client.get<BlogResponse>({
   endpoint: 'spitown-blog',
@@ -34,7 +46,7 @@ const blogs = response.contents;
                 {blogs.map((blog) => (
                     <article class="bg-white border border-[#ece8e1] rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                         {/* 記事詳細へのリンクに言語プレフィックスを付与 */}
-                        <a href={`/${lang}/blog/${blog.slug || blog.id}`} class="block">
+                        <a href={`${prefix}/blog/${blog.slug || blog.id}`} class="block">
                             {/* アイキャッチ画像がある場合 */}
                             {blog.eyecatch && (
                                 <div class="aspect-video w-full overflow-hidden bg-stone-100">
@@ -55,7 +67,7 @@ const blogs = response.contents;
                             {blog.category && (
                                 <div class="mb-2">
                                     <a 
-                                        href={`/${lang}/blog/category/${blog.category.slug}`}
+                                        href={`${prefix}/blog/category/${blog.category.slug}`}
                                         class="inline-block px-2.5 py-0.5 text-xs font-medium bg-amber-50 text-amber-800 rounded-full hover:bg-amber-100 transition-colors"
                                     >
                                         {blog.category.name}
@@ -64,7 +76,7 @@ const blogs = response.contents;
                             )}
 
                             <h2 class="font-serif font-bold text-lg text-[#4a423d] hover:text-amber-600 transition-colors line-clamp-2">
-                                <a href={`/${lang}/blog/${blog.slug || blog.id}`} class="block">
+                                <a href={`${prefix}/blog/${blog.slug || blog.id}`} class="block">
                                     {blog.title}
                                 </a>
                             </h2>

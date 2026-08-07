@@ -10,6 +10,21 @@ interface Props {
 
 const { lang = 'jp', siteText } = Astro.props;
 
+
+
+
+// --- コンポーネントのフロントマター ---
+// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
+const pathname = Astro.url.pathname;
+const isEn = pathname.startsWith('/en');
+
+// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
+// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
+const prefix = isEn 
+  ? '/en' 
+  : (import.meta.env.DEV ? '/jp' : '');
+
+
 // 保険として siteText がなければ動的に読み込む
 let currentSiteText = siteText;
 if (!currentSiteText) {
@@ -52,7 +67,7 @@ const cardsJson = JSON.stringify(cards);
         {/* 背景と余白（bg-amber-50/30 と p-2）を加え、object-contain で画像全体を収める */}
         <div class="w-full h-full bg-amber-50/30 rounded-2xl py-2 border-0 border-amber-200/80 group-hover:shadow-xl transition-shadow flex items-center justify-center overflow-hidden">
         <img 
-            src="/oraclecards/oraclecard_back.webp" 
+            src="/images/oraclecards/oraclecard_back.webp" 
             alt="オラクルカード背表紙" 
             class="w-full h-full object-contain rounded-xl"
             loading="lazy"
@@ -79,7 +94,7 @@ const cardsJson = JSON.stringify(cards);
 
       {/* 修正：siteData から siteStructure.navigation.links に変更 */}
       <a 
-        href={siteStructure.navigation.links[2].children?.[0]?.url || '#'} 
+        href={`${prefix}/oraclecards`} 
         class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-bold px-8 py-3.5 rounded-full shadow-2xs transition-colors flex items-center justify-center"
       >
         📚 カード一覧を見る
@@ -121,7 +136,7 @@ const cardsJson = JSON.stringify(cards);
   </div>
 </section>
 
-<script define:vars={{ cardsJson, lang }}>
+<script define:vars={{ cardsJson }}>
   const cards = JSON.parse(cardsJson);
 
   function drawCard() {
@@ -130,8 +145,24 @@ const cardsJson = JSON.stringify(cards);
     const randomIndex = Math.floor(Math.random() * cards.length);
     const selectedCard = cards[randomIndex];
 
-    // 末尾のスラッシュをつけて確実にファイルにヒットさせる
-    window.location.href = `/${lang}/oraclecards/${selectedCard.id}/`;
+    // 現在のURLパスからセグメントを取得する
+    // 例: /jp/oraclecards/draw -> ['', 'jp', 'oraclecards', 'draw']
+    // 例: /oraclecards/draw -> ['', 'oraclecards', 'draw']
+    const pathSegments = window.location.pathname.split('/');
+    const firstSegment = pathSegments[1];
+
+    let prefix = '';
+
+    // 1番目のセグメントが 'en' または 'jp' の場合は、そのままプレフィックスにする
+    if (firstSegment === 'en' || firstSegment === 'jp') {
+      prefix = `/${firstSegment}`;
+    } else {
+      // それ以外（本番のルート直下など）の場合は空文字
+      prefix = '';
+    }
+
+    // 遷移先のURLを組み立てる
+    window.location.href = `${prefix}/oraclecards/${selectedCard.id}/`;
   }
 
   const btn = document.getElementById('draw-card-btn');

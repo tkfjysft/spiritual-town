@@ -16,8 +16,10 @@ interface ButtonPositions {
   pc: ButtonConfig[];
 }
 
+// 修正1: lang と prefix を受け取れるように型定義を追加
 interface SpiritualTownProps {
-  lang?: string; // 言語を受け取れるようにプロパティを追加
+  lang?: string;
+  prefix?: string;
 }
 
 const buttons: ButtonPositions = {
@@ -37,7 +39,7 @@ const buttons: ButtonPositions = {
   ]
 };
 
-const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp' }) => {
+const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp', prefix = '' }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<{ id: string; name: string } | null>(null);
 
@@ -58,11 +60,12 @@ const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp' }) => {
   const categoriesData = lang === 'en' ? enCategoriesData : jpCategoriesData;
   const activeData = categoriesData.categories.find(item => item.id === selectedCategory?.id);
 
+
   return (
     <div className="relative w-full h-auto overflow-hidden rounded-2xl select-none group/map">
       {/* マップ画像 */}
       <img 
-        src="/town-map-mobile.avif" 
+        src="/images/town-map-mobile.avif" 
         alt="Spiritual Town Map"
         width="660" 
         height="1184" 
@@ -71,7 +74,7 @@ const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp' }) => {
       />
 
       <img 
-        src="/town-map.avif" 
+        src="/images/town-map.avif" 
         alt="Spiritual Town Map"
         width="2201" 
         height="1228" 
@@ -122,7 +125,7 @@ const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp' }) => {
               </button>
               {/* 言語プレフィックス付きのURL（例: /jp/category/fortune）に変更 */}
               <a 
-                href={`/${lang}/category/${activeData.id}`}
+                href={`${prefix}/category/${activeData.id}`}
                 className="px-5 py-2.5 text-base font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md shadow-teal-600/10 transition-colors inline-flex items-center justify-center gap-1 order-1 sm:order-2"
               >
                 このエリアを散策する →

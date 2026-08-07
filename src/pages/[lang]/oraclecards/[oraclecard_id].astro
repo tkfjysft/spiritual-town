@@ -24,8 +24,19 @@ interface Props {
 }
 
 const { card } = Astro.props;
-const { lang } = Astro.params;
+const { lang = 'jp' } = Astro.params;
 
+// --- コンポーネントのフロントマター ---
+// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
+const pathname = Astro.url.pathname;
+const isEn = pathname.startsWith('/en');
+
+// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
+// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
+const prefix = isEn 
+  ? '/en' 
+  : (import.meta.env.DEV ? '/jp' : '');
+  
 if (!card) {
   return Astro.redirect('/404');
 }
@@ -59,7 +70,7 @@ description={cardDescription} pageTitle={card.title_jp}
       {/* カード画像エリア */}
       <div class="flex justify-center mb-10">
         <img 
-          src={`/oraclecards/${card.image}`} 
+          src={`/images/oraclecards/${card.image}`} 
           alt={card.title_jp} 
           style="max-width: 280px; width: 100%; height: auto;"
           class="block rounded-xl shadow-lg"
@@ -79,7 +90,7 @@ description={cardDescription} pageTitle={card.title_jp}
         <div class="flex justify-center gap-3 mt-6 flex-wrap">
           {categorySlug && (
             <a 
-              href={`/${lang}/category/${categorySlug}`} 
+              href={`${prefix}/category/${categorySlug}`} 
               class="bg-gray-100 hover:bg-amber-50 hover:text-amber-700 text-gray-700 px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
             >
               📂 {categoryDisplayName}
@@ -127,7 +138,7 @@ description={cardDescription} pageTitle={card.title_jp}
 
       <div class="text-center mt-10">
         <a 
-          href="/" 
+          href={prefix || '/'}
           class="inline-block bg-gray-800 hover:bg-gray-900 text-white font-bold px-8 py-3 rounded-full transition-colors"
         >
           ホームに戻る
