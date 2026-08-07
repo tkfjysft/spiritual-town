@@ -39,18 +39,32 @@ const matchedPage = metaData.pages[rawPath] || metaData.pages[normalizedPath] ||
 const currentTitle = title || matchedPage?.title || metaData.defaultTitle;
 const currentDescription = description || matchedPage?.description || metaData.defaultDescription;
 
-// --- 固定スラッグの日本語名マッピング ---
-const slugLabelMap: Record<string, string> = {
-  about: '街について',
-  category: 'カテゴリ',
-  oraclecards: 'オラクルカード',
-  blog: 'ブログ',
-  terms: '利用規約',
-  'privacy-policy': 'プライバシーポリシー',
-  draw: 'オラクルカードを引く',
+// --- 【言語別】固定スラッグの名称マッピング ---
+const slugLabelMap: Record<string, Record<string, string>> = {
+  jp: {
+    about: '街について',
+    category: 'カテゴリ',
+    oraclecards: 'オラクルカード',
+    blog: 'ブログ',
+    terms: '免責事項',
+    'privacy-policy': 'プライバシーポリシー',
+    draw: 'オラクルカードを引く',
+  },
+  en: {
+    about: 'About',
+    category: 'Category',
+    oraclecards: 'Oracle Cards',
+    blog: 'Blog',
+    terms: 'Disclaimer',
+    'privacy-policy': 'Privacy Policy',
+    draw: 'Draw Oracle Card',
+  }
 };
 
-// --- 階層的なパンくずリストのアイテムを動적構築 ---
+// 現在の言語に対応するマップを選択
+const currentSlugMap = slugLabelMap[lang] || slugLabelMap.jp;
+
+// --- 階層的なパンくずリストのアイテムを動的構築 ---
 interface BreadcrumbItem {
   label: string;
   url: string;
@@ -59,27 +73,25 @@ interface BreadcrumbItem {
 const breadcrumbs: BreadcrumbItem[] = [];
 
 if (rawPath !== '/' && rawPath !== '/jp/' && rawPath !== '/en/' && rawPath !== '/jp' && rawPath !== '/en') {
-  // 言語プレフィックス（jp/en）を除いたセグメントを取得
   const pathSegments = (segments[0] === 'jp' || segments[0] === 'en') ? segments.slice(1) : segments;
   
-  // パスの起点を正しく設定（英語なら /en、日本語本番なら空、開発時などで /jp を許容する場合は調整）
-  // ここでは本番URLが /blog/ のようになるため、日本語のときはプレフィックスを空にする
   let currentAccumulatedPath = lang === 'en' ? '/en' : '';
 
   pathSegments.forEach((segment, index) => {
     currentAccumulatedPath += `/${segment}`;
     let label = '';
 
-    // 1. 固定マップにあればそれを使う
-    if (slugLabelMap[segment]) {
-      label = slugLabelMap[segment];
+    // 1. 言語別の固定マップにあればそれを使う
+    if (currentSlugMap[segment]) {
+      label = currentSlugMap[segment];
     }
-    // 2. カテゴリ詳細ページ（例: /category/fortune の fortune 部分）
+    // 2. カテゴリ詳細ページ
     else if (pathSegments[0] === 'category' && index === 1) {
+      // 英語用のカテゴリ名があれば対応させられますが、一旦セグメント名または一致するもの
       const matchedCategory = townCategoryInfo.categories.find(item => item.id === segment);
       label = matchedCategory ? matchedCategory.name : segment;
     }
-    // 3. ブログの詳細記事など（例: /blog/00001 の記事ID部分）
+    // 3. ブログの詳細記事など
     else if (pathSegments[0] === 'blog' && index === 1) {
       label = pageTitle || segment;
     }
@@ -136,10 +148,10 @@ const isTopPage = rawPath === '/' || rawPath === '/jp/' || rawPath === '/en/' ||
 
     <!-- パンくずリスト -->
     {!isTopPage && breadcrumbs.length > 0 && (
-      <nav class="mt-2 md:mt-10 mb-8 text-sm text-gray-500 max-w-6xl mx-auto px-6 md:px-16" aria-label="パンくずリスト">
+      <nav class="mt-2 md:mt-10 mb-8 text-sm text-gray-500 max-w-6xl mx-auto px-6 md:px-16" aria-label="Breadcrumb">
         <ol class="flex items-center space-x-2 flex-wrap">
           <li>
-            <a href={homeLink} class="hover:text-amber-600 transition-colors">ホーム</a>
+            <a href={homeLink} class="hover:text-amber-600 transition-colors">{lang === 'en' ? 'Home' : 'ホーム'}</a>
           </li>
 
           {breadcrumbs.map((item, idx) => (
@@ -168,7 +180,7 @@ const isTopPage = rawPath === '/' || rawPath === '/jp/' || rawPath === '/en/' ||
         href={siteStructure.navigation.links[4]?.children?.[0]?.url || '#'} target="_blank" rel="noopener noreferrer"
         class="flex items-center justify-center px-8 py-4 my-10 bg-pink-100 text-amber-900 font-bold rounded-full hover:bg-amber-300 transition-all shadow-md hover:shadow-lg"
       >
-        {siteStructure.navigation.links[4]?.children?.[0]?.label || 'お問い合わせ'}
+        {siteStructure.navigation.links[4]?.children?.[0]?.label || (lang === 'en' ? 'Contact' : 'お問い合わせ')}
       </a>
     </div>
 
