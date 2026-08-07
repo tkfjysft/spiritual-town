@@ -2,9 +2,9 @@
 import '@/styles/global.css';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
 
 import { getSiteStructure } from '@/data/common/siteStructure';
-import townCategoryInfo from '@/data/jp/townCategoryInfo.json';
 import metaData from '@/data/meta.json';
 import BackToTop from '@/components/BackToTop.astro';
 
@@ -38,84 +38,6 @@ const normalizedPathWithSlash = normalizedPath + '/';
 const matchedPage = metaData.pages[rawPath] || metaData.pages[normalizedPath] || metaData.pages[normalizedPathWithSlash];
 const currentTitle = title || matchedPage?.title || metaData.defaultTitle;
 const currentDescription = description || matchedPage?.description || metaData.defaultDescription;
-
-// --- 【言語別】固定スラッグの名称マッピング ---
-const slugLabelMap: Record<string, Record<string, string>> = {
-  jp: {
-    about: '街について',
-    category: 'カテゴリ',
-    oraclecards: 'オラクルカード',
-    blog: 'ブログ',
-    terms: '免責事項',
-    'privacy-policy': 'プライバシーポリシー',
-    draw: 'オラクルカードを引く',
-  },
-  en: {
-    about: 'About',
-    category: 'Category',
-    oraclecards: 'Oracle Cards',
-    blog: 'Blog',
-    terms: 'Disclaimer',
-    'privacy-policy': 'Privacy Policy',
-    draw: 'Draw Oracle Card',
-  }
-};
-
-// 現在の言語に対応するマップを選択
-const currentSlugMap = slugLabelMap[lang] || slugLabelMap.jp;
-
-// --- 階層的なパンくずリストのアイテムを動的構築 ---
-interface BreadcrumbItem {
-  label: string;
-  url: string;
-}
-
-const breadcrumbs: BreadcrumbItem[] = [];
-
-if (rawPath !== '/' && rawPath !== '/jp/' && rawPath !== '/en/' && rawPath !== '/jp' && rawPath !== '/en') {
-  const pathSegments = (segments[0] === 'jp' || segments[0] === 'en') ? segments.slice(1) : segments;
-  
-  let currentAccumulatedPath = lang === 'en' ? '/en' : '';
-
-  pathSegments.forEach((segment, index) => {
-    currentAccumulatedPath += `/${segment}`;
-    let label = '';
-
-    // 1. 言語別の固定マップにあればそれを使う
-    if (currentSlugMap[segment]) {
-      label = currentSlugMap[segment];
-    }
-    // 2. カテゴリ詳細ページ
-    else if (pathSegments[0] === 'category' && index === 1) {
-      // 英語用のカテゴリ名があれば対応させられますが、一旦セグメント名または一致するもの
-      const matchedCategory = townCategoryInfo.categories.find(item => item.id === segment);
-      label = matchedCategory ? matchedCategory.name : segment;
-    }
-    // 3. ブログの詳細記事など
-    else if (pathSegments[0] === 'blog' && index === 1) {
-      label = pageTitle || segment;
-    }
-    // 4. その他の場合
-    else {
-      if (index === pathSegments.length - 1 && pageTitle) {
-        label = pageTitle;
-      } else {
-        label = segment;
-      }
-    }
-
-    breadcrumbs.push({
-      label: label,
-      url: currentAccumulatedPath + '/'
-    });
-  });
-}
-
-// ホームへのリンク先
-const homeLink = lang === 'en' ? '/en/' : '/';
-
-// トップページ判定
-const isTopPage = rawPath === '/' || rawPath === '/jp/' || rawPath === '/en/' || rawPath === '/jp' || rawPath === '/en';
 ---
 
 <html lang={lang}>
@@ -147,28 +69,7 @@ const isTopPage = rawPath === '/' || rawPath === '/jp/' || rawPath === '/en/' ||
     <Header lang={lang} siteText={siteText} />
 
     <!-- パンくずリスト -->
-    {!isTopPage && breadcrumbs.length > 0 && (
-      <nav class="mt-2 md:mt-10 mb-8 text-sm text-gray-500 max-w-6xl mx-auto px-6 md:px-16" aria-label="Breadcrumb">
-        <ol class="flex items-center space-x-2 flex-wrap">
-          <li>
-            <a href={homeLink} class="hover:text-amber-600 transition-colors">{lang === 'en' ? 'Home' : 'ホーム'}</a>
-          </li>
-
-          {breadcrumbs.map((item, idx) => (
-            <>
-              <li><span class="text-gray-300">/</span></li>
-              <li>
-                {idx === breadcrumbs.length - 1 ? (
-                  <span class="text-gray-700 font-medium truncate max-w-[250px] inline-block align-bottom">{item.label}</span>
-                ) : (
-                  <a href={item.url} class="hover:text-amber-600 transition-colors">{item.label}</a>
-                )}
-              </li>
-            </>
-          ))}
-        </ol>
-      </nav>
-    )}
+<Breadcrumbs pageTitle={pageTitle} />
     <!-- パンくずリストここまで -->
 
     <main>
