@@ -39,7 +39,7 @@ const matchedPage = metaData.pages[rawPath] || metaData.pages[normalizedPath] ||
 const currentTitle = title || matchedPage?.title || metaData.defaultTitle;
 const currentDescription = description || matchedPage?.description || metaData.defaultDescription;
 
-// --- 固定スラッグの日本語名マッピング（最小限） ---
+// --- 固定スラッグの日本語名マッピング ---
 const slugLabelMap: Record<string, string> = {
   about: '街について',
   category: 'カテゴリ',
@@ -47,9 +47,10 @@ const slugLabelMap: Record<string, string> = {
   blog: 'ブログ',
   terms: '利用規約',
   'privacy-policy': 'プライバシーポリシー',
+  draw: 'オラクルカードを引く',
 };
 
-// --- 階層的なパンくずリストのアイテムを動的構築 ---
+// --- 階層的なパンくずリストのアイテムを動적構築 ---
 interface BreadcrumbItem {
   label: string;
   url: string;
@@ -61,7 +62,9 @@ if (rawPath !== '/' && rawPath !== '/jp/' && rawPath !== '/en/' && rawPath !== '
   // 言語プレフィックス（jp/en）を除いたセグメントを取得
   const pathSegments = (segments[0] === 'jp' || segments[0] === 'en') ? segments.slice(1) : segments;
   
-  let currentAccumulatedPath = `/${lang}`;
+  // パスの起点を正しく設定（英語なら /en、日本語本番なら空、開発時などで /jp を許容する場合は調整）
+  // ここでは本番URLが /blog/ のようになるため、日本語のときはプレフィックスを空にする
+  let currentAccumulatedPath = lang === 'en' ? '/en' : '';
 
   pathSegments.forEach((segment, index) => {
     currentAccumulatedPath += `/${segment}`;
@@ -78,16 +81,13 @@ if (rawPath !== '/' && rawPath !== '/jp/' && rawPath !== '/en/' && rawPath !== '
     }
     // 3. ブログの詳細記事など（例: /blog/00001 の記事ID部分）
     else if (pathSegments[0] === 'blog' && index === 1) {
-      // 記事ページ等の場合、ページ側から渡された pageTitle があればそれを優先、なければセグメント（ID等）
       label = pageTitle || segment;
     }
-    // 4. その他の場合（メタデータやページタイトル、フォールバック）
+    // 4. その他の場合
     else {
-      // 最後のセグメントかつ pageTitle があればそれを優先
       if (index === pathSegments.length - 1 && pageTitle) {
         label = pageTitle;
       } else {
-        // ナビゲーション等から探す、なければセグメント名
         label = segment;
       }
     }
@@ -101,6 +101,9 @@ if (rawPath !== '/' && rawPath !== '/jp/' && rawPath !== '/en/' && rawPath !== '
 
 // ホームへのリンク先
 const homeLink = lang === 'en' ? '/en/' : '/';
+
+// トップページ判定
+const isTopPage = rawPath === '/' || rawPath === '/jp/' || rawPath === '/en/' || rawPath === '/jp' || rawPath === '/en';
 ---
 
 <html lang={lang}>
@@ -131,8 +134,8 @@ const homeLink = lang === 'en' ? '/en/' : '/';
   <body class="bg-slate-50 antialiased pt-16">
     <Header lang={lang} siteText={siteText} />
 
-    <!-- パンくずリスト（階層対応） -->
-    {breadcrumbs.length > 0 && (
+    <!-- パンくずリスト -->
+    {!isTopPage && breadcrumbs.length > 0 && (
       <nav class="mt-2 md:mt-10 mb-8 text-sm text-gray-500 max-w-6xl mx-auto px-6 md:px-16" aria-label="パンくずリスト">
         <ol class="flex items-center space-x-2 flex-wrap">
           <li>
