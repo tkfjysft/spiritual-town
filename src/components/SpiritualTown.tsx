@@ -16,8 +16,10 @@ interface ButtonPositions {
   pc: ButtonConfig[];
 }
 
+// 修正1: lang と prefix を受け取れるように型定義を追加
 interface SpiritualTownProps {
-  lang?: string; // 言語を受け取れるようにプロパティを追加
+  lang?: string;
+  prefix?: string;
 }
 
 const buttons: ButtonPositions = {
@@ -37,7 +39,7 @@ const buttons: ButtonPositions = {
   ]
 };
 
-const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp' }) => {
+const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp', prefix = '' }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<{ id: string; name: string } | null>(null);
 
@@ -58,16 +60,6 @@ const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp' }) => {
   const categoriesData = lang === 'en' ? enCategoriesData : jpCategoriesData;
   const activeData = categoriesData.categories.find(item => item.id === selectedCategory?.id);
 
-  // --- コンポーネントのフロントマター ---
-// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
-const pathname = Astro.url.pathname;
-const isEn = pathname.startsWith('/en');
-
-// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
-// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
-const prefix = isEn 
-  ? '/en' 
-  : (import.meta.env.DEV ? '/jp' : '');
 
   return (
     <div className="relative w-full h-auto overflow-hidden rounded-2xl select-none group/map">
