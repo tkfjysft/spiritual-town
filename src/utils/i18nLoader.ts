@@ -5,7 +5,9 @@ export async function getPageData(url: URL) {
   const segments = url.pathname.split("/").filter(Boolean);
   const isEn = segments[0] === 'en';
   const lang = isEn ? 'en' : 'jp';
-const prefix = isEn ? '/en' : (segments[0] === 'jp' ? '/jp' : (import.meta.env.DEV ? '/jp' : ''));
+const prefix = isEn 
+  ? '/en' 
+  : (import.meta.env.DEV ? '/jp' : '');
 
   const metaData = isEn
   ? (await import('@/data/en/meta')).metaData
