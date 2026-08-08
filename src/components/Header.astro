@@ -1,38 +1,29 @@
 ---
 import * as Icons from 'lucide-astro';
-import { getSiteStructure } from '@/data/common/siteStructure';
-
-interface Props {
-  lang?: string;
-  siteText?: any;
-}
-
-const { lang = 'jp', siteText } = Astro.props;
-
-// 親から渡ってこなかった場合の保険として、言語に応じて jp か en を動的に読み込む
-let currentSiteText = siteText;
-if (!currentSiteText) {
-  try {
-    currentSiteText = lang === 'en' 
-      ? (await import('@/data/en/siteText')).siteText
-      : (await import('@/data/jp/siteText')).siteText;
-  } catch (e) {
-    currentSiteText = (await import('@/data/jp/siteText')).siteText;
-  }
-}
-
-const siteStructure = getSiteStructure(siteText.langPrefix);
+import LanguageSwitcher from '@/components/LanguageSwitcher.astro';
 
 
-// 動的に取得した currentSiteText を使ってマージする
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// （※コンポーネントなので getStaticPaths() は書かない）
+
+// ページファイルと【まったく同じ】データ取得
+const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+////////言語切替
+
+
+
+// ナビゲーションリンクのラベル結合処理
 const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
   ...link,
-  label: currentSiteText.navigation.links[index]?.label ?? '',
+  label: siteText.navigation?.links?.[index]?.label ?? '',
   children: link.children?.map((child, childIndex) => ({
     ...child,
-    label: currentSiteText.navigation.links[index]?.children?.[childIndex]?.label ?? ''
+    label: siteText.navigation?.links?.[index]?.children?.[childIndex]?.label ?? ''
   }))
 }));
+
 ---
 
 <nav class="fixed top-0 left-0 right-0 h-16 md:h-24 min-h-[64px] bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-50">
@@ -118,6 +109,10 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
             );
         })}
     </div>
+
+	<!-- ★ 言語切り替えスイッチ ★ -->
+    <LanguageSwitcher />
+
 
     <button id="menu-btn" class="lg:hidden p-2 text-slate-800" aria-label="メニューを開く">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

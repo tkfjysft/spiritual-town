@@ -1,0 +1,32 @@
+---
+import { getPageData } from '@/utils/i18nLoader';
+
+const { lang } = await getPageData(Astro.url);
+const currentPath = Astro.url.pathname;
+
+// 1. 現在のパスから '/en' や '/jp' を完全に排除して、純粋なベースパス（例: '/about/'）を作る
+let cleanPath = currentPath
+  .replace(/^\/en/, '')
+  .replace(/^\/jp/, '') 
+  || '/';
+
+// 2. 現在の言語が英語なら「日本語用（本番ならそのまま、開発なら/jp付き）」、
+//    日本語なら「英語用（/en付き）」に組み立て直す
+let otherLangUrl = '';
+
+if (lang === 'en') {
+  // 英語 → 日本語
+  otherLangUrl = import.meta.env.DEV ? `/jp${cleanPath === '/' ? '' : cleanPath}` : cleanPath;
+} else {
+  // 日本語 → 英語
+  otherLangUrl = `/en${cleanPath === '/' ? '' : cleanPath}`;
+}
+---
+
+<a 
+  href={otherLangUrl}
+  class="flex items-center gap-1.5 text-sm font-bold px-4 py-2 rounded-full border border-amber-200 text-amber-900 bg-amber-50 hover:bg-amber-100 transition-all shadow-xs"
+>
+  <i class="fa-solid fa-globe"></i>
+  {lang === 'en' ? '日本語' : 'English'}
+</a>

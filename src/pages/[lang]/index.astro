@@ -6,49 +6,22 @@ import SpiritualTown from '@/components/SpiritualTown.tsx';
 import Header from '@/components/Header.astro';
 import CategoriesDirectory from '@/components/CategoriesDirectory.astro';
 
-// 2. 共通構造データの読み込み（言語に依存しない画像やURLなど）
-import { getSiteStructure } from '@/data/common/siteStructure';
 
-// 3. 動的ルート（ja / en）の定義
+
+
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// ページファイルにだけ必要な関数
 export function getStaticPaths() {
-  return [
-    { params: { lang: 'jp' } },
-    { params: { lang: 'en' } },
-  ];
+  return getLangStaticPaths();
 }
 
-// 4. パラメータから現在の言語を取得
-const { lang = 'jp' } = Astro.params;
+// 全ファイル共通のデータ取得（これをそのまま貼る）
+const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+////////言語切替
 
-// 5. 言語に応じたテキストデータを動的に読み込み
-const siteText = lang === 'en'
-  ? (await import('@/data/en/siteText')).siteText
-  : (await import('@/data/jp/siteText')).siteText;
-
-const townCategoryInfo = lang === 'en'
-  ? (await import('@/data/en/townCategoryInfo.json')).default
-  : (await import('@/data/jp/townCategoryInfo.json')).default;
-
-const newsDate = lang === 'en'
-  ? (await import('@/data/en/index/townNews.json')).default
-  : (await import('@/data/jp/index/townNews.json')).default;
-
-const applicationData = lang === 'en'
-  ? (await import('@/data/en/index/application.json')).default
-  : (await import('@/data/jp/index/application.json')).default;
-
-const siteStructure = getSiteStructure(siteText.langPrefix);
-
-// --- コンポーネントのフロントマター ---
-// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
-const pathname = Astro.url.pathname;
-const isEn = pathname.startsWith('/en');
-
-// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
-// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
-const prefix = isEn 
-  ? '/en' 
-  : (import.meta.env.DEV ? '/jp' : '');
 ---
 
 <Layout>

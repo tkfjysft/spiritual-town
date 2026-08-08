@@ -13,3 +13,8 @@
 html {
   scroll-behavior: smooth;
 }
+
+body {
+	/* background-image: url('/images/body-bg.avif'); */
+	background-color: rgb(195, 197, 172);
+}

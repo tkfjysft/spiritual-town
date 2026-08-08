@@ -2,15 +2,22 @@
 // src/pages/[lang]/terms.astro
 import Layout from '@/layouts/Layout.astro';
 
-// 1. 動的ルート（jp / en）のビルド設定
+
+
+
+
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// ページファイルにだけ必要な関数
 export function getStaticPaths() {
-  return [
-    { params: { lang: 'jp' } },
-    { params: { lang: 'en' } },
-  ];
+  return getLangStaticPaths();
 }
 
-const { lang = 'jp' } = Astro.params;
+// 全ファイル共通のデータ取得（これをそのまま貼る）
+const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+////////言語切替
 ---
 
 <Layout title="免責事項 | Spiritual Town">
