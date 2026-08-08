@@ -145,7 +145,7 @@ const prefix = isEn
                             <div class="web-thum md:w-[300px] md:h-[225px] lg:w-[400px] lg:h-[300px] shrink-0">
                                 <a href={spot.url} class="block h-full hover:opacity-80 transition-opacity" target="_blank" rel="noopener noreferrer">
                                     <img 
-                                        src={`/images/${spot.image}` && `/images/${spot.image}`.trim() !== "" ? spot.image : "images/thum/nothum.avif"} 
+                                        src={`/images/${spot.image}` && `/images/${spot.image}`.trim() !== "" ? `/images/${spot.image}` : "images/thum/nothum.avif"} 
                                         alt={spot.name}
                                         loading="lazy"
                                         class="w-full h-full aspect-[4/3] object-cover rounded-2xl shadow-md" 
