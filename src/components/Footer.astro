@@ -2,36 +2,52 @@
 // Props として各言語の siteText と siteStructure を受け取るようにします
 import { getSiteStructure } from '@/data/common/siteStructure';
 
-interface Props {
-  lang?: string;
-  siteText?: any;
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// （※コンポーネントなので getStaticPaths() は書かない）
+
+// ページファイルと【まったく同じ】データ取得
+const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+////////言語切替
+
+
+// ローカル環境（DEV）で、かつURLに言語プレフィックスがない場合は強制的に '/jp' をセット
+if (import.meta.env.DEV && !prefix && !Astro.url.pathname.startsWith('/en')) {
+  prefix = '/jp';
 }
 
-const { lang = 'jp', siteText } = Astro.props;
 
-// 親から渡ってこなかった場合の保険として、言語に応じて jp か en を動的に読み込む
-let currentSiteText = siteText;
-if (!currentSiteText) {
-  try {
-    currentSiteText = lang === 'en' 
-      ? (await import('@/data/en/siteText')).siteText
-      : (await import('@/data/jp/siteText')).siteText;
-  } catch (e) {
-    currentSiteText = (await import('@/data/jp/siteText')).siteText;
+// ★【重要】URLに prefix（例: /jp）が確実に含まれるようにするヘルパー関数
+const applyPrefix = (url: string) => {
+  // 外部サイトリンク（http〜）や、すでに prefix が付いている場合、ハッシュだけのときはそのまま返す
+  if (!url || url.startsWith('http') || url.startsWith('//') || url.startsWith('#')) {
+    return url;
   }
-}
+  // すでに /jp や /en から始まっていればそのまま、なければ prefix を結合する
+  if (prefix && !url.startsWith(prefix)) {
+    // 例: prefix が '/jp' で url が '/about' の場合 -> '/jp/about'
+    // url が '/' の場合 -> '/jp/'
+    return `${prefix}${url.startsWith('/') ? '' : '/'}${url}`;
+  }
+  return url;
+};
 
-const siteStructure = getSiteStructure(currentSiteText.langPrefix);
-
-// 動的に取得した currentSiteText を使ってマージする
+// ナビゲーションリンクのラベル結合 & URLへのプレフィックス適用
 const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
   ...link,
-  label: currentSiteText.navigation.links[index]?.label ?? '',
+  // ★ ここでリンクのURLに prefix を適用
+  url: applyPrefix(link.url),
+  label: siteText.navigation?.links?.[index]?.label ?? '',
   children: link.children?.map((child, childIndex) => ({
     ...child,
-    label: currentSiteText.navigation.links[index]?.children?.[childIndex]?.label ?? ''
+    // ★ 子メニューのURLにも prefix を適用
+    url: applyPrefix(child.url),
+    label: siteText.navigation?.links?.[index]?.children?.[childIndex]?.label ?? ''
   }))
 }));
+
 ---
 
 <footer class="bg-[#fdfbf7] border-t border-[#ece8e1] pt-12 mt-16">
@@ -102,8 +118,8 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
         
         <div>
             <ul class="flex justify-end gap-8 text-sm text-stone-500 mt-2 border-b-1 border-slate-200 py-6">
-                <li><a href={`${siteText.langPrefix || ''}/privacy-policy`}>プライバシーポリシー</a></li>
-                <li><a href={`${siteText.langPrefix || ''}/terms`}>免責事項</a></li>
+                <li><a href={`${prefix}${siteText.langPrefix || ''}/privacy-policy`}>プライバシーポリシー</a></li>
+                <li><a href={`${prefix}${siteText.langPrefix || ''}/terms`}>免責事項</a></li>
             </ul>
         </div>
 
