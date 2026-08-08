@@ -47,6 +47,9 @@ const prefix = isEn ? '/en' : (segments[0] === 'jp' ? '/jp' : (import.meta.env.D
 	? (await import('@/data/en/oraclecards/draw')).drawData
 	: (await import('@/data/jp/oraclecards/draw')).drawData;
 
+	const oraclecardsData = isEn
+	? (await import('@/data/en/oraclecards/index')).oraclecardsData
+	: (await import('@/data/jp/oraclecards/index')).oraclecardsData;
 
     const siteStructure = getSiteStructure(siteText.langPrefix);
 
@@ -64,6 +67,7 @@ const prefix = isEn ? '/en' : (segments[0] === 'jp' ? '/jp' : (import.meta.env.D
 	privacyPolicyData,
 	termsData,
   	drawData,
+	oraclecardsData,
 	};
 }
 

@@ -9,7 +9,7 @@ import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
 // （※コンポーネントなので getStaticPaths() は書かない）
 
 // ページファイルと【まったく同じ】データ取得
-const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData } = await getPageData(Astro.url);
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData,  oraclecardsData } = await getPageData(Astro.url);
 
 
 ////////言語切替

@@ -4,29 +4,26 @@ import Papa from 'papaparse';
 // スプレッドシートのカラム構成に合わせたTypeScriptの型定義
 export interface OracleCard {
   id: string;
+  title: string;
   title_en: string;
-  title_jp: string;
   image: string;
-  messageTitle_en: string;
-  messageTitle_jp: string;
-  message_en: string;
-  message_jp: string;
-  explanationTitle_en: string;
-  explanationTitle_jp: string;
-  explanation_en: string;
-  explanation_jp: string;
-  actionTitle_en: string;
-  actionTitle_jp: string;
-  action_en: string;
-  action_jp: string;
+  messageTitle: string;
+  message: string;
+  explanationTitle: string;
+  explanation: string;
+  actionTitle: string;
+  action: string;
   categoryName: string;
-  recommendedItem: string; // ← スプレッドシートの列名に合わせています
+  recommendedItem: string;
   slug: string;
 }
 
-export async function fetchOracleCards(): Promise<OracleCard[]> {
-  // 先ほどGoogleスプレッドシートの「ウェブに公開」で取得したCSVのURLをここに貼り付けます
-  const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTATFlbABsJFNJI_sniiEE2jTPf1lg60SCYVrCCJBsjvc9DjRodGznsWMYCpJv8Up5LVqCMtJrP_D7/pub?gid=0&single=true&output=csv';
+export async function fetchOracleCards(lang: 'jp' | 'en' = 'jp'): Promise<OracleCard[]> {
+  // 日本語版のURL (gid=0) と 英語版のURL (gid=1756528425)
+  const jpCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTATFlbABsJFNJI_sniiEE2jTPf1lg60SCYVrCCJBsjvc9DjRodGznsWMYCpJv8Up5LVqCMtJrP_D7/pub?gid=0&single=true&output=csv';
+  const enCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTATFlbABsJFNJI_sniiEE2jTPf1lg60SCYVrCCJBsjvc9DjRodGznsWMYCpJv8Up5LVqCMtJrP_D7/pub?gid=1756528425&single=true&output=csv';
+
+  const csvUrl = lang === 'en' ? enCsvUrl : jpCsvUrl;
 
   try {
     const response = await fetch(csvUrl);
@@ -39,7 +36,7 @@ export async function fetchOracleCards(): Promise<OracleCard[]> {
 
     return parsed.data;
   } catch (error) {
-    console.error('オラクルカードデータの取得に失敗しました:', error);
+    console.error(`オラクルカードデータ(${lang})の取得に失敗しました:`, error);
     return [];
   }
 }

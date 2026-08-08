@@ -3,9 +3,6 @@
 import { fetchOracleCards } from '@/utils/loadOracleCards';
 import Layout from '@/layouts/Layout.astro';
 
-// スプレッドシートから全カードを取得
-const cards = await fetchOracleCards();
-
 
 
 
@@ -19,10 +16,13 @@ export function getStaticPaths() {
 }
 
 // 全ファイル共通のデータ取得（これをそのまま貼る）
-const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData } = await getPageData(Astro.url);
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData,  oraclecardsData } = await getPageData(Astro.url);
 
 
 ////////言語切替
+
+// スプレッドシートから全カードを取得
+const cards = await fetchOracleCards(lang);
 
 ---
 
@@ -31,12 +31,8 @@ const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsD
 
     {/* ページタイトル */}
     <header class="text-center mb-12">
-      <h1 class="text-3xl font-bold text-gray-900 mb-3">
-        ✨ オラクルカード一覧
-      </h1>
-      <p class="text-gray-600">
-        スピリチュアルタウンのオリジナル全オラクルカード（全{cards.length}枚）をご覧いただけます。
-      </p>
+      <h1 class="text-3xl font-bold text-gray-900 mb-3" set:html={oraclecardsData.pageTitle} />
+      <p class="text-gray-600" set:html={oraclecardsData.description} />
     </header>
 
     {/* カード一覧グリッド */}
@@ -50,28 +46,30 @@ const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsD
           <div class="mb-3 rounded-xl aspect-[2/3] w-full bg-amber-50/30 flex items-center justify-center p-2 overflow-hidden">
             <img 
               src={`/images/oraclecards/${card.image}`} 
-              alt={card.title_jp} 
+              alt={card.title} 
               class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
             />
           </div>
           <span class="text-xs text-gray-400 mb-1">No. {card.id}</span>
           <h2 class="text-sm font-bold text-gray-800 group-hover:text-amber-600 transition-colors line-clamp-1">
-            {card.title_jp}
+            {card.title}
           </h2>
         </a>
       ))}
     </div>
 
-    {/* ホームに戻るボタン（ミドルウェアで /jp にリライトされるため / でOK） */}
     <div class="text-center mt-14">
       <a 
          href={prefix || '/'}
         class="inline-block bg-gray-800 hover:bg-gray-900 text-white font-bold px-8 py-3 rounded-full transition-colors shadow-sm"
       >
-        ホームに戻る
+        {oraclecardsData.buttonText}
       </a>
     </div>
 
 </div>
 </Layout>
+
+
+<!-- {cards.length}枚）をご覧いただけます。 -->
