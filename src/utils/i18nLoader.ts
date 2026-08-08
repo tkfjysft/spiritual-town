@@ -34,3 +34,29 @@ export function getLangStaticPaths() {
     { params: { lang: 'en' } },
   ];
 }
+
+
+
+// src/utils/i18nLoader.ts に追加するイメージ
+import { client, type BlogResponse } from '@/lib/microcms';
+
+
+// ★ ブログ用の staticPaths を生成するヘルパー関数
+export async function getBlogStaticPaths() {
+  const response = await client.get<BlogResponse>({
+    endpoint: 'spitown-blog',
+    queries: { limit: 100 },
+  });
+
+  const languages = ['jp', 'en'];
+
+  return languages.flatMap((lang) =>
+    response.contents.map((blog) => ({
+      params: { 
+        lang, 
+        slug: blog.slug || blog.id 
+      },
+      props: { blog },
+    }))
+  );
+}

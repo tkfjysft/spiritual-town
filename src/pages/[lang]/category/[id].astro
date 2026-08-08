@@ -23,7 +23,7 @@ export function getStaticPaths() {
 }
 
 // ★ lang も一緒に受け取る
-const { lang, id } = Astro.params;
+const { id } = Astro.params;
 const currentSpotData = spotsData[id as keyof typeof spotsData];
 const currentCategoriesData = categoriesData.categories.find(item => item.id === id);
 
@@ -38,6 +38,19 @@ const bgGradients = {
 };
 
 const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
+
+
+
+
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// （※コンポーネントなので getStaticPaths() は書かない）
+
+// ページファイルと【まったく同じ】データ取得
+const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+////////言語切替
 ---
 
 <Layout>
@@ -88,7 +101,7 @@ const currentBg = bgGradients[id as keyof typeof bgGradients] || "bg-slate-800";
                     rel="noopener noreferrer" 
                 >
             <img 
-                src={`/images/thum/${spot.image}` && `/images/thum/${spot.image}`.trim().length > 0 ? `/images/thum/${spot.image}` : "nothum.avif" }
+                src={spot.image && spot.image.trim() !== "" ? `/images/thum/${spot.image}` : "/images/thum/nothum.avif"}
                 alt={spot.name}
                 loading="eager" 
                 fetchpriority="high"

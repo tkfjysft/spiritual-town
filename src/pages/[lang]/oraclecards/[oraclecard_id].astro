@@ -24,19 +24,7 @@ interface Props {
 }
 
 const { card } = Astro.props;
-const { lang = 'jp' } = Astro.params;
 
-// --- コンポーネントのフロントマター ---
-// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
-const pathname = Astro.url.pathname;
-const isEn = pathname.startsWith('/en');
-
-// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
-// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
-const prefix = isEn 
-  ? '/en' 
-  : (import.meta.env.DEV ? '/jp' : '');
-  
 if (!card) {
   return Astro.redirect('/404');
 }
@@ -57,6 +45,20 @@ const categoryDisplayName = categorySlug ? (categoryNameMap[categorySlug] || cat
 const cardDescription = card.message_jp 
   ? `${card.message_jp.slice(0, 100)}...（${card.title_jp}のメッセージと意味）` 
   : `${card.title_jp}のオラクルカードメッセージと意味をご紹介します。`;
+
+
+
+
+  
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// （※コンポーネントなので getStaticPaths() は書かない）
+
+// ページファイルと【まったく同じ】データ取得
+const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+////////言語切替
+
 ---
 
 <Layout title={`${card.title_jp}のメッセージ・意味 | Spiritual Town オラクルカード`}

@@ -3,30 +3,25 @@
 import { fetchOracleCards } from '@/utils/loadOracleCards';
 import Layout from '@/layouts/Layout.astro';
 
-// 1. 動的ルート（jp / en）のビルド設定
-export function getStaticPaths() {
-  return [
-    { params: { lang: 'jp' } },
-    { params: { lang: 'en' } },
-  ];
-}
-
-// 2. 現在の言語を取得
-const { lang = 'jp' } = Astro.params;
-
-// --- コンポーネントのフロントマター ---
-// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
-const pathname = Astro.url.pathname;
-const isEn = pathname.startsWith('/en');
-
-// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
-// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
-const prefix = isEn 
-  ? '/en' 
-  : (import.meta.env.DEV ? '/jp' : '');
-
 // スプレッドシートから全カードを取得
 const cards = await fetchOracleCards();
+
+
+
+
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// ページファイルにだけ必要な関数
+export function getStaticPaths() {
+  return getLangStaticPaths();
+}
+
+// 全ファイル共通のデータ取得（これをそのまま貼る）
+const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+////////言語切替
+
 ---
 
 <Layout>
