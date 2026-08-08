@@ -18,6 +18,7 @@ const lang = isEn ? 'en' : 'jp';
 // ※ 必要に応じてご自身のルーティング規則に合わせて調整してください
 const prefix = isEn ? '/en' : (import.meta.env.DEV ? '/jp' : '');
 
+
 // パスセグメントから言語部分を除外して純粋な階層だけを取り出す
 const pathSegments = (segments[0] === 'en' || segments[0] === 'jp') ? segments.slice(1) : segments;
 
