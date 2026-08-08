@@ -1,4 +1,31 @@
-{
+// src/data/jp/townRegisteredSites.ts
+
+export interface TownSpot {
+  isNew: "new" | "old";
+  name: string;
+  url: string;
+  subtitle: string;
+  description: string;
+  tags: string[];
+  image: string;
+}
+
+export interface TownCategorySpots {
+  title: string;
+  description: string;
+  bgGradient: string;
+  spots: TownSpot[];
+}
+
+export interface TownRegisteredSitesData {
+  fortune: TownCategorySpots;
+  healing: TownCategorySpots;
+  shop: TownCategorySpots;
+  counseling: TownCategorySpots;
+  meditation: TownCategorySpots;
+}
+
+export const spotsData: TownRegisteredSitesData = {
   "fortune": {
     "title": "占い番地",
     "description": "運命の糸を解き明かし、進むべき未来を優しく照らす館が集まるエリアです。",
@@ -399,4 +426,4 @@
     "bgGradient": "from-sky-500 to-blue-600",
     "spots": []
   }
-}
+};

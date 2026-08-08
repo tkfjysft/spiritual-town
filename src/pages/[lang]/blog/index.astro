@@ -24,7 +24,9 @@ export function getStaticPaths() {
 }
 
 // 全ファイル共通のデータ取得（これをそのまま貼る）
-const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData } = await getPageData(Astro.url);
+
+
 ////////言語切替
 
 ---

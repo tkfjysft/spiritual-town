@@ -5,7 +5,7 @@ import Footer from '@/components/Footer.astro';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import BackToTop from '@/components/BackToTop.astro';
 
-import metaData from '@/data/meta.json';
+// import metaData from '@/data/meta.json';
 
 
 ////////言語切替
@@ -25,17 +25,28 @@ const { title, description, pageTitle } = Astro.props;
 const rawPath = Astro.url.pathname;
 
 // 全ファイル共通のデータ取得（これをそのまま貼る）
-const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData } = await getPageData(Astro.url);
+
+
 ////////言語切替
 
 
 // --- 3. Meta情報の処理 ---
-const normalizedPath = rawPath.endsWith('/') && rawPath !== '/' ? rawPath.slice(0, -1) : rawPath;
-const normalizedPathWithSlash = normalizedPath + '/';
+// 1. パスから言語プレフィックス（/jp または /en）を除去する
+let cleanPath = rawPath.replace(/^\/(jp|en)(?=\/|$)/, '');
 
-const matchedPage = metaData.pages[rawPath] || metaData.pages[normalizedPath] || metaData.pages[normalizedPathWithSlash];
+// 2. スラッシュの正規化
+if (cleanPath.endsWith('/') && cleanPath !== '/') {
+  cleanPath = cleanPath.slice(0, -1);
+}
+const cleanPathWithSlash = cleanPath + '/' === '//' ? '/' : cleanPath + '/';
+const cleanPathWithoutSlash = cleanPath === '' ? '/' : cleanPath;
+
+// 3. マッチング処理
+const matchedPage = metaData.pages[cleanPathWithoutSlash] || metaData.pages[cleanPathWithSlash];
 const currentTitle = title || matchedPage?.title || metaData.defaultTitle;
 const currentDescription = description || matchedPage?.description || metaData.defaultDescription;
+
 ---
 
 <html lang={lang}>

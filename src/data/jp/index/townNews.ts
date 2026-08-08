@@ -1,4 +1,21 @@
-{
+// src/data/jp/index/townNews.ts
+
+export interface NewsItem {
+  date: string;
+  name: string;
+  siteName: string;
+  description: string;
+  image: string;
+  url: string;
+}
+
+export interface TownNewsData {
+  title: string;
+  subtitle: string;
+  items: NewsItem[];
+}
+
+export const townNewsData: TownNewsData = {
   "title": "お知らせ",
   "subtitle": "「スピリチュアルタウン」にご登録いただいた、今話題の素敵なおすすめウェブサイトをご紹介します。",
   "items": [
@@ -51,4 +68,4 @@
       "url": "https://kalinart.base.shop/"
     }
   ]
-}
+};

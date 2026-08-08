@@ -9,7 +9,9 @@ import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
 // （※コンポーネントなので getStaticPaths() は書かない）
 
 // ページファイルと【まったく同じ】データ取得
-const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData } = await getPageData(Astro.url);
+
+
 ////////言語切替
 
 
@@ -65,7 +67,9 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
             <div class="lg:w-1/4 mb-8 lg:mb-0">
                 <h3 class="font-serif text-[#4a423d] font-bold text-lg mb-3">
                     {siteStructure.titleEn} <br />
+					{lang !== 'en' && (
                     <span class="text-sm">（{siteText.titleJp || siteText.title}）</span>
+					)}
                 </h3>
                 <p class="text-sm text-[#7a726b] leading-relaxed">
                     {siteText.subtitle || "心と体のバランスを整え、明日をもっと前向きに。無料のオラクルカードいやしと占い、信頼できる癒しのスポットを集めた総合ポータルサイトです。"}
@@ -74,7 +78,7 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
 
             <!-- 右側：サイトマップ・メニュー（siteStructure.navigation.links を使用） -->
             <div class="lg:w-2/3">
-                <h3 class="font-serif text-[#4a423d] font-bold text-sm tracking-wider uppercase mb-6">スピリチュアルタウンの案内</h3>
+                <h3 class="text-[#4a423d] font-bold text-sm tracking-wider mb-6">Spiritual Town Sitemap</h3>
                 
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-x-10 gap-y-8 text-sm">
                     {navigationLinks.map((link: any) => (
@@ -112,6 +116,7 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
             </div>
         </div>
 
+		{lang === 'jp' && (
         <div class="flex flex-wrap justify-end gap-6 mt-6 pt-4 border-t-1 border-slate-200">
             <div class="flex items-center gap-8">
                 {/* Instagram */}
@@ -120,11 +125,12 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
                 <a href="https://lin.ee/wsdI1Xn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-line text-2xl text-stone-500"></i></a>
             </div>
         </div>
+		)}
         
         <div>
             <ul class="flex justify-end gap-8 text-sm text-stone-500 mt-2 border-b-1 border-slate-200 py-6">
-                <li><a href={`${prefix}/privacy-policy`}>プライバシーポリシー</a></li>
-                <li><a href={`${prefix}/terms`}>免責事項</a></li>
+                <li><a href={`${prefix}/privacypolicy`}>{siteText.subNavigation.links[0].label}</a></li>
+                <li><a href={`${prefix}/terms`}>{siteText.subNavigation.links[1].label}</a></li>
             </ul>
         </div>
 

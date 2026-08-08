@@ -1,10 +1,38 @@
-{
+// src/data/jp/townCategoryInfo.ts
+
+export interface SubCategory {
+  title: string;
+  icon: string;
+  items: string[];
+}
+
+export interface TownCategory {
+  id: string;
+  name: string;
+  TranslationOfWelcome: string;
+  linkName: string;
+  icon: string;
+  categoriesRead: string;
+  description: string;
+  detailDescription: string;
+  subCategories: SubCategory[];
+}
+
+export interface TownCategoryInfoData {
+  title: string;
+  subTitle: string;
+  categories: TownCategory[];
+}
+
+export const townCategoryInfo: TownCategoryInfoData = {
   "title": "街の案内所（スピリチュアル・癒やしのカテゴリ一覧）",
   "subTitle": "占い、ヒーリング、ショップ、カウンセリング、瞑想など、あなたの目的にぴったりのジャンルやお店をここから見つけてみましょう。",
   "categories": [
     {
       "id": "fortune",
       "name": "占い番地",
+      "TranslationOfWelcome": "Welcome the ",	  
+      "linkName": "占い番地を散策する",
       "icon": "🔮",
       "categoriesRead": "おすすめのオンライン占い・無料占いサイト一覧",
       "description": "恋愛占い・タロット・占術など、運命の糸を解き明かし、進むべき未来を優しく照らす館が集まるエリアです。",
@@ -35,6 +63,7 @@
     {
       "id": "healing",
       "name": "ヒーリング番地",
+      "linkName": "ヒーリング番地を散策する",
       "icon": "🌿",
       "categoriesRead": "ヒーリングサロン、癒やし、リラクゼーション等",
       "description": "BTS（ボディトランクスイッチ）・ヒーリングサロン・オーラ診断・心身の調和など、日々の疲れを解きほぐし、心を整えるセラピーが満載です。",
@@ -50,6 +79,7 @@
     {
       "id": "shop",
       "name": "ショップ番地",
+      "linkName": "ショップ番地を散策する",
       "icon": "🛍️",
       "categoriesRead": "パワーストーン通販、オラクルカード取扱店、スピリチュアルグッズ等",
       "description": "パワーストーンやオラクルカード、香りのアイテムなど、日常を彩る特別なスピリチュアルグッズや通販ショップを集めました。",
@@ -65,6 +95,7 @@
     {
       "id": "counseling",
       "name": "カウンセリング番地",
+      "linkName": "カウンセリング番地を散策する",
       "icon": "☕",
       "categoriesRead": "カウンセリング、心の悩み・相談、スピリチュアルカウンセラー等",
       "description": "一人で抱えきれない悩みに寄り添い、心の声を丁寧に聴いてくれる専門家たちが待っています。",
@@ -80,6 +111,7 @@
     {
       "id": "meditation",
       "name": "瞑想番地",
+      "linkName": "瞑想番地を散策する",
       "icon": "🧘",
       "categoriesRead": "マインドフルネス、瞑想ワークショップ、瞑想の方法・やり方等",
       "description": "マインドフルネスや瞑想ワークショップなど、内なる静けさと繋がるためのヒントが集まる場所です。",
@@ -93,4 +125,4 @@
       ]
     }
   ]
-}
+};

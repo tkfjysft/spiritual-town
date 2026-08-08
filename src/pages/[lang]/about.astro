@@ -1,7 +1,7 @@
 ---
 // src/pages/[lang]/about.astro
 import Layout from '@/layouts/Layout.astro';
-import aboutData from '@/data/about/about.json';
+import { aboutData } from '@/data/jp/about/about';
 import { Image } from 'astro:assets';
 
 
@@ -16,7 +16,9 @@ export function getStaticPaths() {
 }
 
 // 全ファイル共通のデータ取得（これをそのまま貼る）
-const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData } = await getPageData(Astro.url);
+
+
 ////////言語切替
 ---
 
@@ -87,6 +89,7 @@ const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, appli
       </div>
     </div>
 
+	{lang === 'jp' && (
     <section class="py-30 px-[2vw] md:px-10 lg:mx-auto">
       <div class="max-w-4xl mx-auto mt-16">
         <h2 class="text-2xl font-serif text-[#4a423d] mb-10 text-center">
@@ -110,6 +113,7 @@ const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, appli
         </div>
       </div>
     </section>
+	)}
 
   </article>
 </Layout>

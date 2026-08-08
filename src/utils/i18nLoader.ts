@@ -5,28 +5,68 @@ export async function getPageData(url: URL) {
   const segments = url.pathname.split("/").filter(Boolean);
   const isEn = segments[0] === 'en';
   const lang = isEn ? 'en' : 'jp';
-  const prefix = isEn ? '/en' : (import.meta.env.DEV ? '/jp' : '');
+const prefix = isEn ? '/en' : (segments[0] === 'jp' ? '/jp' : (import.meta.env.DEV ? '/jp' : ''));
+
+  const metaData = isEn
+  ? (await import('@/data/en/meta')).metaData
+  : (await import('@/data/jp/meta')).metaData;
 
   const siteText = isEn
     ? (await import('@/data/en/siteText')).siteText
     : (await import('@/data/jp/siteText')).siteText;
 
   const townCategoryInfo = isEn
-    ? (await import('@/data/en/townCategoryInfo.json')).default
-    : (await import('@/data/jp/townCategoryInfo.json')).default;
+    ? (await import('@/data/en/townCategoryInfo')).townCategoryInfo
+    : (await import('@/data/jp/townCategoryInfo')).townCategoryInfo;
 
   const newsDate = isEn
-    ? (await import('@/data/en/index/townNews.json')).default
-    : (await import('@/data/jp/index/townNews.json')).default;
+    ? (await import('@/data/en/index/townNews')).townNewsData
+    : (await import('@/data/jp/index/townNews')).townNewsData;
 
   const applicationData = isEn
-    ? (await import('@/data/en/index/application.json')).default
-    : (await import('@/data/jp/index/application.json')).default;
+    ? (await import('@/data/en/index/application')).applicationData
+    : (await import('@/data/jp/index/application')).applicationData;
 
-  const siteStructure = getSiteStructure(siteText.langPrefix);
+	const spotsData = isEn
+	? (await import('@/data/en/townRegisteredSites')).spotsData
+	: (await import('@/data/jp/townRegisteredSites')).spotsData
 
-  return { lang, prefix, siteText, townCategoryInfo, newsDate, applicationData, siteStructure };
+	const aboutData = isEn
+	? (await import('@/data/en/about/about')).aboutData
+	: (await import('@/data/jp/about/about')).aboutData
+
+	const privacyPolicyData = isEn
+    ? (await import('@/data/en/privacyPolicy/privacyPolicy')).privacyPolicyData
+    : (await import('@/data/jp/privacyPolicy/privacyPolicy')).privacyPolicyData;
+
+	const termsData = isEn
+	? (await import('@/data/en/terms/terms')).termsData
+	: (await import('@/data/jp/terms/terms')).termsData;
+
+	const drawData = isEn
+	? (await import('@/data/en/oraclecards/draw')).drawData
+	: (await import('@/data/jp/oraclecards/draw')).drawData;
+
+
+    const siteStructure = getSiteStructure(siteText.langPrefix);
+
+	return { 
+	lang, 
+	prefix, 
+	metaData, 
+	siteText, 
+	townCategoryInfo, 
+	newsDate, 
+	applicationData, 
+	spotsData, 
+	siteStructure, 
+	aboutData, 
+	privacyPolicyData,
+	termsData,
+  	drawData,
+	};
 }
+
 
 export function getLangStaticPaths() {
   return [

@@ -1,4 +1,15 @@
-{
+export interface PageMeta {
+  title: string;
+  description: string;
+}
+
+export interface MetaData {
+  defaultTitle: string;
+  defaultDescription: string;
+  pages: Record<string, PageMeta>;
+}
+
+export const metaData: MetaData = {
   "defaultTitle": "スピリチュアルタウン | 占い・ヒーリング・カウンセリング・癒しのポータルサイト",
   "defaultDescription": "人間関係の疲れや心のモヤモヤを癒す、占い・ヒーリング・カウンセリング・瞑想のポータルサイト「スピリチュアルタウン」。無料で引けるオラクルカードや、厳選されたライトワーカー・サロン情報をご紹介。",
   "pages": {
@@ -39,4 +50,4 @@
       "description": "「スピ・タウン」で引けるすべてのオラクルカード一覧です。それぞれのカードに込められた深いメッセージや意味をご覧いただけます。今のあなたに必要な心のお守りや気づきをここで見つけてみませんか？"
     }
   }
-}
+};

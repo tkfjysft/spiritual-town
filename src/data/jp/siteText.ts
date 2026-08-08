@@ -7,6 +7,10 @@ export interface NavItemText {
   children?: NavChildText[];
 }
 
+export interface SubNavItemText {
+  label: string;
+}
+
 export interface SiteText {
   langPrefix: string;
   titleJp: string;
@@ -19,6 +23,9 @@ export interface SiteText {
   navigation: {
     links: NavItemText[];
   };
+  subNavigation: {
+    links: SubNavItemText[];
+  };  
   copyright: string;
 }
 
@@ -57,6 +64,12 @@ export const siteText: SiteText = {
           { label: "お問い合わせ" }
         ]
       }
+    ]
+  },
+  subNavigation: {
+    links: [
+      { label: "プライバシーポリシー" },
+      { label: "免責事項" }
     ]
   },
   copyright: "Spiritual Town. All rights reserved."

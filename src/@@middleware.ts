@@ -14,7 +14,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   // ★ ルート直下に置いてあり、言語プレフィックスを付けたくないパスはリライトしない
   if (
-    pathname === '/privacy-policy' || pathname === '/privacy-policy/' ||
+    pathname === '/privacypolicy' || pathname === '/privacypolicy/' ||
     pathname === '/terms' || pathname === '/terms/' ||
     pathname === '/about' || pathname === '/about/' ||
     pathname.startsWith('/blog') ||

@@ -1,5 +1,5 @@
 ---
-import townCategoryInfo from '@/data/jp/townCategoryInfo.json';
+import {townCategoryInfo} from '@/data/jp/townCategoryInfo';
 
 interface Props {
   pageTitle?: string;
@@ -30,7 +30,7 @@ const slugLabelMap: Record<string, Record<string, string>> = {
     oraclecards: 'オラクルカード',
     blog: 'ブログ',
     terms: '免責事項',
-    'privacy-policy': 'プライバシーポリシー',
+    'privacypolicy': 'プライバシーポリシー',
     draw: 'オラクルカードを引く',
   },
   en: {
@@ -39,7 +39,7 @@ const slugLabelMap: Record<string, Record<string, string>> = {
     oraclecards: 'Oracle Cards',
     blog: 'Blog',
     terms: 'Disclaimer',
-    'privacy-policy': 'Privacy Policy',
+    'privacypolicy': 'Privacy Policy',
     draw: 'Draw Oracle Card',
   }
 };

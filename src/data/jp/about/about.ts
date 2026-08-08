@@ -1,4 +1,35 @@
-{
+// src/data/about/about.ts
+
+export interface AboutFeature {
+  title: string;
+  description: string;
+  icon?: string;
+  url?: string;
+  qr?: string;
+}
+
+export interface AboutSection {
+  id: string;
+  title: string;
+  content?: string;
+  subTitle?: string;
+  list?: { text: string }[];
+  content2?: string;
+  content3?: string;
+  features?: AboutFeature[];
+}
+
+export interface AboutData {
+  pageTitle: string;
+  hero: {
+    title: string;
+    description: string;
+  };
+  sections: AboutSection[];
+  image: string;
+}
+
+export const aboutData: AboutData = {
   "pageTitle": "Spiritual Town について",
   "hero": {
     "title": "スピリチュアルタウン：心に灯りをともす場所",
