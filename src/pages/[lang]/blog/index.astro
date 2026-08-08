@@ -33,7 +33,7 @@ const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsD
 
 <Layout>
     <div class="max-w-6xl mx-auto px-6 md:px-16 py-16">
-        <h1 class="font-serif text-3xl font-bold mb-8 text-center text-[#4a423d]">ブログ記事一覧</h1>
+        <h1 class="font-serif text-3xl font-bold mb-8 text-center text-[#4a423d]">{lang === 'jp' ? "ブログ記事一覧" : "Blog Posts"}</h1>
 
         {blogs.length === 0 ? (
             <p class="text-center text-stone-500">まだ記事がありません。</p>
