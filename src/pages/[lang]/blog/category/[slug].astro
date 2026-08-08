@@ -19,9 +19,11 @@ export async function getStaticPaths() {
   // 全言語分 × 全カテゴリ分の組み合わせを作成
   return languages.flatMap((lang) =>
     categoriesResponse.contents.map((category) => {
-      const filteredBlogs = blogsResponse.contents.filter(
-        (blog) => blog.category && blog.category.id === category.id
-      );
+      // lang に応じて判定するプロパティ（category_jp または category_en）を切り替える
+      const filteredBlogs = blogsResponse.contents.filter((blog) => {
+        const targetCategory = lang === 'jp' ? blog.category_jp : blog.category_en;
+        return targetCategory && targetCategory.id === category.id;
+      });
 
       return {
         params: { 
@@ -33,6 +35,7 @@ export async function getStaticPaths() {
     })
   );
 }
+
 
 // 2. パスに対応するパラメータとプロパティを受け取る
 const { category, blogs } = Astro.props;
@@ -59,24 +62,31 @@ const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsD
       </h1>
 
       <div class="grid gap-6">
-        {blogs.length === 0 ? (
-          <p class="text-slate-500">このカテゴリの記事はまだありません。</p>
-        ) : (
-          <ul class="space-y-6">
-            {blogs.map((blog) => (
-              <li class="border-b pb-8 border-slate-200 sm:flex text-left sm:justify-between max-w-5xl mx-auto gap-6 items-center">
-                <time class="text-gray-500 text-sm mt-1 whitespace-nowrap">
-                  {blog.pubDate ? new Date(blog.pubDate).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
-                </time>
+			{blogs.length === 0 ? (
+					<p class="text-slate-500 py-6">
+					{lang === 'en' ? 'No articles found in this category yet.' : 'このカテゴリの記事はまだありません。'}
+					</p>
+				) : (
+					<ul class="space-y-6">
+					{blogs.map((blog) => {
+						// 英語のときは blog.title_en、なければ日本語タイトル（blog.title_jp）をフォールバックとして使う
+						const blogTitle = lang === 'en' ? (blog.title_en || blog.title_jp) : blog.title_jp;
 
-                {/* 記事詳細へのリンクに言語プレフィックスを付与 */}
-                <a href={`${prefix}/blog/${blog.slug || blog.id}`} class="text-xl font-semibold text-slate-700 hover:text-amber-600 transition-colors flex-1">
-                  {blog.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
+						return (
+						<li class="border-b pb-8 border-slate-200 sm:flex text-left sm:justify-between max-w-5xl mx-auto gap-6 items-center">
+							<time class="text-gray-500 text-sm mt-1 whitespace-nowrap">
+							{blog.pubDate ? new Date(blog.pubDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'jp-JP') : new Date(blog.publishedAt).toLocaleDateString(lang === 'en' ? 'en-US' : 'jp-JP')}
+							</time>
+
+							{/* 記事詳細へのリンクに言語プレフィックスを付与 */}
+							<a href={`${prefix}/blog/${blog.slug || blog.id}`} class="text-xl font-semibold text-slate-700 hover:text-amber-600 transition-colors flex-1">
+							{blogTitle}
+							</a>
+						</li>
+						);
+					})}
+					</ul>
+				)}
       </div>
     </div>
   </section>

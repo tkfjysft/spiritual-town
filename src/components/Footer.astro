@@ -89,7 +89,7 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
                                     target={link.target} 
                                     rel={link.rel}
                                 >
-                                    {link.label || "ホーム"}
+                                    {link.label || (link.label === '' && lang === 'en' ? "Home" : "ホーム")}
                                 </a>
                             ) : (
                                 <span class="font-bold text-[#4a423d] block whitespace-nowrap">{link.label}</span>

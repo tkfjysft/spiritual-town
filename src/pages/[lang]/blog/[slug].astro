@@ -24,16 +24,10 @@ export async function getStaticPaths() {
   );
 }
 
-// 2. パスに対応するパラメータとプロパティを受け取る
-const { blog } = Astro.props as { blog: Blog };
-
-const safeContent = blog.content
-  ? blog.content.replace(/<h1(\s|>)/gi, '<h2$1').replace(/<\/h1>/gi, '</h2>')
-  : '';
 
 
 
-  
+
 ////////言語切替
 import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
 
@@ -45,21 +39,36 @@ const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsD
 
 ////////言語切替
 
+
+
+
+
+// 2. パスに対応するパラメータとプロパティを受け取る
+const { blog } = Astro.props as { blog: Blog };
+
+const rawContent = lang === 'en' ? blog.content_en : blog.content_jp;
+const safeContent = rawContent
+  ? rawContent.replace(/<h1(\s|>)/gi, '<h2$1').replace(/<\/h1>/gi, '</h2>')
+  : '';
+
+const titleBlog = lang === 'en' ? blog.title_en : blog.title_jp;
+const categoryBlog = lang === 'en' ? blog.category_en : blog.category_jp;
+
 ---
 
-<Layout pageTitle={blog.title} category={blog.category}>
+<Layout pageTitle={titleBlog} category={categoryBlog}>
     <div class="max-w-6xl mx-auto px-6 md:px-16 py-16">
         <article>
             <!-- 記事ヘッダー -->
             <header class="mb-8">
                 <!-- カテゴリバッジ（言語プレフィックス付き） -->
-                {blog.category && (
+                {categoryBlog && (
                     <div class="mb-4">
                         <a 
-                            href={`${prefix}/blog/category/${blog.category.slug}`}
+                            href={`${prefix}/blog/category/${categoryBlog.slug}`}
                             class="inline-block px-3 py-1 text-xs font-medium bg-amber-50 text-amber-800 rounded-full hover:bg-amber-100 transition-colors"
                         >
-                            {blog.category.name}
+                            {categoryBlog.name}
                         </a>
                     </div>
                 )}
@@ -68,7 +77,7 @@ const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsD
                     {blog.pubDate ? new Date(blog.pubDate).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
                 </time>
                 <h1 class="font-serif text-3xl md:text-4xl font-bold text-[#4a423d] leading-tight mb-6">
-                    {blog.title}
+                    {titleBlog}
                 </h1>
 
                 <!-- アイキャッチ画像 -->
