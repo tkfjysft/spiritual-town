@@ -21,16 +21,21 @@ if (import.meta.env.DEV && !prefix && !Astro.url.pathname.startsWith('/en')) {
 
 // ★【重要】URLに prefix（例: /jp）が確実に含まれるようにするヘルパー関数
 const applyPrefix = (url: string) => {
-  // 外部サイトリンク（http〜）や、すでに prefix が付いている場合、ハッシュだけのときはそのまま返す
+  // 外部サイトやハッシュはそのまま
   if (!url || url.startsWith('http') || url.startsWith('//') || url.startsWith('#')) {
     return url;
   }
-  // すでに /jp や /en から始まっていればそのまま、なければ prefix を結合する
+
+  // ★すでにURL自体に /en/ や /jp/ が含まれている場合は、そのまま返す（重複防止）
+  if (url.startsWith('/en') || url.startsWith('/jp')) {
+    return url;
+  }
+
+  // それ以外（日本語環境で /about のようになっている場合など）は prefix を結合
   if (prefix && !url.startsWith(prefix)) {
-    // 例: prefix が '/jp' で url が '/about' の場合 -> '/jp/about'
-    // url が '/' の場合 -> '/jp/'
     return `${prefix}${url.startsWith('/') ? '' : '/'}${url}`;
   }
+  
   return url;
 };
 
@@ -118,8 +123,8 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
         
         <div>
             <ul class="flex justify-end gap-8 text-sm text-stone-500 mt-2 border-b-1 border-slate-200 py-6">
-                <li><a href={`${prefix}${siteText.langPrefix || ''}/privacy-policy`}>プライバシーポリシー</a></li>
-                <li><a href={`${prefix}${siteText.langPrefix || ''}/terms`}>免責事項</a></li>
+                <li><a href={`${prefix}/privacy-policy`}>プライバシーポリシー</a></li>
+                <li><a href={`${prefix}/terms`}>免責事項</a></li>
             </ul>
         </div>
 
