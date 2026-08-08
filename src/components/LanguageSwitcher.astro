@@ -1,0 +1,25 @@
+---
+import { getPageData } from '@/utils/i18nLoader';
+
+const { lang } = await getPageData(Astro.url);
+const currentPath = Astro.url.pathname;
+
+// 開発環境（/jp）と本番環境を考慮した言語切り替えURLの生成
+let otherLangUrl = '';
+
+if (lang === 'en') {
+  const cleanPath = currentPath.replace(/^\/en/, '') || '/';
+  otherLangUrl = import.meta.env.DEV ? `/jp${cleanPath === '/' ? '' : cleanPath}` : cleanPath;
+} else {
+  const cleanPath = import.meta.env.DEV ? currentPath.replace(/^\/jp/, '') || '/' : currentPath;
+  otherLangUrl = `/en${cleanPath === '/' ? '' : cleanPath}`;
+}
+---
+
+<a 
+  href={otherLangUrl}
+  class="flex items-center gap-1.5 text-sm font-bold px-4 py-2 rounded-full border border-amber-200 text-amber-900 bg-amber-50 hover:bg-amber-100 transition-all shadow-xs"
+>
+  <i class="fa-solid fa-globe"></i>
+  {lang === 'en' ? '日本語' : 'English'}
+</a>

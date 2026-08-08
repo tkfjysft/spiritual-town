@@ -7,7 +7,11 @@ import BackToTop from '@/components/BackToTop.astro';
 
 import metaData from '@/data/meta.json';
 
-import { getPageData } from '@/utils/i18nLoader';
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// （※コンポーネントなので getStaticPaths() は書かない）
 
 interface Props {
   title?: string;
@@ -17,9 +21,12 @@ interface Props {
 
 const { title, description, pageTitle } = Astro.props;
 
-// 1. パスと共通データを取得
+// パスを取得
 const rawPath = Astro.url.pathname;
-const { lang, prefix, siteText, siteStructure } = await getPageData(Astro.url);
+
+// 全ファイル共通のデータ取得（これをそのまま貼る）
+const { lang, prefix, siteText, siteStructure, townCategoryInfo, newsDate, applicationData } = await getPageData(Astro.url);
+////////言語切替
 
 
 // --- 3. Meta情報の処理 ---
