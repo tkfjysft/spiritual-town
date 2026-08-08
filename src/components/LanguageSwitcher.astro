@@ -4,14 +4,22 @@ import { getPageData } from '@/utils/i18nLoader';
 const { lang } = await getPageData(Astro.url);
 const currentPath = Astro.url.pathname;
 
-// 開発環境（/jp）と本番環境を考慮した言語切り替えURLの生成
 let otherLangUrl = '';
 
 if (lang === 'en') {
-  const cleanPath = currentPath.replace(/^\/en/, '') || '/';
+  // 英語から日本語に切り替える場合
+  // 1. まず '/en' を取り除く
+  let cleanPath = currentPath.replace(/^\/en/, '') || '/';
+  // 2. もしローカル開発環境（DEV）なら '/jp' を先頭に付与、本番ならそのまま
   otherLangUrl = import.meta.env.DEV ? `/jp${cleanPath === '/' ? '' : cleanPath}` : cleanPath;
 } else {
-  const cleanPath = import.meta.env.DEV ? currentPath.replace(/^\/jp/, '') || '/' : currentPath;
+  // 日本語から英語に切り替える場合
+  // 1. 開発環境なら '/jp'、本番なら何もない状態から、それぞれのプレフィックスを取り除く
+  let cleanPath = currentPath;
+  if (import.meta.env.DEV) {
+    cleanPath = cleanPath.replace(/^\/jp/, '') || '/';
+  }
+  // 2. 先頭に '/en' をつける
   otherLangUrl = `/en${cleanPath === '/' ? '' : cleanPath}`;
 }
 ---
