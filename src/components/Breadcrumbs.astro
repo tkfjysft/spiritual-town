@@ -1,5 +1,5 @@
 ---
-import {townCategoryInfo} from '@/data/jp/townCategoryInfo';
+// import {townCategoryInfo} from '@/data/jp/townCategoryInfo';
 
 interface Props {
   pageTitle?: string;
@@ -17,6 +17,11 @@ const lang = isEn ? 'en' : 'jp';
 // 開発環境かつ日本語の場合は '/jp'、それ以外（英語または本番）のルールに合わせる
 // ※ 必要に応じてご自身のルーティング規則に合わせて調整してください
 const prefix = isEn ? '/en' : (import.meta.env.DEV ? '/jp' : '');
+
+
+const townCategoryInfo = isEn
+    ? (await import('@/data/en/townCategoryInfo')).townCategoryInfo
+    : (await import('@/data/jp/townCategoryInfo')).townCategoryInfo;
 
 
 // パスセグメントから言語部分を除外して純粋な階層だけを取り出す
