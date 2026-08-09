@@ -324,7 +324,7 @@ try {
 
 						{/* 記事タイトル */}
 						<h3 class="text-lg sm:text-xl font-serif text-clr-main-1 mb-6 leading-relaxed group-hover:text-clr-main-1 transition-colors">
-							<a href={postUrl} class="focus:outline-none">
+							<a href={prefix + postUrl} class="focus:outline-none">
 							<span class="absolute inset-0 z-30"></span>
 							{post.title}
 							</a>
@@ -344,6 +344,16 @@ try {
 			})}
 			</div>
 		)}
+
+			<div class="flex items-center justify-center mx-auto mt-10">
+		            <a 
+                    href={prefix + siteStructure.navigation.links[3]?.url || '#'}
+                    class="inline-block px-8 py-4 bg-amber-200 text-amber-900 font-bold rounded-full hover:bg-amber-300 transition-all shadow-md hover:shadow-lg"
+                	>
+                    {isEn ? 'Blog Posts' : 'ブログ記事一覧はこちら'}
+                </a>
+			</div>
+
 
 		</section>
 
