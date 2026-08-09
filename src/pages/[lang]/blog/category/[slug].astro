@@ -4,11 +4,8 @@ import { client, type Blog, type Category } from '@/lib/microcms';
 import Layout from '@/layouts/Layout.astro';
 
 // 1. 言語（jp/en）とカテゴリの組み合わせを全件生成
+// 1. 言語（jp/en）とカテゴリの組み合わせを全件生成
 export async function getStaticPaths() {
-  const categoriesResponse = await client.get<{ contents: Category[] }>({
-    endpoint: 'spitown-blog-categories',
-  });
-
   const blogsResponse = await client.get<{ contents: Blog[] }>({
     endpoint: 'spitown-blog',
     queries: { limit: 100 },
@@ -16,66 +13,88 @@ export async function getStaticPaths() {
 
   const languages = ['jp', 'en'];
 
-  // 全言語分 × 全カテゴリ分の組み合わせを作成
-  return languages.flatMap((lang) =>
-    categoriesResponse.contents.map((category) => {
-      const filteredBlogs = blogsResponse.contents.filter(
-        (blog) => blog.category && blog.category.id === category.id
-      );
+  // 各言語ごとに対応するカテゴリを取得してパスを生成する
+  const allPaths = await Promise.all(
+    languages.map(async (lang) => {
+      // 言語に応じて取得するエンドポイントを切り替える
+      const endpoint = lang === 'jp' ? 'spitown-blog-categories-jp' : 'spitown-blog-categories-en';
+      
+      const categoriesResponse = await client.get<{ contents: Category[] }>({
+        endpoint,
+      });
 
-      return {
-        params: { 
-          lang, 
-          slug: category.slug || category.id 
-        },
-        props: { category, blogs: filteredBlogs },
-      };
+      return categoriesResponse.contents.map((category) => {
+        const filteredBlogs = blogsResponse.contents.filter((blog) => {
+          const targetCategory = lang === 'jp' ? blog.category_jp : blog.category_en;
+          return targetCategory && targetCategory.id === category.id;
+        });
+
+        return {
+          params: { 
+            lang, 
+            slug: category.slug || category.id 
+          },
+          props: { category, blogs: filteredBlogs },
+        };
+      });
     })
   );
+
+  // 二次元配列を平坦化して返す
+  return allPaths.flat();
 }
 
+
 // 2. パスに対応するパラメータとプロパティを受け取る
-const { lang = 'jp' } = Astro.params;
 const { category, blogs } = Astro.props;
 
-// --- コンポーネントのフロントマター ---
-// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
-const pathname = Astro.url.pathname;
-const isEn = pathname.startsWith('/en');
 
-// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
-// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
-const prefix = isEn 
-  ? '/en' 
-  : (import.meta.env.DEV ? '/jp' : '');
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// （※コンポーネントなので getStaticPaths() は書かない）
+
+// ページファイルと【まったく同じ】データ取得
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData,  oraclecardsData } = await getPageData(Astro.url);
+
+
+////////言語切替
 ---
 
-<Layout pageTitle={`${category.name}の記事一覧`}>
+<Layout title={lang === 'en' ? `Articles in \"${category.name}\" | Spiritual Town` : `「${category.name}」記事一覧 | スピリチュアルタウン`} pageTitle={lang === 'en' ? `Articles in \"${category.name}\"` : `「${category.name}」記事一覧`} description={lang === 'en' ? `${category.description}` : `${category.description}`}>
   <section class="my-16 px-4 text-center max-w-6xl mx-auto px-6 md:px-16">
     <div class="bg-gradient-to-b from-amber-50/60 to-white p-8 sm:p-10 rounded-3xl border border-amber-200/60 shadow-sm">
       <h1 class="text-2xl font-bold mt-10 mb-18 text-slate-800">
-        「{category.name}」のカテゴリー記事
+        {lang === 'en' ? `Articles in \"${category.name}\"` : `「${category.name}」記事一覧`}
       </h1>
 
       <div class="grid gap-6">
-        {blogs.length === 0 ? (
-          <p class="text-slate-500">このカテゴリの記事はまだありません。</p>
-        ) : (
-          <ul class="space-y-6">
-            {blogs.map((blog) => (
-              <li class="border-b pb-8 border-slate-200 sm:flex text-left sm:justify-between max-w-5xl mx-auto gap-6 items-center">
-                <time class="text-gray-500 text-sm mt-1 whitespace-nowrap">
-                  {blog.pubDate ? new Date(blog.pubDate).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
-                </time>
+			{blogs.length === 0 ? (
+					<p class="text-slate-500 py-6">
+					{lang === 'en' ? 'No articles found in this category yet.' : 'このカテゴリの記事はまだありません。'}
+					</p>
+				) : (
+					<ul class="space-y-6">
+					{blogs.map((blog) => {
+						// 英語のときは blog.title_en、なければ日本語タイトル（blog.title_jp）をフォールバックとして使う
+						const blogTitle = lang === 'en' ? (blog.title_en || blog.title_jp) : blog.title_jp;
 
-                {/* 記事詳細へのリンクに言語プレフィックスを付与 */}
-                <a href={`${prefix}/blog/${blog.slug || blog.id}`} class="text-xl font-semibold text-slate-700 hover:text-amber-600 transition-colors flex-1">
-                  {blog.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
+						return (
+						<li class="border-b pb-8 border-slate-200 sm:flex text-left sm:justify-between max-w-5xl mx-auto gap-6 items-center">
+							<time class="text-gray-500 text-sm mt-1 whitespace-nowrap">
+							{blog.pubDate ? new Date(blog.pubDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'jp-JP') : new Date(blog.publishedAt).toLocaleDateString(lang === 'en' ? 'en-US' : 'jp-JP')}
+							</time>
+
+							{/* 記事詳細へのリンクに言語プレフィックスを付与 */}
+							<a href={`${prefix}/blog/${blog.slug || blog.id}`} class="text-xl font-semibold text-slate-700 hover:text-amber-600 transition-colors flex-1">
+							{blogTitle}
+							</a>
+						</li>
+						);
+					})}
+					</ul>
+				)}
       </div>
     </div>
   </section>

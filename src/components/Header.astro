@@ -1,43 +1,65 @@
 ---
 import * as Icons from 'lucide-astro';
-import { getSiteStructure } from '@/data/common/siteStructure';
+import LanguageSwitcher from '@/components/LanguageSwitcher.astro';
 
-interface Props {
-  lang?: string;
-  siteText?: any;
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// （※コンポーネントなので getStaticPaths() は書かない）
+
+// ページファイルと【まったく同じ】データ取得
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData,  oraclecardsData } = await getPageData(Astro.url);
+
+
+////////言語切替
+
+
+// ローカル環境（DEV）で、かつURLに言語プレフィックスがない場合は強制的に '/jp' をセット
+if (import.meta.env.DEV && !prefix && !Astro.url.pathname.startsWith('/en')) {
+  prefix = '/jp';
 }
 
-const { lang = 'jp', siteText } = Astro.props;
 
-// 親から渡ってこなかった場合の保険として、言語に応じて jp か en を動的に読み込む
-let currentSiteText = siteText;
-if (!currentSiteText) {
-  try {
-    currentSiteText = lang === 'en' 
-      ? (await import('@/data/en/siteText')).siteText
-      : (await import('@/data/jp/siteText')).siteText;
-  } catch (e) {
-    currentSiteText = (await import('@/data/jp/siteText')).siteText;
+// ★【重要】URLに prefix（例: /jp）が確実に含まれるようにするヘルパー関数
+const applyPrefix = (url: string) => {
+  // 外部サイトやハッシュはそのまま
+  if (!url || url.startsWith('http') || url.startsWith('//') || url.startsWith('#')) {
+    return url;
   }
-}
 
-const siteStructure = getSiteStructure(siteText.langPrefix);
+  // ★すでにURL自体に /en/ や /jp/ が含まれている場合は、そのまま返す（重複防止）
+  if (url.startsWith('/en') || url.startsWith('/jp')) {
+    return url;
+  }
 
+  // それ以外（日本語環境で /about のようになっている場合など）は prefix を結合
+  if (prefix && !url.startsWith(prefix)) {
+    return `${prefix}${url.startsWith('/') ? '' : '/'}${url}`;
+  }
+  
+  return url;
+};
 
-// 動的に取得した currentSiteText を使ってマージする
+// ナビゲーションリンクのラベル結合 & URLへのプレフィックス適用
 const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
   ...link,
-  label: currentSiteText.navigation.links[index]?.label ?? '',
+  // ★ ここでリンクのURLに prefix を適用
+  url: applyPrefix(link.url),
+  label: siteText.navigation?.links?.[index]?.label ?? '',
   children: link.children?.map((child, childIndex) => ({
     ...child,
-    label: currentSiteText.navigation.links[index]?.children?.[childIndex]?.label ?? ''
+    // ★ 子メニューのURLにも prefix を適用
+    url: applyPrefix(child.url),
+    label: siteText.navigation?.links?.[index]?.children?.[childIndex]?.label ?? ''
   }))
 }));
+
 ---
 
 <nav class="fixed top-0 left-0 right-0 h-16 md:h-24 min-h-[64px] bg-white/80 backdrop-blur-md border-b border-slate-200/60 z-50">
-<div class="max-w-6xl mx-auto px-6 md:px-16 h-full px-4 flex items-center justify-between">
-    <a href={siteStructure.navigation.links[0].url} class="flex items-center justify-center h-16 md:h-20 hover:opacity-80 transition-opacity">
+<div class="max-w-7xl mx-auto px-6 md:px-16 h-full px-4 flex items-center justify-between">
+    <a href={`${prefix}${siteStructure.navigation.links[0].url}`} class="flex items-center justify-center h-16 md:h-20 hover:opacity-80 transition-opacity">
         <img 
             src={`/images/${siteStructure.navigation.siteNameImage}`} 
             alt={siteText.titleJp}
@@ -119,6 +141,12 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
         })}
     </div>
 
+	<!-- ★ 言語切り替えスイッチ ★ -->
+	 <div class="hidden lg:block">
+    <LanguageSwitcher />
+	 </div>
+
+
     <button id="menu-btn" class="lg:hidden p-2 text-slate-800" aria-label="メニューを開く">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
@@ -199,6 +227,12 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
             );
         })}
     </div>
+		<!-- ★ 言語切り替えスイッチ ★ -->
+	 <div class="block flex items-center justify-center lg:hidden">
+		<div class="w-40 text-center">
+    <LanguageSwitcher />
+		</div>
+	 </div>
 </div>
 
 <script>

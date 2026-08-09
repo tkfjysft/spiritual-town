@@ -6,49 +6,24 @@ import SpiritualTown from '@/components/SpiritualTown.tsx';
 import Header from '@/components/Header.astro';
 import CategoriesDirectory from '@/components/CategoriesDirectory.astro';
 
-// 2. 共通構造データの読み込み（言語に依存しない画像やURLなど）
-import { getSiteStructure } from '@/data/common/siteStructure';
 
-// 3. 動的ルート（ja / en）の定義
+
+
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// ページファイルにだけ必要な関数
 export function getStaticPaths() {
-  return [
-    { params: { lang: 'jp' } },
-    { params: { lang: 'en' } },
-  ];
+  return getLangStaticPaths();
 }
 
-// 4. パラメータから現在の言語を取得
-const { lang = 'jp' } = Astro.params;
+// 全ファイル共通のデータ取得（これをそのまま貼る）
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData,  oraclecardsData } = await getPageData(Astro.url);
 
-// 5. 言語に応じたテキストデータを動的に読み込み
-const siteText = lang === 'en'
-  ? (await import('@/data/en/siteText')).siteText
-  : (await import('@/data/jp/siteText')).siteText;
 
-const townCategoryInfo = lang === 'en'
-  ? (await import('@/data/en/townCategoryInfo.json')).default
-  : (await import('@/data/jp/townCategoryInfo.json')).default;
+////////言語切替
 
-const newsDate = lang === 'en'
-  ? (await import('@/data/en/index/townNews.json')).default
-  : (await import('@/data/jp/index/townNews.json')).default;
-
-const applicationData = lang === 'en'
-  ? (await import('@/data/en/index/application.json')).default
-  : (await import('@/data/jp/index/application.json')).default;
-
-const siteStructure = getSiteStructure(siteText.langPrefix);
-
-// --- コンポーネントのフロントマター ---
-// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
-const pathname = Astro.url.pathname;
-const isEn = pathname.startsWith('/en');
-
-// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
-// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
-const prefix = isEn 
-  ? '/en' 
-  : (import.meta.env.DEV ? '/jp' : '');
 ---
 
 <Layout>
@@ -84,46 +59,50 @@ const prefix = isEn
         <section class="border-y border-slate-400/80 shadow-md shadow-slate-100 p-8 text-center leading-relaxed text-slate-600 mb-20 relative mx-[2vw] md:mx-10 lg:mx-auto lg:max-w-3xl">
             <div class="md:flex md:items-center md:justify-center md:gap-8">
                 <div class="mb-8 mx-auto text-white font-bold bg-[#e55a53] shadow-md shadow-slate-100 p-8 rounded-full w-[200px] h-[200px] flex flex-col items-center justify-center">
-                    <span>ライトワーカーの</span>
-                    <span class="block sm:hidden">皆様！</span>
-                    <span>ぜひ、あなたの</span>
-                    <span>サイトを</span>
-                    <span>ご登録ください</span>
-                </div>
-                <div class="space-y-4">
-                    <h2 class="text-2xl sm:text-3xl text-[#e55a53] font-bold">占い・ヒーリングなどの<br>集客・宣伝なら！<br>掲載料・登録料<br class="block sm:hidden">完全無料</h2>
-                    <h3 class="text-2xl text-[#ba980c] font-bold">スピリチュアルタウンに<br class="block sm:hidden">掲載するメリット</h3>
-                    <div class="flex items-center justify-center">
-                        <ol class="text-left" style="list-style: decimal;">
-                            <li>無料であなたの活動・サイトを宣伝できる！</li>
-                            <li>被リンク効果で、あなたのWEBサイトのSEO評価が上がる！</li>
-                            <li>同じ志を持つライトワーカーと繋がれる・仲間が増える！</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-8">
-<a 
-    href={`${prefix}/about/#freeReason`}
-    class="inline-block mb-4 px-8 py-4 text-amber-900 hover:text-amber-500 transition-all"
->
-    なぜ無料で掲載できるの？
-</a>
-                <div>
-                    <a 
-                        href={applicationData.button.link} target="_blank" rel="noopener noreferrer"
-                        class="inline-block px-18 py-4 bg-amber-200 text-amber-900 font-bold rounded-full hover:bg-amber-300 transition-all shadow-md hover:shadow-lg"
-                    >
-                        {applicationData.button.text}
-                    </a>
-                </div>
-            </div>
+					<p>
+					{applicationData.badge.line1}<br />
+					{applicationData.badge.line2}<br />
+					{applicationData.badge.line3}<br />
+					{applicationData.badge.line4}<br />
+					{applicationData.badge.line5}<br />                
+					</p>
+				   </div>
+			<div class="space-y-4">
+						<h2 class="text-2xl sm:text-3xl text-[#e55a53] font-bold" set:html={applicationData.heading} />
+						<h3 class="text-2xl text-[#ba980c] font-bold" set:html={applicationData.subHeading} />
+						<div class="flex items-center justify-center">
+							<ol class="text-left space-y-1" style="list-style: decimal;">
+								{applicationData.benefits.map((benefit) => (
+									<li>{benefit}</li>
+								))}
+							</ol>
+						</div>
+			</div>
+	    </div>
+		<div class="mt-8">
+				<a 
+					href={`${prefix}/about/#freeReason`}
+					class="inline-block mb-4 px-8 py-4 text-amber-900 hover:text-amber-500 transition-all font-medium"
+				>
+					{applicationData.freeReasonLinkText}
+				</a>
+				<div>
+					<a 
+						href={applicationData.button.link} 
+						target="_blank" 
+						rel="noopener noreferrer"
+						class="inline-block px-18 py-4 bg-amber-200 text-amber-900 font-bold rounded-full hover:bg-amber-300 transition-all shadow-md hover:shadow-lg"
+					>
+						{applicationData.button.text}
+					</a>
+				</div>
+			</div>
         </section>
 
         <!-- メイン機能（街のマップ）部分 -->
         <section id="map" class="mb-24 scroll-mt-24 max-w-6xl mx-auto px-6 md:px-16">
             <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
-                <SpiritualTown client:visible prefix={prefix} />
+                <SpiritualTown client:visible prefix={prefix} lang={lang} />
             </div>
         </section>
 
@@ -145,7 +124,7 @@ const prefix = isEn
                             <div class="web-thum md:w-[300px] md:h-[225px] lg:w-[400px] lg:h-[300px] shrink-0">
                                 <a href={spot.url} class="block h-full hover:opacity-80 transition-opacity" target="_blank" rel="noopener noreferrer">
                                     <img 
-                                        src={`/images/${spot.image}` && `/images/${spot.image}`.trim() !== "" ? `/images/${spot.image}` : "images/thum/nothum.avif"} 
+                                        src={spot.image && spot.image.trim() !== "" ? `/images/${spot.image}` : "/images/thum/nothum.avif"} 
                                         alt={spot.name}
                                         loading="lazy"
                                         class="w-full h-full aspect-[4/3] object-cover rounded-2xl shadow-md" 
@@ -200,7 +179,7 @@ const prefix = isEn
     href={`${prefix}/category/${category.id}`} 
     class="group/btn inline-flex items-center justify-between w-full bg-teal-50 hover:bg-teal-100 text-teal-800 text-base font-bold px-6 py-6 rounded-xl border border-teal-200/60 transition-all shadow-2xs"
 >
-    <span>{category.name}を散策する</span>
+    <span>{category.linkName}</span>
     <span class="ml-2 transform group-hover/btn:translate-x-1 transition-transform duration-200 text-teal-600">
         →
     </span>

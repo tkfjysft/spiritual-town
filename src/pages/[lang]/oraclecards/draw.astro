@@ -2,24 +2,142 @@
 // src/pages/oraclecards/index.astro
 import { fetchOracleCards } from '@/utils/loadOracleCards';
 import Layout from '@/layouts/Layout.astro';
-import OracleDraw from '@/components/OracleDraw.astro';
-
-
-// ★ これを追加：動的ルート（jp / en）をビルド時に生成させるため
-export function getStaticPaths() {
-  return [
-    { params: { lang: 'jp' } },
-    { params: { lang: 'en' } },
-  ];
-}
-
-const { lang } = Astro.params;
-
 
 // スプレッドシートから全カードを取得
 const cards = await fetchOracleCards();
+const cardsJson = JSON.stringify(cards);
+
+
+
+
+
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// ページファイルにだけ必要な関数
+export function getStaticPaths() {
+  return getLangStaticPaths();
+}
+
+// 全ファイル共通のデータ取得（これをそのまま貼る）
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData,  oraclecardsData } = await getPageData(Astro.url);
+
+
+////////言語切替
+
 ---
 
-<Layout>
-<OracleDraw />
+<Layout pageTitle={drawData.pageTitle}>
+  <section class="my-16 px-4 text-center max-w-6xl mx-auto px-6 md:px-16">
+    <div class="bg-gradient-to-b from-amber-50/60 to-white p-8 sm:p-10 rounded-3xl border border-amber-200/60 shadow-sm">
+      <span class="text-amber-600 font-bold text-sm tracking-wider uppercase">{drawData.badge}</span>
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-4">
+        {drawData.heading} <br class="block sm:hidden"><span class="text-sm font-normal text-amber-600">{drawData.subheading}</span>
+      </h1>
+      <div class="flex items-center justify-center">
+        <p class="text-gray-600 mb-8 leading-relaxed text-left" set:html={drawData.description} />
+      </div>
+
+      {/* カードの背表紙を表示するエリア */}
+      <div class="flex justify-center mb-8">
+        <div 
+          id="oracle-draw-trigger"
+          class="relative w-36 sm:w-44 aspect-[2/3] cursor-pointer group transform transition-all duration-300 hover:-translate-y-2 hover:scale-105"
+          title={drawData.triggerButtonText}
+        >
+          <div class="w-full h-full bg-amber-50/30 rounded-2xl py-2 border-0 border-amber-200/80 group-hover:shadow-xl transition-shadow flex items-center justify-center overflow-hidden">
+            <img 
+              src="/images/oraclecards/oraclecard_back.webp" 
+              alt={drawData.cardAlt} 
+              class="w-full h-full object-contain rounded-xl"
+              loading="lazy"
+            />
+          </div>
+          
+          <div class="absolute inset-0 bg-black/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+            <span class="bg-white/90 text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+              {drawData.triggerButtonText}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <button 
+          id="draw-card-btn"
+          class="bg-amber-700 hover:bg-amber-600 text-white font-bold px-8 py-3.5 rounded-full shadow-md transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer"
+        >
+          {drawData.drawButtonText}
+        </button>
+
+        <a 
+          href={`${prefix}/oraclecards`} 
+          class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 font-bold px-8 py-3.5 rounded-full shadow-2xs transition-colors flex items-center justify-center"
+        >
+          {drawData.listButtonText}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEO強化・コンテンツ解説セクション -->
+  <section class="max-w-6xl mx-auto px-6 md:px-16 mb-16">
+    <div class="bg-white p-8 sm:p-10 rounded-3xl border border-amber-100 shadow-sm space-y-8">
+      
+      <div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <span class="text-amber-600">🔮</span> {drawData.section1Title}
+        </h3>
+        <p class="text-gray-600 leading-relaxed text-sm sm:text-base">
+          {drawData.section1Content}
+        </p>
+      </div>
+
+      <hr class="border-amber-100">
+
+      <div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <span class="text-amber-600">🌿</span> {drawData.section2Title}
+        </h3>
+        <p class="text-gray-600 leading-relaxed text-sm sm:text-base mb-3">
+          {drawData.section2Content1}
+        </p>
+        <p class="text-gray-600 leading-relaxed text-sm sm:text-base">
+          {drawData.section2Content2}
+        </p>
+      </div>
+
+    </div>
+  </section>
 </Layout>
+
+<script define:vars={{ cardsJson }}>
+  const cards = JSON.parse(cardsJson);
+
+  function drawCard() {
+    if (!cards || cards.length === 0) return;
+
+    const randomIndex = Math.floor(Math.random() * cards.length);
+    const selectedCard = cards[randomIndex];
+
+    const pathSegments = window.location.pathname.split('/');
+    const firstSegment = pathSegments[1];
+
+    let prefix = '';
+
+    if (firstSegment === 'en' || firstSegment === 'jp') {
+      prefix = `/${firstSegment}`;
+    } else {
+      prefix = '';
+    }
+
+    window.location.href = `${prefix}/oraclecards/${selectedCard.id}/`;
+  }
+
+  const btn = document.getElementById('draw-card-btn');
+  const trigger = document.getElementById('oracle-draw-trigger');
+
+  if (btn) btn.addEventListener('click', drawCard);
+  if (trigger) trigger.addEventListener('click', drawCard);
+</script>

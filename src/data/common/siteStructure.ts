@@ -36,23 +36,23 @@ export const getSiteStructure = (langPrefix: string = "") => {
   navigation: {
     siteNameImage: "/logo_ci_header.avif",
     links: [
-      { url: `${langPrefix}/`, icon: "Home" },
+      { url: `/`, icon: "Home" },
       { 
-        url: `${langPrefix}/#map`, 
+        url: `/#map`, 
         icon: "Map",
         children: [
-          { url: `${langPrefix}/#categories`, icon: "LayoutGrid" },
-          { url: `${langPrefix}/about`, icon: "Info" }
+          { url: `/#categories`, icon: "LayoutGrid" },
+          { url: `/about`, icon: "Info" }
         ]
       },
       { 
-        url: `${langPrefix}/oraclecards/draw`, 
+        url: `/oraclecards/draw`, 
         icon: "Sparkles",
         children: [
-          { url: `${langPrefix}/oraclecards`, icon: "BookOpen" }
+          { url: `/oraclecards`, icon: "BookOpen" }
         ]
       },
-      { url: `${langPrefix}/blog`, icon: "PenTool" },
+      { url: `/blog`, icon: "PenTool" },
       {
         url: "https://forms.gle/1Q5Mq1qipnwdaUas6",
         icon: "Send",

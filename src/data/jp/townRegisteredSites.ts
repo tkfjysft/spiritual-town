@@ -1,9 +1,58 @@
-{
+// src/data/jp/townRegisteredSites.ts
+
+export interface TownSpot {
+  isNew: "new" | "old";
+  name: string;
+  url: string;
+  subtitle: string;
+  description: string;
+  tags: string[];
+  image: string;
+}
+
+export interface TownCategorySpots {
+  title: string;
+  description: string;
+  bgGradient: string;
+  spots: TownSpot[];
+}
+
+export interface TownRegisteredSitesData {
+  fortune: TownCategorySpots;
+  healing: TownCategorySpots;
+  shop: TownCategorySpots;
+  counseling: TownCategorySpots;
+  meditation: TownCategorySpots;
+}
+
+export const spotsData: TownRegisteredSitesData = {
   "fortune": {
     "title": "占い番地",
     "description": "運命の糸を解き明かし、進むべき未来を優しく照らす館が集まるエリアです。",
     "bgGradient": "from-purple-500 to-indigo-600",
     "spots": [
+      {
+        "isNew": "new",
+        "name": "ルナ宵町",
+        "url": "https://uranai-luna.com/",
+        "subtitle": "復縁・恋愛の悩みに強い占い師を、動画を見てから選べます",
+        "description": "ココナラで活動する占い師の口コミを、鑑定動画つきで比較できるようにまとめている情報メディアです。\n実際の鑑定動画から話し方や雰囲気を確認できるため、「相性が合わなかった」というミスマッチを減らせます。\n復縁・彼の気持ち・音信不通・複雑な恋のご相談先を探している方に向けて、7問の無料診断や相性占いもご用意しています。",
+        "tags": [
+          "ココナラ占い",
+          "占い動画",
+          "鑑定動画",
+          "占い師選び",
+          "相性占い",
+          "復縁",
+          "彼の気持ち",
+          "音信不通",
+          "複雑な恋愛",
+          "恋愛の悩み",
+          "無料診断",
+          "相性診断"
+        ],
+        "image": "uranai-luna.com.avif"
+      },
       {
         "isNew": "old",
         "name": "LINE 占い",
@@ -399,4 +448,4 @@
     "bgGradient": "from-sky-500 to-blue-600",
     "spots": []
   }
-}
+};

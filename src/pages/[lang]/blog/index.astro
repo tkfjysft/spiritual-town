@@ -3,29 +3,6 @@
 import { client, type BlogResponse } from '@/lib/microcms';
 import Layout from '@/layouts/Layout.astro';
 
-// 1. 動的ルート（jp / en）のビルド設定
-export function getStaticPaths() {
-  return [
-    { params: { lang: 'jp' } },
-    { params: { lang: 'en' } },
-  ];
-}
-
-// 現在の言語を取得
-const { lang = 'jp' } = Astro.params;
-
-// --- コンポーネントのフロントマター ---
-// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
-const pathname = Astro.url.pathname;
-const isEn = pathname.startsWith('/en');
-
-// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
-// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
-const prefix = isEn 
-  ? '/en' 
-  : (import.meta.env.DEV ? '/jp' : '');
-
-
 // microCMSからブログ記事一覧を取得
 const response = await client.get<BlogResponse>({
   endpoint: 'spitown-blog',
@@ -33,11 +10,29 @@ const response = await client.get<BlogResponse>({
 });
 
 const blogs = response.contents;
+
+
+
+
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// ページファイルにだけ必要な関数
+export function getStaticPaths() {
+  return getLangStaticPaths();
+}
+
+// 全ファイル共通のデータ取得（これをそのまま貼る）
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData,  oraclecardsData } = await getPageData(Astro.url);
+
+////////言語切替
+
 ---
 
-<Layout>
+<Layout title={lang === 'en' ? 'Blog Posts | Spiritual Town' : 'ブログ記事一覧 | スピリチュアルタウン'} description={lang === 'en' ? 'Explore the Spiritual Town blog article archive. Discover a wide range of spiritual insights to enrich your daily life, including oracle cards, divination, fortune-telling, luck-boosting methods, emotional healing, and messages for a better life. Find articles that resonate with your heart.' : 'スピリチュアルタウンのブログ記事一覧です。オラクルカードや占い、開運方法、心の癒やし、人生を好転させるメッセージなど、日々の暮らしを豊かにするスピリチュアルな情報を幅広くお届けします。あなたの心に寄り添うお気に入りの記事が見つかります。'}>
     <div class="max-w-6xl mx-auto px-6 md:px-16 py-16">
-        <h1 class="font-serif text-3xl font-bold mb-8 text-center text-[#4a423d]">ブログ記事一覧</h1>
+        <h1 class="font-serif text-3xl font-bold mb-8 text-center text-[#4a423d]">{lang === 'jp' ? "ブログ記事一覧" : "Blog Posts"}</h1>
 
         {blogs.length === 0 ? (
             <p class="text-center text-stone-500">まだ記事がありません。</p>
@@ -60,24 +55,25 @@ const blogs = response.contents;
                         </a>
                         <div class="p-6">
                             <time class="text-xs text-stone-500 block mb-2">
-                                {blog.pubDate ? new Date(blog.pubDate).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
+								{blog.pubDate ? new Date(blog.pubDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'jp-JP') : new Date(blog.publishedAt).toLocaleDateString(lang === 'en' ? 'en-US' : 'jp-JP')}
                             </time>
 
                             {/* カテゴリバッジ（言語プレフィックス付き） */}
-                            {blog.category && (
+                            {(lang === 'en' ? blog.category_en : blog.category_jp)
+							 && (
                                 <div class="mb-2">
                                     <a 
-                                        href={`${prefix}/blog/category/${blog.category.slug}`}
+                                        href={`${prefix}/blog/category/${lang === 'en' ? blog.category_en.slug : blog.category_jp.slug}`}
                                         class="inline-block px-2.5 py-0.5 text-xs font-medium bg-amber-50 text-amber-800 rounded-full hover:bg-amber-100 transition-colors"
                                     >
-                                        {blog.category.name}
+                                        {lang === 'en' ? blog.category_en.name : blog.category_jp.name}
                                     </a>
                                 </div>
                             )}
 
                             <h2 class="font-serif font-bold text-lg text-[#4a423d] hover:text-amber-600 transition-colors line-clamp-2">
                                 <a href={`${prefix}/blog/${blog.slug || blog.id}`} class="block">
-                                    {blog.title}
+                                    {lang === 'en' ? blog.title_en : blog.title_jp}
                                 </a>
                             </h2>
                         </div>

@@ -2,36 +2,59 @@
 // Props として各言語の siteText と siteStructure を受け取るようにします
 import { getSiteStructure } from '@/data/common/siteStructure';
 
-interface Props {
-  lang?: string;
-  siteText?: any;
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// （※コンポーネントなので getStaticPaths() は書かない）
+
+// ページファイルと【まったく同じ】データ取得
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData,  oraclecardsData } = await getPageData(Astro.url);
+
+
+////////言語切替
+
+
+// ローカル環境（DEV）で、かつURLに言語プレフィックスがない場合は強制的に '/jp' をセット
+if (import.meta.env.DEV && !prefix && !Astro.url.pathname.startsWith('/en')) {
+  prefix = '/jp';
 }
 
-const { lang = 'jp', siteText } = Astro.props;
 
-// 親から渡ってこなかった場合の保険として、言語に応じて jp か en を動的に読み込む
-let currentSiteText = siteText;
-if (!currentSiteText) {
-  try {
-    currentSiteText = lang === 'en' 
-      ? (await import('@/data/en/siteText')).siteText
-      : (await import('@/data/jp/siteText')).siteText;
-  } catch (e) {
-    currentSiteText = (await import('@/data/jp/siteText')).siteText;
+// ★【重要】URLに prefix（例: /jp）が確実に含まれるようにするヘルパー関数
+const applyPrefix = (url: string) => {
+  // 外部サイトやハッシュはそのまま
+  if (!url || url.startsWith('http') || url.startsWith('//') || url.startsWith('#')) {
+    return url;
   }
-}
 
-const siteStructure = getSiteStructure(currentSiteText.langPrefix);
+  // ★すでにURL自体に /en/ や /jp/ が含まれている場合は、そのまま返す（重複防止）
+  if (url.startsWith('/en') || url.startsWith('/jp')) {
+    return url;
+  }
 
-// 動的に取得した currentSiteText を使ってマージする
+  // それ以外（日本語環境で /about のようになっている場合など）は prefix を結合
+  if (prefix && !url.startsWith(prefix)) {
+    return `${prefix}${url.startsWith('/') ? '' : '/'}${url}`;
+  }
+  
+  return url;
+};
+
+// ナビゲーションリンクのラベル結合 & URLへのプレフィックス適用
 const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
   ...link,
-  label: currentSiteText.navigation.links[index]?.label ?? '',
+  // ★ ここでリンクのURLに prefix を適用
+  url: applyPrefix(link.url),
+  label: siteText.navigation?.links?.[index]?.label ?? '',
   children: link.children?.map((child, childIndex) => ({
     ...child,
-    label: currentSiteText.navigation.links[index]?.children?.[childIndex]?.label ?? ''
+    // ★ 子メニューのURLにも prefix を適用
+    url: applyPrefix(child.url),
+    label: siteText.navigation?.links?.[index]?.children?.[childIndex]?.label ?? ''
   }))
 }));
+
 ---
 
 <footer class="bg-[#fdfbf7] border-t border-[#ece8e1] pt-12 mt-16">
@@ -44,7 +67,9 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
             <div class="lg:w-1/4 mb-8 lg:mb-0">
                 <h3 class="font-serif text-[#4a423d] font-bold text-lg mb-3">
                     {siteStructure.titleEn} <br />
+					{lang !== 'en' && (
                     <span class="text-sm">（{siteText.titleJp || siteText.title}）</span>
+					)}
                 </h3>
                 <p class="text-sm text-[#7a726b] leading-relaxed">
                     {siteText.subtitle || "心と体のバランスを整え、明日をもっと前向きに。無料のオラクルカードいやしと占い、信頼できる癒しのスポットを集めた総合ポータルサイトです。"}
@@ -53,7 +78,7 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
 
             <!-- 右側：サイトマップ・メニュー（siteStructure.navigation.links を使用） -->
             <div class="lg:w-2/3">
-                <h3 class="font-serif text-[#4a423d] font-bold text-sm tracking-wider uppercase mb-6">スピリチュアルタウンの案内</h3>
+                <h3 class="text-[#4a423d] font-bold text-sm tracking-wider mb-6">Spiritual Town Sitemap</h3>
                 
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-x-10 gap-y-8 text-sm">
                     {navigationLinks.map((link: any) => (
@@ -64,7 +89,7 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
                                     target={link.target} 
                                     rel={link.rel}
                                 >
-                                    {link.label || "ホーム"}
+                                    {link.label || (link.label === '' && lang === 'en' ? "Home" : "ホーム")}
                                 </a>
                             ) : (
                                 <span class="font-bold text-[#4a423d] block whitespace-nowrap">{link.label}</span>
@@ -91,6 +116,7 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
             </div>
         </div>
 
+		{lang === 'jp' && (
         <div class="flex flex-wrap justify-end gap-6 mt-6 pt-4 border-t-1 border-slate-200">
             <div class="flex items-center gap-8">
                 {/* Instagram */}
@@ -99,16 +125,18 @@ const navigationLinks = siteStructure.navigation.links.map((link, index) => ({
                 <a href="https://lin.ee/wsdI1Xn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-line text-2xl text-stone-500"></i></a>
             </div>
         </div>
+		)}
         
         <div>
             <ul class="flex justify-end gap-8 text-sm text-stone-500 mt-2 border-b-1 border-slate-200 py-6">
-                <li><a href={`${siteText.langPrefix || ''}/privacy-policy`}>プライバシーポリシー</a></li>
-                <li><a href={`${siteText.langPrefix || ''}/terms`}>免責事項</a></li>
+                <li><a href={`${prefix}/privacypolicy`}>{siteText.subNavigation.links[0].label}</a></li>
+                <li><a href={`${prefix}/terms`}>{siteText.subNavigation.links[1].label}</a></li>
             </ul>
         </div>
 
     </div>
 
+	
     <div class="text-center text-sm bg-[#7a726b] text-white py-6">
         <p>&copy; {new Date().getFullYear()} {siteStructure.copyrightYear}</p>
     </div>

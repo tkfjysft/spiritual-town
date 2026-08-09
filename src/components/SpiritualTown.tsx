@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import jpCategoriesData from '@/data/jp/townCategoryInfo.json';
-import enCategoriesData from '@/data/en/townCategoryInfo.json';
+import { townCategoryInfo as jpCategoriesData } from '@/data/jp/townCategoryInfo';
+import { townCategoryInfo as enCategoriesData } from '@/data/en/townCategoryInfo';
+
+import { jpButtons } from '@/data/jp/index/townMapButtons';
+import { enButtons } from '@/data/en/index/townMapButtons';
 
 interface ButtonConfig {
   id: string;
@@ -22,23 +25,6 @@ interface SpiritualTownProps {
   prefix?: string;
 }
 
-const buttons: ButtonPositions = {
-  mobile: [
-    { id: 'fortune', name: '占い番地', top: "15%", left: "5%", width: "28%", height: "12%" },
-    { id: 'healing', name: 'ヒーリング番地', top: "12%", left: "70%", width: "25%", height: "10%" },
-    { id: 'shop', name: 'ショップ番地', top: "47%", left: "4.5%", width: "32%", height: "12%" },
-    { id: 'counseling', name: 'カウンセリング番地', top: "55%", left: "72%", width: "25%", height: "12%" },
-    { id: 'meditation', name: '瞑想番地', top: "86%", left: "69%", width: "28%", height: "11%" }
-  ],
-  pc: [
-    { id: 'fortune', name: '占い番地', top: "12%", left: "6%", width: "17%", height: "19%" },
-    { id: 'healing', name: 'ヒーリング番地', top: "10.5%", left: "43.5%", width: "16.5%", height: "15.5%" },
-    { id: 'shop', name: 'ショップ番地', top: "72%", left: "3.5%", width: "17.5%", height: "19.5%" },
-    { id: 'counseling', name: 'カウンセリング番地', top: "16%", left: "81%", width: "15%", height: "16%" },
-    { id: 'meditation', name: '瞑想番地', top: "70.5%", left: "80%", width: "18%", height: "18%" }
-  ]
-};
-
 const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp', prefix = '' }) => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<{ id: string; name: string } | null>(null);
@@ -54,7 +40,10 @@ const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp', prefix = '' 
     setSelectedCategory({ id, name });
   };
 
+  const buttons = lang === 'en' ? enButtons : jpButtons;
+
   const currentButtons = isMobile ? buttons.mobile : buttons.pc;
+  const modalText = isMobile ? buttons.mobile : buttons.pc;
   
   // 言語に応じてデータを切り替え
   const categoriesData = lang === 'en' ? enCategoriesData : jpCategoriesData;
@@ -109,7 +98,7 @@ const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp', prefix = '' 
             
             <div className="text-5xl mb-4">{activeData.icon}</div>
             <h2 className="text-2xl font-bold text-slate-800 mb-3">
-              {activeData.name}へようこそ
+              {activeData.TranslationOfWelcome}
             </h2>
             
             <p className="text-slate-500 text-base leading-relaxed mb-6">
@@ -121,14 +110,14 @@ const SpiritualTown: React.FC<SpiritualTownProps> = ({ lang = 'jp', prefix = '' 
                 className="px-4 py-2.5 text-base font-medium text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors order-2 sm:order-1"
                 onClick={() => setSelectedCategory(null)}
               >
-                街に戻る
+                {buttons.textA}
               </button>
               {/* 言語プレフィックス付きのURL（例: /jp/category/fortune）に変更 */}
               <a 
                 href={`${prefix}/category/${activeData.id}`}
                 className="px-5 py-2.5 text-base font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md shadow-teal-600/10 transition-colors inline-flex items-center justify-center gap-1 order-1 sm:order-2"
               >
-                このエリアを散策する →
+                {buttons.textB} →
               </a>
             </div>
           </div>

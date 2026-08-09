@@ -4,15 +4,17 @@ import { fetchOracleCards, type OracleCard } from '@/utils/loadOracleCards';
 import Layout from '@/layouts/Layout.astro';
 
 export async function getStaticPaths() {
-  const cards = await fetchOracleCards();
-  const langs = ['jp', 'en'];
-
+  const langs = ['jp', 'en'] as const;
   const paths = [];
+
   for (const lang of langs) {
+    // ★ ループの中（langが定義された後）でデータを取得する
+    const cards = await fetchOracleCards(lang);
+    
     for (const card of cards) {
       paths.push({
         params: { lang, oraclecard_id: card.id },
-        props: { card },
+        props: { card, lang },
       });
     }
   }
@@ -21,46 +23,62 @@ export async function getStaticPaths() {
 
 interface Props {
   card: OracleCard;
+  lang: string;
 }
 
-const { card } = Astro.props;
-const { lang = 'jp' } = Astro.params;
+const { card, lang: propLang } = Astro.props;
 
-// --- コンポーネントのフロントマター ---
-// 1. 現在のURLパスから、言語プレフィックスを動的に取得する
-const pathname = Astro.url.pathname;
-const isEn = pathname.startsWith('/en');
-
-// 2. 開発環境か本番か、言語は何かを考慮して正しい prefix を決定する
-// 英語なら必ず '/en'、日本語で開発環境なら '/jp'、日本語の本番なら ''
-const prefix = isEn 
-  ? '/en' 
-  : (import.meta.env.DEV ? '/jp' : '');
-  
 if (!card) {
   return Astro.redirect('/404');
 }
 
-// スラッグ（英語）から日本語の表示名に変換するマップ
-const categoryNameMap: Record<string, string> = {
-  fortune: "占い番地",
-  healing: "ヒーリング番地",
-  shop: "ショップ番地",
-  counseling: "カウンセリング番地",
-  meditation: "瞑想番地",
+
+
+
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// （※コンポーネントなので getStaticPaths() は書かない）
+
+// ページファイルと【まったく同じ】データ取得
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData,  oraclecardsData } = await getPageData(Astro.url);
+
+
+////////言語切替
+
+
+
+
+// カテゴリ名の多言語対応マップ
+const categoryNameMap: Record<string, { jp: string; en: string }> = {
+  fortune: { jp: "占い番地", en: "Fortune District" },
+  healing: { jp: "ヒーリング番地", en: "Healing District" },
+  shop: { jp: "ショップ番地", en: "Shop District" },
+  counseling: { jp: "カウンセリング番地", en: "Counseling District" },
+  meditation: { jp: "瞑想番地", en: "Meditation District" },
 };
 
-// card.categoryName が英語スラッグなので対応する日本語名を取得
 const categorySlug = card.categoryName;
-const categoryDisplayName = categorySlug ? (categoryNameMap[categorySlug] || categorySlug) : "";
+const categoryInfo = categorySlug ? categoryNameMap[categorySlug] : null;
 
-const cardDescription = card.message_jp 
-  ? `${card.message_jp.slice(0, 100)}...（${card.title_jp}のメッセージと意味）` 
-  : `${card.title_jp}のオラクルカードメッセージと意味をご紹介します。`;
+// ★ 現在の言語（isEn）に合わせて .en または .jp を取得する
+const categoryDisplayName = categoryInfo 
+  ? (lang === 'en' ? categoryInfo.en : categoryInfo.jp) 
+  : (categorySlug || "");
+
+const cardDescription = card.message 
+  ? (lang === 'en'
+      ? `${card.message.slice(0, 100)}... (Message & Meaning of ${card.title})` 
+      : `${card.message.slice(0, 100)}...（${card.title}のメッセージと意味）`)
+  : (lang === 'en'
+      ? `Discover the message and meaning of the oracle card ${card.title}.` 
+      : `${card.title}のオラクルカードメッセージと意味をご紹介します。`);
+
 ---
 
-<Layout title={`${card.title_jp}のメッセージ・意味 | Spiritual Town オラクルカード`}
-description={cardDescription} pageTitle={card.title_jp}
+<Layout title={`${card.title} ${lang === 'jp' ? "[メッセージ・意味]" : "[Message & Meaning]"} | Spiritual Town ${lang === 'jp' ? "オラクルカード" : "Oraclecard"}`}
+description={cardDescription} pageTitle={card.title}
 >
   <div class="max-w-6xl mx-auto px-6 md:px-16">
     
@@ -71,7 +89,7 @@ description={cardDescription} pageTitle={card.title_jp}
       <div class="flex justify-center mb-10">
         <img 
           src={`/images/oraclecards/${card.image}`} 
-          alt={card.title_jp} 
+          alt={card.title} 
           style="max-width: 280px; width: 100%; height: auto;"
           class="block rounded-xl shadow-lg"
         />
@@ -80,11 +98,13 @@ description={cardDescription} pageTitle={card.title_jp}
       {/* タイトルセクション */}
       <header class="text-center mb-10 border-b border-gray-100 pb-8">
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 tracking-wide">
-          {card.title_jp}
+          {card.title}
         </h1>
+		{lang !== 'en' && (
         <p class="text-base sm:text-lg text-gray-600 italic font-serif m-0">
           {card.title_en}
         </p>
+		)}
 
         {/* カテゴリ & 推奨アイテム */}
         <div class="flex justify-center gap-3 mt-6 flex-wrap">
@@ -107,31 +127,31 @@ description={cardDescription} pageTitle={card.title_jp}
       {/* 各メッセージセクション */}
       <section class="max-w-6xl mx-auto mb-8 p-6 sm:p-8 rounded-2xl bg-[#faf8f5] border-l-4 border-amber-400">
         <h2 class="text-lg font-bold text-gray-900 mt-0 mb-3 flex items-center gap-2">
-          <span class="text-amber-500">🌸</span> {card.messageTitle_jp || "メッセージ"}
+          <span class="text-amber-500">🌸</span> {card.messageTitle || "メッセージ"}
         </h2>
         <p class="leading-relaxed text-gray-700 whitespace-pre-wrap m-0 text-base">
-          {card.message_jp}
+          {card.message}
         </p>
       </section>
 
-      {card.explanation_jp && (
+      {card.explanation && (
         <section class="max-w-6xl mx-auto mb-8 p-6 sm:p-8 rounded-2xl bg-white border border-gray-100">
           <h2 class="text-lg font-bold text-gray-900 mt-0 mb-3 flex items-center gap-2">
-            <span class="text-amber-500">📖</span> {card.explanationTitle_jp || "解説"}
+            <span class="text-amber-500">📖</span> {card.explanationTitle || "解説"}
           </h2>
           <p class="leading-relaxed text-gray-700 whitespace-pre-wrap m-0 text-base">
-            {card.explanation_jp}
+            {card.explanation}
           </p>
         </section>
       )}
 
-      {card.action_jp && (
+      {card.action && (
         <section class="max-w-6xl mx-auto mb-6 p-6 sm:p-8 rounded-2xl bg-[#f0fdf4] border-l-4 border-emerald-400">
           <h2 class="text-lg font-bold text-emerald-900 mt-0 mb-3 flex items-center gap-2">
-            <span class="text-emerald-500">🍀</span> {card.actionTitle_jp || "今日のアクション"}
+            <span class="text-emerald-500">🍀</span> {card.actionTitle || "今日のアクション"}
           </h2>
           <p class="leading-relaxed text-[#166534] whitespace-pre-wrap m-0 text-base">
-            {card.action_jp}
+            {card.action}
           </p>
         </section>
       )}
@@ -141,7 +161,7 @@ description={cardDescription} pageTitle={card.title_jp}
           href={prefix || '/'}
           class="inline-block bg-gray-800 hover:bg-gray-900 text-white font-bold px-8 py-3 rounded-full transition-colors"
         >
-          ホームに戻る
+          {oraclecardsData.buttonText}
         </a>
       </div>
 

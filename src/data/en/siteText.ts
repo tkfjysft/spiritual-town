@@ -37,5 +37,11 @@ export const siteText: SiteText = {
       }
     ]
   },
+  subNavigation: {
+    links: [
+      { label: "Privacy Policy" },
+      { label: "Disclaimer" }
+    ]
+  },
   copyright: "Spiritual Town. All rights reserved."
 };
