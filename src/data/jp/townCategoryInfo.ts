@@ -24,15 +24,27 @@ export interface TownCategoryInfoData {
   categories: TownCategory[];
 }
 
+const A_ID = "fortune";
+const B_ID = "healing";
+const C_ID = "shop";
+const D_ID = "counseling";
+const E_ID = "meditation";
+
+const A_NAME = "占い番地";
+const B_NAME = "ヒーリング番地";
+const C_NAME = "ショップ番地";
+const D_NAME = "カウンセリング番地";
+const E_NAME = "瞑想番地";
+
 export const townCategoryInfo: TownCategoryInfoData = {
   "title": "街の案内所（スピリチュアル・癒やしのカテゴリ一覧）",
   "subTitle": "占い、ヒーリング、ショップ、カウンセリング、瞑想など、あなたの目的にぴったりのジャンルやお店をここから見つけてみましょう。",
   "categories": [
     {
-      "id": "fortune",
-      "name": "占い番地",
-      "TranslationOfWelcome": "Welcome the ",	  
-      "linkName": "占い番地を散策する",
+      "id": A_ID,
+      "name": A_NAME,
+      "TranslationOfWelcome": `${A_NAME}へようこそ`,	  
+      "linkName": `${A_NAME}を散策する`,
       "icon": "🔮",
       "categoriesRead": "おすすめのオンライン占い・無料占いサイト一覧",
       "description": "恋愛占い・タロット・占術など、運命の糸を解き明かし、進むべき未来を優しく照らす館が集まるエリアです。",
@@ -61,9 +73,10 @@ export const townCategoryInfo: TownCategoryInfoData = {
       ]
     },
     {
-      "id": "healing",
-      "name": "ヒーリング番地",
-      "linkName": "ヒーリング番地を散策する",
+      "id": B_ID,
+      "name": B_NAME,
+      "TranslationOfWelcome": `${B_NAME}へようこそ`,	  
+      "linkName": `${B_NAME}を散策する`,
       "icon": "🌿",
       "categoriesRead": "ヒーリングサロン、癒やし、リラクゼーション等",
       "description": "BTS（ボディトランクスイッチ）・ヒーリングサロン・オーラ診断・心身の調和など、日々の疲れを解きほぐし、心を整えるセラピーが満載です。",
@@ -77,9 +90,10 @@ export const townCategoryInfo: TownCategoryInfoData = {
       ]
     },
     {
-      "id": "shop",
-      "name": "ショップ番地",
-      "linkName": "ショップ番地を散策する",
+      "id": C_ID,
+      "name": C_NAME,
+      "TranslationOfWelcome": `${C_NAME}へようこそ`,	  
+      "linkName": `${C_NAME}を散策する`,
       "icon": "🛍️",
       "categoriesRead": "パワーストーン通販、オラクルカード取扱店、スピリチュアルグッズ等",
       "description": "パワーストーンやオラクルカード、香りのアイテムなど、日常を彩る特別なスピリチュアルグッズや通販ショップを集めました。",
@@ -93,9 +107,10 @@ export const townCategoryInfo: TownCategoryInfoData = {
       ]
     },
     {
-      "id": "counseling",
-      "name": "カウンセリング番地",
-      "linkName": "カウンセリング番地を散策する",
+      "id": D_ID,
+      "name": D_NAME,
+      "TranslationOfWelcome": `${D_NAME}へようこそ`,	  
+      "linkName": `${D_NAME}を散策する`,
       "icon": "☕",
       "categoriesRead": "カウンセリング、心の悩み・相談、スピリチュアルカウンセラー等",
       "description": "一人で抱えきれない悩みに寄り添い、心の声を丁寧に聴いてくれる専門家たちが待っています。",
@@ -109,9 +124,10 @@ export const townCategoryInfo: TownCategoryInfoData = {
       ]
     },
     {
-      "id": "meditation",
-      "name": "瞑想番地",
-      "linkName": "瞑想番地を散策する",
+      "id": E_ID,
+      "name": E_NAME,
+      "TranslationOfWelcome": `${E_NAME}へようこそ`,	  
+      "linkName": `${E_NAME}を散策する`,
       "icon": "🧘",
       "categoriesRead": "マインドフルネス、瞑想ワークショップ、瞑想の方法・やり方等",
       "description": "マインドフルネスや瞑想ワークショップなど、内なる静けさと繋がるためのヒントが集まる場所です。",

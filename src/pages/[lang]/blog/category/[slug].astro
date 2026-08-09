@@ -4,11 +4,8 @@ import { client, type Blog, type Category } from '@/lib/microcms';
 import Layout from '@/layouts/Layout.astro';
 
 // 1. 言語（jp/en）とカテゴリの組み合わせを全件生成
+// 1. 言語（jp/en）とカテゴリの組み合わせを全件生成
 export async function getStaticPaths() {
-  const categoriesResponse = await client.get<{ contents: Category[] }>({
-    endpoint: 'spitown-blog-categories',
-  });
-
   const blogsResponse = await client.get<{ contents: Blog[] }>({
     endpoint: 'spitown-blog',
     queries: { limit: 100 },
@@ -16,24 +13,35 @@ export async function getStaticPaths() {
 
   const languages = ['jp', 'en'];
 
-  // 全言語分 × 全カテゴリ分の組み合わせを作成
-  return languages.flatMap((lang) =>
-    categoriesResponse.contents.map((category) => {
-      // lang に応じて判定するプロパティ（category_jp または category_en）を切り替える
-      const filteredBlogs = blogsResponse.contents.filter((blog) => {
-        const targetCategory = lang === 'jp' ? blog.category_jp : blog.category_en;
-        return targetCategory && targetCategory.id === category.id;
+  // 各言語ごとに対応するカテゴリを取得してパスを生成する
+  const allPaths = await Promise.all(
+    languages.map(async (lang) => {
+      // 言語に応じて取得するエンドポイントを切り替える
+      const endpoint = lang === 'jp' ? 'spitown-blog-categories-jp' : 'spitown-blog-categories-en';
+      
+      const categoriesResponse = await client.get<{ contents: Category[] }>({
+        endpoint,
       });
 
-      return {
-        params: { 
-          lang, 
-          slug: category.slug || category.id 
-        },
-        props: { category, blogs: filteredBlogs },
-      };
+      return categoriesResponse.contents.map((category) => {
+        const filteredBlogs = blogsResponse.contents.filter((blog) => {
+          const targetCategory = lang === 'jp' ? blog.category_jp : blog.category_en;
+          return targetCategory && targetCategory.id === category.id;
+        });
+
+        return {
+          params: { 
+            lang, 
+            slug: category.slug || category.id 
+          },
+          props: { category, blogs: filteredBlogs },
+        };
+      });
     })
   );
+
+  // 二次元配列を平坦化して返す
+  return allPaths.flat();
 }
 
 
@@ -54,11 +62,11 @@ const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsD
 ////////言語切替
 ---
 
-<Layout pageTitle={`${category.name}の記事一覧`}>
+<Layout title={lang === 'en' ? `Articles in \"${category.name}\" | Spiritual Town` : `「${category.name}」記事一覧 | スピリチュアルタウン`} pageTitle={lang === 'en' ? `Articles in \"${category.name}\"` : `「${category.name}」記事一覧`} description={lang === 'en' ? `${category.description}` : `${category.description}`}>
   <section class="my-16 px-4 text-center max-w-6xl mx-auto px-6 md:px-16">
     <div class="bg-gradient-to-b from-amber-50/60 to-white p-8 sm:p-10 rounded-3xl border border-amber-200/60 shadow-sm">
       <h1 class="text-2xl font-bold mt-10 mb-18 text-slate-800">
-        「{category.name}」のカテゴリー記事
+        {lang === 'en' ? `Articles in \"${category.name}\"` : `「${category.name}」記事一覧`}
       </h1>
 
       <div class="grid gap-6">

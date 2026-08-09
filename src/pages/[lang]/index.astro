@@ -59,12 +59,14 @@ const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsD
         <section class="border-y border-slate-400/80 shadow-md shadow-slate-100 p-8 text-center leading-relaxed text-slate-600 mb-20 relative mx-[2vw] md:mx-10 lg:mx-auto lg:max-w-3xl">
             <div class="md:flex md:items-center md:justify-center md:gap-8">
                 <div class="mb-8 mx-auto text-white font-bold bg-[#e55a53] shadow-md shadow-slate-100 p-8 rounded-full w-[200px] h-[200px] flex flex-col items-center justify-center">
-<span>{applicationData.badge.line1}</span>
-            <span>{applicationData.badge.line2}</span>
-            <span>{applicationData.badge.line2}</span>
-            <span>{applicationData.badge.line3}</span>
-            <span>{applicationData.badge.line4}</span>
-            <span>{applicationData.badge.line5}</span>                </div>
+					<p>
+					{applicationData.badge.line1}<br />
+					{applicationData.badge.line2}<br />
+					{applicationData.badge.line3}<br />
+					{applicationData.badge.line4}<br />
+					{applicationData.badge.line5}<br />                
+					</p>
+				   </div>
 			<div class="space-y-4">
 						<h2 class="text-2xl sm:text-3xl text-[#e55a53] font-bold" set:html={applicationData.heading} />
 						<h3 class="text-2xl text-[#ba980c] font-bold" set:html={applicationData.subHeading} />

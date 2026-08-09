@@ -51,12 +51,16 @@ const safeContent = rawContent
   ? rawContent.replace(/<h1(\s|>)/gi, '<h2$1').replace(/<\/h1>/gi, '</h2>')
   : '';
 
-const titleBlog = lang === 'en' ? blog.title_en : blog.title_jp;
+const titleBlog = lang === 'en' ? `${blog.title_en} | Spiritual Town` : `${blog.title_jp} | スピリチュアルタウン`;
 const categoryBlog = lang === 'en' ? blog.category_en : blog.category_jp;
+const descriptionBlog = lang === 'en'
+      ? `${blog.content_en.slice(0, 100)}...` 
+      : `${blog.content_jp.slice(0, 100)}...`;
 
+	  
 ---
 
-<Layout pageTitle={titleBlog} category={categoryBlog}>
+<Layout title={titleBlog} pageTitle={titleBlog} description={descriptionBlog}>
     <div class="max-w-6xl mx-auto px-6 md:px-16 py-16">
         <article>
             <!-- 記事ヘッダー -->
@@ -74,10 +78,10 @@ const categoryBlog = lang === 'en' ? blog.category_en : blog.category_jp;
                 )}
 
                 <time class="text-sm text-stone-500 block mb-3">
-                    {blog.pubDate ? new Date(blog.pubDate).toLocaleDateString('ja-JP') : new Date(blog.publishedAt).toLocaleDateString('ja-JP')}
+                    {blog.pubDate ? new Date(blog.pubDate).toLocaleDateString(lang === 'en' ? 'en-US' : 'jp-JP') : new Date(blog.publishedAt).toLocaleDateString(lang === 'en' ? 'en-US' : 'jp-JP')}
                 </time>
                 <h1 class="font-serif text-3xl md:text-4xl font-bold text-[#4a423d] leading-tight mb-6">
-                    {titleBlog}
+                    {lang === 'en' ? blog.title_en : blog.title_jp}
                 </h1>
 
                 <!-- アイキャッチ画像 -->
