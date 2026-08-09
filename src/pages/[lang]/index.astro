@@ -88,7 +88,7 @@ const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsD
 				</a>
 				<div>
 					<a 
-						href={applicationData.button.link} 
+						href={siteStructure.navigation.links[4]?.url || '#'} 
 						target="_blank" 
 						rel="noopener noreferrer"
 						class="inline-block px-18 py-4 bg-amber-200 text-amber-900 font-bold rounded-full hover:bg-amber-300 transition-all shadow-md hover:shadow-lg"
@@ -215,7 +215,7 @@ const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsD
                 </ul>
 
                 <a 
-                    href={applicationData.button.link} target="_blank" rel="noopener noreferrer"
+                    href={siteStructure.navigation.links[4]?.url || '#'} target="_blank" rel="noopener noreferrer"
                     class="inline-block px-8 py-4 bg-amber-200 text-amber-900 font-bold rounded-full hover:bg-amber-300 transition-all shadow-md hover:shadow-lg"
                 >
                     {applicationData.button.text}

@@ -26,7 +26,16 @@ export interface SiteStructure {
   copyrightYear: string;
 }
 
+
+import { getFormUrls } from "@/data/common/formUrls.ts";
+
+
 export const getSiteStructure = (langPrefix: string = "") => {
+ 
+  // ★フォームURLを取得
+  const formUrls = getFormUrls(langPrefix);
+
+
   return {
   titleEn: "Spiritual Town",
   titleImage: "/logo_ci.avif",
@@ -54,13 +63,15 @@ export const getSiteStructure = (langPrefix: string = "") => {
       },
       { url: `/blog`, icon: "PenTool" },
       {
-        url: "https://forms.gle/1Q5Mq1qipnwdaUas6",
+		// ★申込フォームURL
+        url: formUrls.application,
         icon: "Send",
         target: "_blank",
         rel: "noopener noreferrer",
         children: [
           { 
-            url: "https://forms.gle/dtMHv1mHwetdmajq7", 
+			// ★お問い合わせフォームURL
+            url: formUrls.contact, 
             icon: "Mail",
             target: "_blank",
             rel: "noopener noreferrer"
