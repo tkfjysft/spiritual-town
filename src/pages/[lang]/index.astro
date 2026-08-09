@@ -324,7 +324,7 @@ try {
 
 						{/* 記事タイトル */}
 						<h3 class="text-lg sm:text-xl font-serif text-clr-main-1 mb-6 leading-relaxed group-hover:text-clr-main-1 transition-colors">
-							<a href={prefix + postUrl} class="focus:outline-none">
+							<a href={isEn ? postUrl : prefix + postUrl} class="focus:outline-none">
 							<span class="absolute inset-0 z-30"></span>
 							{post.title}
 							</a>
