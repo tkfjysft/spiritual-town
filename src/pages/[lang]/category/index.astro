@@ -1,0 +1,36 @@
+---
+// src/pages/[lang]/about.astro
+import Layout from '@/layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+
+
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// ページファイルにだけ必要な関数
+export function getStaticPaths() {
+  return getLangStaticPaths();
+}
+
+// 全ファイル共通のデータ取得（これをそのまま貼る）
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData,  oraclecardsData } = await getPageData(Astro.url);
+
+
+////////言語切替
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+<head>
+    <meta charset="UTF-8">
+    <title>ページを移動しました</title>
+    <!-- 0秒後に指定したURLへ自動でジャンプします -->
+    <meta http-equiv="refresh" content={`0;URL=${prefix}/#categories`} />
+    <link rel="canonical" href={`${prefix}/#categories`}>
+</head>
+<body>
+    <p>ページを移動しました。自動的に転送されない場合は、<a href={`${prefix}/#categories`}>こちらのリンク</a>をクリックしてください。</p>
+</body>
+</html>

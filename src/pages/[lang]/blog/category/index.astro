@@ -1,0 +1,86 @@
+---
+// src/pages/[lang]/blog/category/index.astro
+import { client, type Category } from '@/lib/microcms';
+import Layout from '@/layouts/Layout.astro';
+// import { getPageData } from '@/utils/i18nLoader';
+
+// 1. 言語（jp/en）ごとに静的パスを生成する
+// export async function getStaticPaths() {
+//   return [
+//     { params: { lang: 'jp' } },
+//     { params: { lang: 'en' } }
+//   ];
+// }
+
+
+
+
+
+
+////////言語切替
+import { getLangStaticPaths, getPageData } from '@/utils/i18nLoader';
+
+// ページファイルにだけ必要な関数
+export function getStaticPaths() {
+  return getLangStaticPaths();
+}
+
+// 全ファイル共通のデータ取得（これをそのまま貼る）
+const { lang, prefix, metaData, siteText, siteStructure, townCategoryInfo, newsDate, applicationData, spotsData, aboutData, privacyPolicyData, termsData,  drawData,  oraclecardsData } = await getPageData(Astro.url);
+
+
+////////言語切替
+
+
+
+
+
+// 言語に応じて該当言語のカテゴリ一覧を全件取得
+const endpoint = lang === 'jp' ? 'spitown-blog-categories-jp' : 'spitown-blog-categories-en';
+const categoriesResponse = await client.get<{ contents: Category[] }>({
+  endpoint,
+  queries: { limit: 100 },
+});
+const categories = categoriesResponse.contents;
+---
+
+<Layout 
+  title={lang === 'en' ? 'Blog Categories | Spiritual Town' : 'ブログカテゴリ一覧 | スピリチュアルタウン'} 
+  pageTitle={lang === 'en' ? 'Blog Categories' : 'ブログカテゴリ一覧'} 
+  description={lang === 'en' ? 'Explore all blog categories.' : 'ブログのカテゴリ一覧ページです。'}
+>
+  <section class="my-16 px-4 text-center max-w-6xl mx-auto px-6 md:px-16">
+    <div class="bg-gradient-to-b from-amber-50/60 to-white p-8 sm:p-10 rounded-3xl border border-amber-200/60 shadow-sm">
+      <h1 class="text-2xl font-bold mt-10 mb-10 text-slate-800">
+        {lang === 'en' ? 'Blog Categories' : 'ブログカテゴリ一覧'}
+      </h1>
+
+      <div class="grid gap-6 max-w-3xl mx-auto text-left">
+        {categories.length === 0 ? (
+          <p class="text-slate-500 py-6 text-center">
+            {lang === 'en' ? 'No categories found.' : 'カテゴリはまだありません。'}
+          </p>
+        ) : (
+          <ul class="space-y-4">
+            {categories.map((category) => (
+              <li class="border-b pb-4 border-slate-200">
+                <a 
+                  href={`${prefix}/blog/category/${category.slug || category.id}`} 
+                  class="text-lg font-semibold text-slate-700 hover:text-amber-600 transition-colors"
+                >
+                  {category.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div class="mt-12">
+        <a href={`${prefix}/blog/`} class="text-blue-600 hover:underline">
+          {lang === 'en' ? '← Back to Blog' : '← ブログ一覧へ戻る'}
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
