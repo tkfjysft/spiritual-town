@@ -108,7 +108,7 @@ const descriptionBlog = lang === 'en'
         <!-- 一覧に戻るボタン（言語プレフィックス付き） -->
         <div class="mt-12 pt-6 border-t border-[#ece8e1]">
             <a href={`${prefix}/blog`} class="inline-flex items-center text-sm font-bold text-[#4a423d] hover:text-amber-600 transition-colors">
-                ← ブログ一覧へ戻る
+                ← {lang === 'en' ? 'Back to Blog' : 'ブログ一覧へ戻る'}
             </a>
         </div>
     </div>
